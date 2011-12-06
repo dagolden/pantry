@@ -1,0 +1,71 @@
+{
+   "abstract" : "Manage resources for chef-solo",
+   "author" : [
+      "David Golden <dagolden@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 4.300002, CPAN::Meta::Converter version 2.112580",
+   "license" : [
+      "apache_2_0"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "pantry",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "examples",
+         "corpus"
+      ],
+      "package" : [
+         "DB"
+      ]
+   },
+   "prereqs" : {
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Pantry::App" : 0,
+            "autodie" : "2.00",
+            "perl" : "v5.14.0",
+            "strict" : 0,
+            "warnings" : 0
+         }
+      },
+      "test" : {
+         "requires" : {
+            "File::Find" : 0,
+            "File::Temp" : 0,
+            "Test::More" : 0
+         }
+      }
+   },
+   "provides" : {
+      "Pantry" : {
+         "file" : "lib/Pantry.pm",
+         "version" : "0.001"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "mailto" : "bug-pantry at rt.cpan.org",
+         "web" : "http://rt.cpan.org/Public/Dist/Display.html?Name=pantry"
+      },
+      "homepage" : "https://github.com/dagolden/pantry",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/dagolden/pantry.git",
+         "web" : "https://github.com/dagolden/pantry"
+      }
+   },
+   "version" : "0.001"
+}
+

@@ -1,0 +1,17 @@
+=head1 SYNOPSIS
+
+Write one!
+
+=head1 SEE ALSO
+
+Inspiration for this tool came from similar chef-solo management tools.
+In addition to being implemented in different languages, each approaches
+the problem in slightly different ways, neither of which fit my priorities.
+Nevertheless, if you use chef-solo, you might consider them as well:
+
+=for :list
+* L<https://github.com/tobami/littlechef|littlechef> (Python)
+* L<https://github.com/igal/pocketknife|pocketknife> (Ruby)
+
+=cut
+

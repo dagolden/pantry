@@ -1,0 +1,62 @@
+=head1 NAME
+
+Pantry - Manage resources for chef-solo
+
+=head1 VERSION
+
+version 0.001
+
+=head1 SYNOPSIS
+
+Write one!
+
+=head1 SEE ALSO
+
+Inspiration for this tool came from similar chef-solo management tools.
+In addition to being implemented in different languages, each approaches
+the problem in slightly different ways, neither of which fit my priorities.
+Nevertheless, if you use chef-solo, you might consider them as well:
+
+=over 4
+
+=item *
+
+L<https://github.com/tobami/littlechef|littlechef> (Python)
+
+=item *
+
+L<https://github.com/igal/pocketknife|pocketknife> (Ruby)
+
+=back
+
+=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders
+
+=head1 SUPPORT
+
+=head2 Bugs / Feature Requests
+
+Please report any bugs or feature requests by email to C<bug-pantry at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/Public/Dist/Display.html?Name=pantry>. You will be automatically notified of any
+progress on the request by the system.
+
+=head2 Source Code
+
+This is open source software.  The code repository is available for
+public review and contribution under the terms of the license.
+
+L<https://github.com/dagolden/pantry>
+
+  git clone https://github.com/dagolden/pantry.git
+
+=head1 AUTHOR
+
+David Golden <dagolden@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2011 by David Golden.
+
+This is free software, licensed under:
+
+  The Apache License, Version 2.0, January 2004
+
