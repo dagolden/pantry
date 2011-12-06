@@ -1,13 +1,14 @@
 #!perl
 use v5.14;
 use warnings;
+
 package pantry;
 # ABSTRACT: Manage resources for chef-solo
 # PODNAME: pantry
 # VERSION
 
 use Pantry::App;
-Pantry->run;
+Pantry::App->run;
 
 # Pod for this file is generated from the pod/ directory in the source
 # repository using the 'AppendExternalData' dzil plugin

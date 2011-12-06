@@ -32,10 +32,8 @@
       },
       "runtime" : {
          "requires" : {
-            "Pantry::App" : 0,
-            "autodie" : "2.00",
+            "App::Cmd::Setup" : "0.311",
             "perl" : "v5.14.0",
-            "strict" : 0,
             "warnings" : 0
          }
       },
@@ -43,13 +41,26 @@
          "requires" : {
             "File::Find" : 0,
             "File::Temp" : 0,
-            "Test::More" : 0
+            "Test::More" : 0,
+            "strict" : 0
          }
       }
    },
    "provides" : {
       "Pantry" : {
          "file" : "lib/Pantry.pm",
+         "version" : "0.001"
+      },
+      "Pantry::App" : {
+         "file" : "lib/Pantry/App.pm",
+         "version" : "0.001"
+      },
+      "Pantry::App::Command" : {
+         "file" : "lib/Pantry/App/Command.pm",
+         "version" : "0.001"
+      },
+      "Pantry::App::Command::init" : {
+         "file" : "lib/Pantry/App/Command/init.pm",
          "version" : "0.001"
       }
    },
