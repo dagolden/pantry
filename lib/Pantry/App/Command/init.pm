@@ -6,6 +6,7 @@ package Pantry::App::Command::init;
 # VERSION
 
 use Pantry::App -command;
+use autodie;
 
 sub abstract {
   return 'initialize a pantry in the current directory';
@@ -19,9 +20,25 @@ sub validate {
   return;
 }
 
+my @pantry_dirs = qw(
+  cookbooks
+  roles
+  environments
+);
+
 sub execute {
   my ($self, $opt, $args) = @_;
 
+  for my $d ( @pantry_dirs ) {
+    if ( -d $d ) {
+      say "Directory '$d' already exists";
+    }
+    else {
+      mkdir $d;
+      say "Directory '$d' created";
+    }
+  }
+  return;
 }
 
 1;
