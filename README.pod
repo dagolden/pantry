@@ -8,7 +8,12 @@ version 0.001
 
 =head1 SYNOPSIS
 
-Write one!
+N.B. This program doesn't do much yet, but I'll expand this synopses
+incrementally as features are added
+
+  $ mkdir my-project
+  $ cd my-project
+  $ pantry init
 
 =head1 SEE ALSO
 
@@ -21,11 +26,11 @@ Nevertheless, if you use chef-solo, you might consider them as well:
 
 =item *
 
-L<https://github.com/tobami/littlechef|littlechef> (Python)
+L<littlechef|https://github.com/tobami/littlechef> (Python)
 
 =item *
 
-L<https://github.com/igal/pocketknife|pocketknife> (Ruby)
+L<pocketknife|https://github.com/igal/pocketknife> (Ruby)
 
 =back
 

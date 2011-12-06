@@ -1,6 +1,11 @@
 =head1 SYNOPSIS
 
-Write one!
+N.B. This program doesn't do much yet, but I'll expand this synopses
+incrementally as features are added
+
+  $ mkdir my-project
+  $ cd my-project
+  $ pantry init
 
 =head1 SEE ALSO
 
@@ -10,8 +15,8 @@ the problem in slightly different ways, neither of which fit my priorities.
 Nevertheless, if you use chef-solo, you might consider them as well:
 
 =for :list
-* L<https://github.com/tobami/littlechef|littlechef> (Python)
-* L<https://github.com/igal/pocketknife|pocketknife> (Ruby)
+* L<littlechef|https://github.com/tobami/littlechef> (Python)
+* L<pocketknife|https://github.com/igal/pocketknife> (Ruby)
 
 =cut
 

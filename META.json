@@ -33,15 +33,18 @@
       "runtime" : {
          "requires" : {
             "App::Cmd::Setup" : "0.311",
+            "autodie" : 0,
             "perl" : "v5.14.0",
             "warnings" : 0
          }
       },
       "test" : {
          "requires" : {
+            "App::Cmd::Tester" : 0,
             "File::Find" : 0,
             "File::Temp" : 0,
-            "Test::More" : 0,
+            "File::pushd" : "1.00",
+            "Test::More" : "0.92",
             "strict" : 0
          }
       }
