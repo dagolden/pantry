@@ -1,13 +1,10 @@
-use 5.008001;
+use v5.14;
 use strict;
 use warnings;
 
 package Pantry;
 # ABSTRACT: Manage resources for chef-solo
 # VERSION
-
-# Dependencies
-use autodie 2.00;
 
 # This file is a namespace placeholder and gives a default place to find
 # documentation for the 'pantry' program.
