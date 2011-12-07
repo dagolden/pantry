@@ -1,0 +1,23 @@
+Discrete objects manipulated by pantry
+
+- nodes
+- roles
+- environments
+- cookbooks
+- tags (?)
+- data bags
+
+#--------------------------------------------------------------------------#
+
+Rough ORM:
+
+environments have 0+ nodes
+
+nodes have 0+ roles
+nodes have 0+ recipes
+nodes have 0+ tags
+
+roles have 0+ roles
+roles have 0+ recipes
+
+

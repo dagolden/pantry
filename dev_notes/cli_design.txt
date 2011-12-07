@@ -1,0 +1,169 @@
+COMMAND LINE INTERFACE DESIGN BRAINSTORMING
+
+The CLI template is
+
+  $ pantry VERB [TARGET SELECTOR] [OBJECTS OR PARAMETERS]
+
+Where the "target selector" is a "type name" pair and the indirect objects are
+"--param value" pairs
+
+E.g. "apply to node foo the role web and tag groupA"
+
+  $ pantry apply node foo -R web -T groupA
+
+E.g. "apply to role web the role server and recipe nginx"
+
+  $ pantry apply role web -R server -r nginx ...
+
+Acting on multiple targets is done by specifying '-' as the name
+of the target and iterating a list of names from STDIN.
+
+E.g. "For all nodes in the 'dev' environment that are tagged 'web',
+apply the role 'debugger'"
+
+  $ pantry list -E dev -T web | pantry apply --node - -R debugger
+
+#--------------------------------------------------------------------------#
+# verbs
+#--------------------------------------------------------------------------#
+
+init:
+
+  $ pantry init
+  $ pantry init [--dir DIR]     # maybe?
+
+create:
+
+  $ pantry create                                   # ERROR
+  $ pantry create <node|role|env> NAME [OPTIONS]
+  $ pantry create node - [OPTIONS]                  # iterate from STDIN
+
+Options for nodes might include environments:
+
+  $ pantry create node NAME -E dev
+
+[Otherwise, put in the _default environment]
+
+Options might also include getting initial data from a file (-F <FILE>).
+
+list:
+
+  $ pantry list                                     # ERROR
+  $ pantry list node(s) [QUALIFIERS]                # synonyms node|nodes
+  $ pantry list role(s) [QUALIFIERS]
+  $ pantry list env(s) [QUALIFIERS]
+
+show:
+
+  $ pantry show                                     # ERROR
+  $ pantry show <node|role|env> NAME [OPTIONS]
+
+Options might included output format (JSON, YAML) or levels of
+detail (e.g. --all).
+
+Or they could reference parts of the data structure (c.f. 'update')
+
+delete:
+
+  $ pantry delete                                   # ERROR
+  $ pantry delete <node|role|env> NAME
+  $ pantry delete node NAME
+
+Maybe options here could be "--force" which would override interactive
+prompting of a delete?!?
+
+edit:
+
+  $ pantry edit                                     # ERROR
+  $ pantry edit <node|role|env> NAME [OPTIONS]
+
+Options might include which editor, or a subset of information based
+on the direct object.  E.g.
+
+  $ pantry edit <node|role> NAME --runlist
+
+"Edit" means "manually modify", whereas "update" means to change it
+programatically. Editing should include post-edit validation.
+
+update:
+
+  $ pantry update                                   # ERROR
+  $ pantry update <node|role|env> NAME [OPTIONS]
+
+The options would have to reference parts of the data structure in some
+useful way. E.g. 
+
+  $ pantry update node NAME --default nginx.port=8080
+
+That works fine for key/value stuff (maybe). For lists [are there any other
+than "runlist"?], maybe use a more specialized command than 'update'.  E.g.
+'apply' or 'remove' for runlist stuff.
+
+Options might also include getting data from a file (-F <FILE>).
+
+apply|remove:
+
+  $ pantry apply                                    # ERROR
+  $ pantry apply <node|role> NAME [OPTIONS]
+
+Here, options are roles/recipes to append-to|remove-from the runlist of the
+direct object. 
+
+Possibly 'update' should be used to overwrite existing runlist with a
+specific order and this is just sugar for getting the existing list and
+appending or filtering out.
+
+sync:
+
+[Maybe not the best name, but what I've got now. Alt: "deploy"? ]
+
+  $ pantry sync                                   # ERROR
+  $ pantry sync <node|env> NAME [OPTIONS]
+
+Deploy data to node or environment, run chef-solo remotely, and collect
+results into a reports directory.
+
+search:
+
+  $ pantry search <node|role|env> [QUALIFIERS]
+
+Options would be qualifiers to limit search.  Question to consider is how
+this differs from 'list'.  Possibly 'list' is based on configuration data
+and 'search' is based on the gathered reports data.
+
+reorder:
+
+  $ pantry reorder <node|role> NAME
+
+Might be redundant with 'edit node NAME --runlist'?
+
+#--------------------------------------------------------------------------#
+# conventions for options/parameters
+#--------------------------------------------------------------------------#
+
+Selectors/qualifiers:
+
+  --environment|--env|-E        Environment
+  --role|-R                     Role
+  --recipe|-r                   Recipe
+  --tag|-T                      Tag
+  --node|-n                     Node [Do we ever need this? Search?]
+
+Data segments:
+
+  --runlist                     [multiple-value]
+  --attribute|--default         "default_attributes" [key/value] 
+  --override                    "override_attributes" [key/value]
+
+Common stuff:
+
+  --force|-f                    Do something dangerous. [Global?]
+
+Global-level stuff:
+
+  --verbose|-v                  Global verbosity
+  --version|-V                  program version
+  --help
+  --yes|-y                      Say 'yes' to prompts?
+  --color|--no-color            Eventually, maybe
+
