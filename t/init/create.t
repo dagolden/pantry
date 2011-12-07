@@ -1,6 +1,7 @@
-use 5.006;
+use v5.14;
 use strict;
 use warnings;
+use autodie;
 use Test::More 0.92;
 
 use File::pushd 1.00 qw/tempd/;
