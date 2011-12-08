@@ -49,9 +49,9 @@ You will be notified automatically of any progress on your issue.
 This is open source software.  The code repository is available for
 public review and contribution under the terms of the license.
 
-L<https://github.com/dagolden/pantry>
+L<http://github.com/dagolden/pantry>
 
-  git clone https://github.com/dagolden/pantry.git
+  git clone http://github.com/dagolden/pantry
 
 =head1 AUTHOR
 
