@@ -43,8 +43,6 @@ my $empty = {
   ok( $data, "node file is valid JSON" ) or diag $@;
 
   is( $data->{name}, "foo.example.com", "name field correct" );
-  is( $data->{json_class}, "Chef::Node", "json_class field correct" );
-  is( $data->{chef_type}, "node", "chef_type field correct" );
 
   for my $k ( sort keys %$empty ) {
     my $field = $data->{$k};

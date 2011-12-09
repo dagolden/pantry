@@ -8,6 +8,7 @@ incrementally as features are added
   $ pantry init
   $ pantry create node foo.example.com
   $ pantry edit node foo.example.com
+  $ pantry sync node foo.example.com
 
 =head1 SEE ALSO
 

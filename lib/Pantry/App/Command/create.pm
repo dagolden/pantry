@@ -51,7 +51,6 @@ sub execute {
   my ($type, $name) = splice(@$args, 0, 2);
   my $path = $self->app->node_path($name);
   my $data = $self->_node_guts($name);
-  say "## PATH: $path";
   mkpath( dirname($path) );
   write_file( $path, { no_clobber => 1, binmode => ":raw" }, $data );
   return;
@@ -66,8 +65,6 @@ sub _node_guts {
 
   my $data = {
     name => $name,
-    json_class => "Chef::Node",
-    chef_type => "node",
     default => {},
     override => {},
     normal => {},

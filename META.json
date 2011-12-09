@@ -4,7 +4,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300003, CPAN::Meta::Converter version 2.110930",
+   "generated_by" : "Dist::Zilla version 4.300003, CPAN::Meta::Converter version 2.112580",
    "license" : [
       "apache_2_0"
    ],
@@ -36,7 +36,10 @@
             "File::Basename" : 0,
             "File::Path" : 0,
             "File::Slurp" : 0,
+            "File::Temp" : "0.22",
+            "IPC::Cmd" : 0,
             "JSON" : 0,
+            "Net::OpenSSH" : 0,
             "autodie" : 0,
             "namespace::clean" : 0,
             "perl" : "v5.14.0",
@@ -46,8 +49,8 @@
       "test" : {
          "requires" : {
             "App::Cmd::Tester" : 0,
+            "Capture::Tiny" : 0,
             "File::Find" : 0,
-            "File::Temp" : 0,
             "File::pushd" : "1.00",
             "Scalar::Util" : 0,
             "Test::More" : "0.92",
@@ -72,8 +75,16 @@
          "file" : "lib/Pantry/App/Command/create.pm",
          "version" : "0.001"
       },
+      "Pantry::App::Command::edit" : {
+         "file" : "lib/Pantry/App/Command/edit.pm",
+         "version" : "0.001"
+      },
       "Pantry::App::Command::init" : {
          "file" : "lib/Pantry/App/Command/init.pm",
+         "version" : "0.001"
+      },
+      "Pantry::App::Command::sync" : {
+         "file" : "lib/Pantry/App/Command/sync.pm",
          "version" : "0.001"
       }
    },
@@ -83,11 +94,11 @@
          "mailto" : "devnull@example.com",
          "web" : "http://github.com/dagolden/pantry/issues"
       },
-      "homepage" : "http://github.com/dagolden/pantry",
+      "homepage" : "https://github.com/dagolden/pantry",
       "repository" : {
          "type" : "git",
-         "url" : "http://github.com/dagolden/pantry",
-         "web" : "http://github.com/dagolden/pantry"
+         "url" : "https://github.com/dagolden/pantry.git",
+         "web" : "https://github.com/dagolden/pantry"
       }
    },
    "version" : "0.001"

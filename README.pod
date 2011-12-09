@@ -14,6 +14,9 @@ incrementally as features are added
   $ mkdir my-project
   $ cd my-project
   $ pantry init
+  $ pantry create node foo.example.com
+  $ pantry edit node foo.example.com
+  $ pantry sync node foo.example.com
 
 =head1 SEE ALSO
 
@@ -49,9 +52,9 @@ You will be notified automatically of any progress on your issue.
 This is open source software.  The code repository is available for
 public review and contribution under the terms of the license.
 
-L<http://github.com/dagolden/pantry>
+L<https://github.com/dagolden/pantry>
 
-  git clone http://github.com/dagolden/pantry
+  git clone https://github.com/dagolden/pantry.git
 
 =head1 AUTHOR
 
