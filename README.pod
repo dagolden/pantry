@@ -18,6 +18,50 @@ incrementally as features are added
   $ pantry edit node foo.example.com
   $ pantry sync node foo.example.com
 
+=head1 DESCRIPTION
+
+C<pantry> is a utility to make it easier to manage a collection of
+computers with the configuration management tool
+L<chef-solo|http://wiki.opscode.com/display/chef/Chef+Solo>
+
+=head1 USAGE
+
+(To be written...)
+
+=head1 AUTHENTICATION
+
+C<pantry> relies on OpenSSH for secure communications with managed nodes,
+but does not manage keys itself.  Instead, it expects the user to manage
+keys using standard OpenSSH configuration and tools.
+
+The user should specify SSH private keys to use in the ssh config file.  One
+approach would be to use the C<IdentityFile> with a host-name wildcard:
+
+  IdentityFile ~/.ssh/identities/id_dsa_%h
+
+This would allow a directory of host-specific identities (which could all be
+symlinks to a master key).  Another alternative might be to create a master key
+for each environment:
+
+  IdentityFile ~/.ssh/id_dsa_dev
+  IdentityFile ~/.ssh/id_dsa_test
+  IdentityFile ~/.ssh/id_dsa_prod
+
+C<pantry> also assumes that the user will unlock keys using C<ssh-agent>.
+For example, assuming that ssh-agent has not already been invoked by a
+graphical shell session, it can be started with a subshell of a terminal:
+
+  $ ssh-agent $SHELL
+
+Then private keys can be unlocked in advance of running C<pantry> using
+C<ssh-add>:
+
+  $ ssh-add ~/.ssh/id_dsa_test
+  $ pantry ...
+
+See the documentation for C<ssh-add> for control over how long keys
+stay unlocked.
+
 =head1 SEE ALSO
 
 Inspiration for this tool came from similar chef-solo management tools.
