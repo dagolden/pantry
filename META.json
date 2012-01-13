@@ -1,5 +1,5 @@
 {
-   "abstract" : "Manage resources for chef-solo",
+   "abstract" : "Configuration management tool for chef-solo",
    "author" : [
       "David Golden <dagolden@cpan.org>"
    ],

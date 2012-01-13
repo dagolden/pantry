@@ -2,7 +2,7 @@ use v5.14;
 use warnings;
 
 package Pantry;
-# ABSTRACT: Manage resources for chef-solo
+# ABSTRACT: Configuration management tool for chef-solo
 # VERSION
 
 # This file is a namespace placeholder and gives a default place to find

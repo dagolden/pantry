@@ -1,6 +1,6 @@
 =head1 NAME
 
-Pantry - Manage resources for chef-solo
+Pantry - Configuration management tool for chef-solo
 
 =head1 VERSION
 
@@ -26,7 +26,35 @@ L<chef-solo|http://wiki.opscode.com/display/chef/Chef+Solo>
 
 =head1 USAGE
 
-(To be written...)
+Arguments to the C<pantry> command line tool follow a regular structure:
+
+  $ pantry VERB [[NOUN] [ARGUMENTS...]]
+
+See the following sections for details and examples by topic.
+
+=head2 Pantry setup
+
+  $ pantry init
+
+This initializes a pantry in the current directory.  Currently, it just
+creates some directories for use storing cookbooks, node data, etc.
+
+=head2 Managing nodes
+
+  $ pantry create node NAME
+
+Creates a node configuration file for the given C<NAME>.  The C<NAME>
+must be a valid DNS name or IP address.
+
+  $ pantry edit node NAME
+
+Invokes the editor given by the environment variable C<EDITOR> on
+the configuration file for the C<name> node.
+
+  $ pantry sync node NAME
+
+Copies cookbooks and configuration data to the C<NAME> node and invokes
+C<chef-solo> via C<ssh> to start a configuration run.
 
 =head1 AUTHENTICATION
 
