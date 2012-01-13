@@ -93,4 +93,8 @@ sub _node_guts {
 
 1;
 
+=for Pod::Coverage options validate
+
+=cut
+
 # vim: ts=2 sts=2 sw=2 et:

@@ -4,7 +4,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300003, CPAN::Meta::Converter version 2.112580",
+   "generated_by" : "Dist::Zilla version 4.300003, CPAN::Meta::Converter version 2.112621",
    "license" : [
       "apache_2_0"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "pantry",
+   "name" : "Pantry",
    "no_index" : {
       "directory" : [
          "t",
@@ -92,7 +92,7 @@
    "resources" : {
       "bugtracker" : {
          "mailto" : "devnull@example.com",
-         "web" : "http://github.com/dagolden/pantry/issues"
+         "web" : "http://github.com/dagolden/Pantry/issues"
       },
       "homepage" : "https://github.com/dagolden/pantry",
       "repository" : {

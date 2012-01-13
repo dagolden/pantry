@@ -88,7 +88,7 @@ L<pocketknife|https://github.com/igal/pocketknife> (Ruby)
 =head2 Bugs / Feature Requests
 
 Please report any bugs or feature requests through the issue tracker
-at L<http://github.com/dagolden/pantry/issues>.
+at L<http://github.com/dagolden/Pantry/issues>.
 You will be notified automatically of any progress on your issue.
 
 =head2 Source Code
