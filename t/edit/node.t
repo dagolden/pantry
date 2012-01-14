@@ -16,10 +16,6 @@ use Capture::Tiny qw/capture/; # until App::Cmd::Tester::CaptureExtended
 #--------------------------------------------------------------------------#-
 
 my $empty = {
-  default => {},
-  override => {},
-  normal => {},
-  automatic => {},
   run_list => [],
 };
 
@@ -37,7 +33,7 @@ my $empty = {
 
   local $ENV{VISUAL} = local $ENV{EDITOR} = "echo";
   my $node_file = 'environments/_default/foo.example.com.json';
-  
+
   my ($stdout, $stderr) = capture {
     $result = test_app( 'Pantry::App' => [qw(edit node foo.example.com)] );
   };
