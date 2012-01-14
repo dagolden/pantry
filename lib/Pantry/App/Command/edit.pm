@@ -71,26 +71,6 @@ sub execute {
 # Internal
 #--------------------------------------------------------------------------#
 
-sub _node_guts {
-  my ($self, $name) = @_;
-
-  my $data = {
-    name => $name,
-    json_class => "Chef::Node",
-    chef_type => "node",
-    default => {},
-    override => {},
-    normal => {},
-    automatic => {},
-    run_list => [],
-  };
-
-  my $json = eval {JSON->new->pretty(1)->utf8(1)->encode($data)};
-  die "JSON encoding error: $@\n" if $@;
-
-  return $json;
-}
-
 1;
 
 =for Pod::Coverage options validate
