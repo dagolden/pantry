@@ -65,10 +65,6 @@ sub _node_guts {
 
   my $data = {
     name => $name,
-    default => {},
-    override => {},
-    normal => {},
-    automatic => {},
     run_list => [],
   };
 
