@@ -58,7 +58,7 @@ sub execute {
   }
 
   if ( @editor ) {
-    system( @editor, $path ) and die "System failed!: $!";
+    _edit_file(\@editor, $path);
   }
   else {
     $self->usage_error( "EDITOR not set or not found" );
@@ -70,6 +70,11 @@ sub execute {
 #--------------------------------------------------------------------------#
 # Internal
 #--------------------------------------------------------------------------#
+
+sub _edit_file {
+  my ($editor, $path) = @_;
+  system( @$editor, $path ) and die "System failed!: $!";
+}
 
 1;
 
