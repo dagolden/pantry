@@ -7,11 +7,11 @@ package Pantry::App::Command::edit;
 
 use Pantry::App -command;
 use autodie;
-use File::Basename qw/dirname/;
+use File::Basename qw/dirname basename/;
 use File::Path qw/mkpath/;
-use File::Slurp qw/write_file/;
+use File::Slurp qw/read_file/;
 use IPC::Cmd qw/can_run/;
-use JSON;
+use JSON qw/decode_json/;
 
 use namespace::clean;
 
@@ -50,7 +50,6 @@ sub execute {
   my ($self, $opt, $args) = @_;
 
   my ($type, $name) = splice(@$args, 0, 2);
-  my $path = $self->app->node_path($name);
 
   my @editor = defined $ENV{EDITOR} ? split / /, $ENV{EDITOR} : ();
   if ( @editor ) {
@@ -58,7 +57,7 @@ sub execute {
   }
 
   if ( @editor ) {
-    _edit_file(\@editor, $path);
+    $self->_edit_file($name, @editor);
   }
   else {
     $self->usage_error( "EDITOR not set or not found" );
@@ -72,8 +71,14 @@ sub execute {
 #--------------------------------------------------------------------------#
 
 sub _edit_file {
-  my ($editor, $path) = @_;
-  system( @$editor, $path ) and die "System failed!: $!";
+  my ($self, $name, @editor) = @_;
+  my $path = $self->app->node_path($name);
+  system( @editor, $path ) and die "System failed!: $!";
+  eval { decode_json(read_file($path,{ binmode => ":raw" })) };
+  if ( my $err = $@ ) {
+    $err =~ s/, at .* line .*//;
+    warn "Warning: JSON errors in config for $name\n";
+  }
 }
 
 1;
