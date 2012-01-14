@@ -34,6 +34,7 @@
          "requires" : {
             "App::Cmd::Setup" : "0.311",
             "File::Basename" : 0,
+            "File::Copy" : 0,
             "File::Path" : 0,
             "File::Slurp" : 0,
             "File::Temp" : "0.22",
@@ -61,31 +62,31 @@
    "provides" : {
       "Pantry" : {
          "file" : "lib/Pantry.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       },
       "Pantry::App" : {
          "file" : "lib/Pantry/App.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       },
       "Pantry::App::Command" : {
          "file" : "lib/Pantry/App/Command.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       },
       "Pantry::App::Command::create" : {
          "file" : "lib/Pantry/App/Command/create.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       },
       "Pantry::App::Command::edit" : {
          "file" : "lib/Pantry/App/Command/edit.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       },
       "Pantry::App::Command::init" : {
          "file" : "lib/Pantry/App/Command/init.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       },
       "Pantry::App::Command::sync" : {
          "file" : "lib/Pantry/App/Command/sync.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       }
    },
    "release_status" : "stable",
@@ -101,6 +102,6 @@
          "web" : "https://github.com/dagolden/pantry"
       }
    },
-   "version" : "0.001"
+   "version" : "0.002"
 }
 
