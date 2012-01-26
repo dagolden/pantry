@@ -1,0 +1,11 @@
+Helps to have knife installed for managing cookbooks.
+
+In particular, "knife cookbook site ..." helps get community cookbooks
+installed with all dependencies.  Of note, I've found it needs to be given
+an absolute path to the cookbook location.
+
+$ knife cookbook site install -o /path/to/my-pantry/cookbooks some-cookbook
+
+That also needs to be in a git repo, which shouldn't be an issue.
+
+Q: Should pantry encapsulate this (if knife is available)?
