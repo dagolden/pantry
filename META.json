@@ -4,7 +4,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300003, CPAN::Meta::Converter version 2.112621",
+   "generated_by" : "Dist::Zilla version 4.300005, CPAN::Meta::Converter version 2.112621",
    "license" : [
       "apache_2_0"
    ],
@@ -34,13 +34,13 @@
          "requires" : {
             "App::Cmd::Setup" : "0.311",
             "File::Basename" : 0,
-            "File::Copy" : 0,
             "File::Path" : 0,
             "File::Slurp" : 0,
             "File::Temp" : "0.22",
             "IPC::Cmd" : 0,
             "JSON" : 0,
             "Net::OpenSSH" : 0,
+            "Path::Class::Rule" : 0,
             "autodie" : 0,
             "namespace::clean" : 0,
             "perl" : "v5.14.0",
@@ -82,6 +82,10 @@
       },
       "Pantry::App::Command::init" : {
          "file" : "lib/Pantry/App/Command/init.pm",
+         "version" : "0.002"
+      },
+      "Pantry::App::Command::list" : {
+         "file" : "lib/Pantry/App/Command/list.pm",
          "version" : "0.002"
       },
       "Pantry::App::Command::sync" : {
