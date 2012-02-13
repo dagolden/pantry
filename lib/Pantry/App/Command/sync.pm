@@ -102,7 +102,9 @@ sub _process_node {
     or die "Could not rsync cookbooks\n";
 
   # ssh execute chef-solo
-  $ssh->system("chef-solo") # XXX eventually capture output
+  my $command = "chef-solo";
+  $command .= " -l debug" if $ENV{PANTRY_CHEF_DEBUG};
+  $ssh->system($command) # XXX eventually capture output
     or die "Error running chef-solo\n";
 
   # scp get run report
