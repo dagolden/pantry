@@ -63,6 +63,7 @@ my $rsync_opts = {
   verbose => 0, # XXX should trigger off a global option
   compress => 1,
   recursive => 1,
+  'delete' => 1,
   links => 1,
   times => 1,
 };
