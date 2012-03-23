@@ -10,7 +10,10 @@ use App::Cmd::Setup -command;
 sub opt_spec {
   my ($class, $app) = @_;
     return (
+    # Universal
     [ 'help' => "This usage screen" ],
+    # Selectors/qualifiers
+    [ 'recipe|r=s@' => "A recipe" ],
     $class->options($app),
   )
 }
