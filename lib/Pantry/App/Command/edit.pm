@@ -68,13 +68,17 @@ sub execute {
 
 sub _edit_file {
   my ($self, $name, @editor) = @_;
-  require Pantry::Model::Node;
-  my $path = Pantry::Model::Node->node_path($name);
-  system( @editor, $path ) and die "System failed!: $!";
-  eval { decode_json(read_file($path,{ binmode => ":raw" })) };
-  if ( my $err = $@ ) {
-    $err =~ s/, at .* line .*//;
-    warn "Warning: JSON errors in config for $name\n";
+  my $path = $self->pantry->node_path($name);
+  if ( -e $path ) {
+    system( @editor, $path ) and die "System failed!: $!";
+    eval { decode_json(read_file($path,{ binmode => ":raw" })) };
+    if ( my $err = $@ ) {
+      $err =~ s/, at .* line .*//;
+      warn "Warning: JSON errors in config for $name\n";
+    }
+  }
+  else {
+    $self->usage_error("Node '$name' does not exist");
   }
 }
 
