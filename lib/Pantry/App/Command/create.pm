@@ -7,10 +7,6 @@ package Pantry::App::Command::create;
 
 use Pantry::App -command;
 use autodie;
-use File::Basename qw/dirname/;
-use File::Path qw/mkpath/;
-use File::Slurp qw/write_file/;
-use JSON;
 
 use namespace::clean;
 
@@ -38,9 +34,6 @@ sub validate {
   if ( ! length $name ) {
     $self->usage_error( "This command requires the name for the thing to create" );
   }
-  elsif ( -e $self->app->node_path($name) ) {
-    $self->usage_error( "Node '$name' already exists" );
-  }
 
   return;
 }
@@ -49,29 +42,20 @@ sub execute {
   my ($self, $opt, $args) = @_;
 
   my ($type, $name) = splice(@$args, 0, 2);
-  my $path = $self->app->node_path($name);
-  my $data = $self->_node_guts($name);
-  mkpath( dirname($path) );
-  write_file( $path, { no_clobber => 1, binmode => ":raw" }, $data );
+
+  if ( $type eq 'node' ) {
+    require Pantry::Model::Node;
+    my $path = Pantry::Model::Node->node_path($name, '.', "_default");
+    if ( -e $path ) {
+      $self->usage_error( "Node '$name' already exists" );
+    }
+    else {
+      my $node = Pantry::Model::Node->new( name => $name );
+      $node->save_as( $path );
+    }
+  }
+
   return;
-}
-
-#--------------------------------------------------------------------------#
-# Internal
-#--------------------------------------------------------------------------#
-
-sub _node_guts {
-  my ($self, $name) = @_;
-
-  my $data = {
-    name => $name,
-    run_list => [],
-  };
-
-  my $json = eval {JSON->new->pretty(1)->utf8(1)->encode($data)};
-  die "JSON encoding error: $@\n" if $@;
-
-  return $json;
 }
 
 1;

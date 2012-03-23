@@ -8,7 +8,6 @@ package Pantry::App::Command::edit;
 use Pantry::App -command;
 use autodie;
 use File::Basename qw/dirname basename/;
-use File::Path qw/mkpath/;
 use File::Slurp qw/read_file/;
 use IPC::Cmd qw/can_run/;
 use JSON qw/decode_json/;
@@ -38,9 +37,6 @@ sub validate {
   # validate name
   if ( ! length $name ) {
     $self->usage_error( "This command requires the name for the thing to edit" );
-  }
-  elsif ( ! -e $self->app->node_path($name) ) {
-    $self->usage_error( "Node '$name' does not exist" );
   }
 
   return;
@@ -72,7 +68,8 @@ sub execute {
 
 sub _edit_file {
   my ($self, $name, @editor) = @_;
-  my $path = $self->app->node_path($name);
+  require Pantry::Model::Node;
+  my $path = Pantry::Model::Node->node_path($name);
   system( @editor, $path ) and die "System failed!: $!";
   eval { decode_json(read_file($path,{ binmode => ":raw" })) };
   if ( my $err = $@ ) {

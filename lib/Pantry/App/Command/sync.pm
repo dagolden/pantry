@@ -38,9 +38,6 @@ sub validate {
   if ( ! length $name ) {
     $self->usage_error( "This command requires the name for the thing to edit" );
   }
-  elsif ( ! -e $self->app->node_path($name) ) {
-    $self->usage_error( "Node '$name' does not exist" );
-  }
 
   return;
 }
@@ -93,7 +90,8 @@ sub _process_node {
     or die "Could not rsync solo.rb\n";
   
   # rsync node JSON to remote /etc/chef/node.json
-  my $node_json = $self->app->node_path($name);
+  require Pantry::Model::Node;
+  my $node_json = Pantry::Model::Node->node_path($name);
   $ssh->rsync_put($rsync_opts, $node_json, "/etc/chef/node.json")
     or die "Could not rsync node.json\n";
 

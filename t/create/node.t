@@ -45,9 +45,14 @@ my $empty = {
     ok( defined $field && reftype($field) eq reftype($empty->{$k}),
       "$k field correct type"
     );
-    is( scalar((reftype($field) eq 'HASH') ? %$field : @$field), 0,
-      "$k field is empty"
-    );
+    if ( defined $field ) { 
+      is( scalar((reftype($field) eq 'HASH') ? %$field : @$field), 0,
+        "$k field is empty"
+      );
+    }
+    else {
+      fail "$k field is undef";
+    }
   }
 
 }
