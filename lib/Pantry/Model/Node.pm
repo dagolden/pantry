@@ -6,6 +6,7 @@ package Pantry::Model::Node;
 # VERSION
 
 use Moose 2;
+use List::AllUtils qw/uniq first/;
 
 # new_from_file, save_as
 with 'Pantry::Role::Serializable' => {
@@ -22,9 +23,14 @@ has name => (
 );
 
 has run_list => (
-  is => 'ro',
+  is => 'bare',
   isa => 'ArrayRef[Str]',
+  traits => ['Array'],
   default => sub { [] },
+  handles => {
+    run_list => 'elements',
+    _push_run_list => 'push',
+  },
 );
 
 #--------------------------------------------------------------------------#
@@ -35,6 +41,24 @@ sub node_path {
   my ($class, $name, $pantry, $env) = @_;
   $env //= '_default';
   return "${pantry}/environments/${env}/${name}.json";
+}
+
+#--------------------------------------------------------------------------#
+# methods
+#--------------------------------------------------------------------------#
+
+sub in_run_list {
+  my ($self, $item) = @_;
+  return first { $item eq $_ } $self->run_list;
+}
+
+sub append_to_runlist {
+  my ($self, @items) = @_;
+  for my $i (@items) {
+    $self->_push_run_list($i)
+      unless $self->in_run_list($i);
+  }
+  return;
 }
 
 #--------------------------------------------------------------------------#
