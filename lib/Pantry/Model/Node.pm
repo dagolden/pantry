@@ -24,5 +24,17 @@ has name => (
   required => 1,
 );
 
+has _path => (
+  is => 'ro',
+  isa => 'Str',
+  predicate => 'has_path',
+);
+
+sub save {
+  my ($self) = @_;
+  die "No _path attribute set" unless $self->has_path;
+  return $self->save_as( $self->_path );
+}
+
 1;
 
