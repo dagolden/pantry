@@ -25,11 +25,21 @@ parameter engine_opts => (
   default => sub { return {} },
 );
 
+parameter freezer => (
+  isa => 'Str',
+);
+
+parameter thawer => (
+  isa => 'Str',
+);
+
 role {
   my $params = shift;
   my $engine_class = "Pantry::Role::Serializable::" . $params->engine;
   load_class $engine_class;
   my $engine = $engine_class->new( engine_opts => $params->engine_opts );
+  my $freezer = $params->freezer;
+  my $thawer = $params->thawer;
 
   method new_from_file => sub {
     my ($class, $file) = @_;
@@ -39,6 +49,10 @@ role {
     # XXX check if string needs UTF-8 decoding?
     my $data = $engine->thaw( $str_ref );
 
+    if ($thawer) {
+      $data = $class->$thawer($data);
+    }
+
     return $class->new( $data );
   };
 
@@ -47,6 +61,10 @@ role {
 
     my $data = get_all_attribute_values($self->meta, $self);
     delete $data->{$_} for grep { /^_/ } keys %$data; # delete private attributes
+
+    if ($freezer) {
+      $data = $self->$freezer($data);
+    }
 
     # XXX check if string needs UTF-8 encoding?
     my $str_ref = $engine->freeze( $data );

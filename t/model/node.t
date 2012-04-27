@@ -3,6 +3,13 @@ use strict;
 use warnings;
 use Test::More 0.96;
 use File::pushd qw/tempd/;
+use File::Slurp qw/read_file/;
+use JSON;
+
+sub _thaw_file {
+  my $file = shift;
+  my $data = eval { decode_json( scalar read_file( $file ) ) };
+}
 
 use Pantry::Model::Node;
 
@@ -61,9 +68,34 @@ subtest 'node attribute CRUD' => sub {
   is( $node->get_attribute("nginx.port"), undef, "deleted 'nginx.port'" );
 };
 
-#subtest 'node attribute serialization' => sub {
-#
-#};
+subtest 'node attribute serialization' => sub {
+  my $wd=tempd;
+  my $node = Pantry::Model::Node->new(
+    name => "foo.example.com",
+    _path => "node.json",
+  );
+  $node->set_attribute("nginx.port" => 80);
+  $node->set_attribute("nginx.user" => "nobody");
+  $node->set_attribute("set_fqdn" => "foo.example.com");
+  is( $node->get_attribute("nginx.port"), 80, "set/got 'nginx.port'" );
+  $node->save;
+  my $data = _thaw_file("node.json");
+  is_deeply( $data, {
+      name => 'foo.example.com',
+      run_list => [],
+      nginx => {
+        port => 80,
+        user => "nobody",
+      },
+      set_fqdn => "foo.example.com",
+    },
+    "node attributes serialized at correct level"
+  ) or diag explain $data;
+  ok( my $thawed = Pantry::Model::Node->new_from_file("node.json"), "thawed node");
+  is( $thawed->get_attribute("nginx.port"), 80, "thawed node has correct 'nginx.port'" );
+  is( $thawed->get_attribute("nginx.user"), "nobody", "thawed node has correct 'nginx.user'" );
+  is( $thawed->get_attribute("set_fqdn"), "foo.example.com", "thawed node has correct 'set_fqdn'" );
+};
 
 done_testing;
 # COPYRIGHT

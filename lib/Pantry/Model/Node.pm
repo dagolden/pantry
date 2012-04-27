@@ -12,7 +12,9 @@ use namespace::autoclean;
 # new_from_file, save_as
 with 'Pantry::Role::Serializable' => {
   engine => 'JSON',
-  engine_opts => { utf8 => 1, pretty => 1 }
+  engine_opts => { utf8 => 1, pretty => 1 },
+  freezer => '_freeze',
+  thawer => '_thaw',
 };
 
 # in_run_list, append_to_runliset
@@ -46,6 +48,64 @@ sub save {
   my ($self) = @_;
   die "No _path attribute set" unless $self->has_path;
   return $self->save_as( $self->_path );
+}
+
+my @top_level_keys = qw/name run_list/;
+
+sub _freeze {
+  my ($self, $data) = @_;
+  my $attr = delete $data->{attributes};
+  for my $k ( keys %$attr ) {
+    next if grep { $k eq $_ } @top_level_keys;
+    $self->_dot_to_hash($data, $k, $attr->{$k});
+  }
+  return $data;
+}
+
+sub _thaw {
+  my ($self, $data) = @_;
+  my $attr = {};
+  for my $k ( keys %$data ) {
+    next if grep { $k eq $_ } @top_level_keys;
+    for my $pair ( $self->_hash_to_dot($k, delete $data->{$k}) ) {
+      my ($key, $value) = @$pair;
+      $attr->{$key} = $value;
+    }
+  }
+  $data->{attributes} = $attr;
+  return $data;
+}
+
+sub _dot_to_hash {
+  my ($self, $hash, $key, $value) = @_;
+
+  my ($top_key, $rest) = split /\./, $key, 2;
+  if ( $rest ) {
+    my $new_hash = $hash->{$top_key} || {};
+    $self->_dot_to_hash($new_hash, $rest, $value);
+    $hash->{$top_key} = $new_hash;
+  }
+  else {
+    $hash->{$key} = $value;
+    return;
+  }
+}
+
+sub _hash_to_dot {
+  my ($self, $key, $value) = @_;
+  if ( ref $value eq 'HASH' ) {
+    my @pairs;
+    for my $k ( %$value ) {
+      for my $item ( $self->_hash_to_dot($k, $value->{$k}) ) {
+        $item->[0] = "$key\.$item->[0]";
+        push @pairs, $item;
+      }
+    }
+    return @pairs;
+  }
+  else {
+    return [$key, $value];
+  }
 }
 
 1;
