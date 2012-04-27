@@ -30,6 +30,18 @@ has _path => (
   predicate => 'has_path',
 );
 
+has attributes => (
+  is => 'bare',
+  isa => 'HashRef',
+  traits => ['Hash'],
+  default => sub { +{} },
+  handles => {
+    set_attribute => 'set',
+    get_attribute => 'get',
+    delete_attribute => 'delete',
+  },
+);
+
 sub save {
   my ($self) = @_;
   die "No _path attribute set" unless $self->has_path;

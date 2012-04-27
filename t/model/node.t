@@ -49,5 +49,21 @@ subtest 'append to / remove from runlist' => sub {
   is_deeply([qw/foo baz/], [$node->run_list], "remove item that doesn't exist");
 };
 
+subtest 'node attribute CRUD' => sub {
+  my $node = Pantry::Model::Node->new(
+    name => "foo.example.com",
+  );
+  $node->set_attribute("nginx.port" => 80);
+  is( $node->get_attribute("nginx.port"), 80, "set/got 'nginx.port'" );
+  $node->set_attribute("nginx.port" => 8080);
+  is( $node->get_attribute("nginx.port"), 8080, "changed 'nginx.port'" );
+  $node->delete_attribute("nginx.port");
+  is( $node->get_attribute("nginx.port"), undef, "deleted 'nginx.port'" );
+};
+
+#subtest 'node attribute serialization' => sub {
+#
+#};
+
 done_testing;
 # COPYRIGHT
