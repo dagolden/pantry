@@ -16,6 +16,7 @@ has run_list => (
   handles => {
     run_list => 'elements',
     _push_run_list => 'push',
+    _clear_run_list => 'clear',
   },
 );
 
@@ -30,6 +31,15 @@ sub append_to_runlist {
     $self->_push_run_list($i)
       unless $self->in_run_list($i);
   }
+  return;
+}
+
+sub remove_from_runlist {
+  my ($self, @items) = @_;
+  my %match = map { $_ => 1 } @items;
+  my @keep = grep { ! $match{$_} } $self->run_list;
+  $self->_clear_run_list;
+  $self->_push_run_list(@keep);
   return;
 }
 
