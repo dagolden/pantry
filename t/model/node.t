@@ -97,5 +97,36 @@ subtest 'node attribute serialization' => sub {
   is( $thawed->get_attribute("set_fqdn"), "foo.example.com", "thawed node has correct 'set_fqdn'" );
 };
 
+subtest 'node attribute escape dots' => sub {
+  my $wd=tempd;
+  my $node = Pantry::Model::Node->new(
+    name => "foo.example.com",
+    _path => "node.json",
+  );
+  $node->set_attribute('nginx\.port' => 80);
+  $node->set_attribute('deep.attribute.dotted\.name' => 'bar');
+  is( $node->get_attribute('nginx\.port'), 80, q{set/got 'nginx\.port'} );
+  is( $node->get_attribute('deep.attribute.dotted\.name'), 'bar', q{set/got 'deep.attribute.dotted\.name'} );
+  $node->save;
+  my $data = _thaw_file("node.json");
+  is_deeply( $data, {
+      name => 'foo.example.com',
+      run_list => [],
+      'nginx.port' => 80,
+      'deep' => {
+        attribute => {
+          'dotted.name' => 'bar',
+        },
+      },
+    },
+    "node attributes escaped dot works"
+  ) or diag explain $data;
+  ok( my $thawed = Pantry::Model::Node->new_from_file("node.json"), "thawed node");
+  is( $thawed->get_attribute('nginx\.port'), 80, q{thawed node has correct 'nginx\.port'} )
+    or diag explain $thawed;
+  is( $thawed->get_attribute('deep.attribute.dotted\.name'), 'bar', q{thawed node has correct 'deep.attribute.dotted\.name'} )
+    or diag explain $thawed;
+};
+
 done_testing;
 # COPYRIGHT
