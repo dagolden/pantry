@@ -45,7 +45,7 @@
             "Moose::Role" : "0",
             "Moose::Util" : "0",
             "MooseX::Role::Parameterized" : "0",
-            "MooseX::Types::Path::Class::MoreCoercions" : "0",
+            "MooseX::Types::Path::Class::MoreCoercions" : "0.002",
             "Net::OpenSSH" : "0",
             "Path::Class" : "0",
             "Path::Class::Rule" : "0",
