@@ -57,6 +57,5 @@ sub _build_description {
   return "The " . $self->name . " role";
 }
 
-
 1;
 
