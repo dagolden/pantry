@@ -49,7 +49,7 @@ has name => (
 has description => (
   is => 'ro',
   isa => 'Str',
-  lazy => 1,
+  lazy_builder => 1,
 );
 
 sub _build_description {
