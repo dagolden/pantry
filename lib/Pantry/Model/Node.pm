@@ -6,6 +6,7 @@ package Pantry::Model::Node;
 # VERSION
 
 use Moose 2;
+use MooseX::Types::Path::Class::MoreCoercions qw/File/;
 use List::AllUtils qw/uniq first/;
 use namespace::autoclean;
 
@@ -28,7 +29,8 @@ has name => (
 
 has _path => (
   is => 'ro',
-  isa => 'Str',
+  isa => File,
+  coerce => 1,
   predicate => 'has_path',
 );
 

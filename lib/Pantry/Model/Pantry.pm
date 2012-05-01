@@ -32,7 +32,7 @@ sub node {
     return Pantry::Model::Node->new_from_file( $path );
   }
   else {
-    return Pantry::Model::Node->new( name => $node_name );
+    return Pantry::Model::Node->new( name => $node_name, _path => $path );
   }
 }
 

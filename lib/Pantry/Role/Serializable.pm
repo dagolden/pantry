@@ -53,6 +53,7 @@ role {
       $data = $class->$thawer($data);
     }
 
+    $data->{_path} = $file;
     return $class->new( $data );
   };
 
