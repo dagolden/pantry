@@ -11,7 +11,7 @@ use autodie;
 use namespace::clean;
 
 sub abstract {
-  return 'apply a recipe to a node'
+  return 'apply recipes or attributes to a node'
 }
 
 sub options {
@@ -44,14 +44,21 @@ sub execute {
   my ($type, $name) = splice(@$args, 0, 2);
 
   if ( $type eq 'node' ) {
-    my $path = $self->pantry->node_path($name, "_default");
     my $node = $self->pantry->node( $name )
       or $self->usage_error( "Node '$name' does not exist" );
+
     if ($opt->{recipe}) {
       $node->append_to_runlist(map { "recipe[$_]" } @{$opt->{recipe}});
     }
 
-    $node->save_as( $path );
+    if ($opt->{default}) {
+      for my $attr ( @{ $opt->{default} } ) {
+        my ($key, $value) = split /=/, $attr, 2; # split on first '='
+        $node->set_attribute($key, $value);
+      }
+    }
+
+    $node->save;
   }
 
   return;

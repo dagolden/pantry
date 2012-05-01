@@ -14,6 +14,7 @@ sub opt_spec {
     [ 'help' => "This usage screen" ],
     # Selectors/qualifiers
     [ 'recipe|r=s@' => "A recipe" ],
+    [ 'default|d=s@' => "Default attribute" ],
     $class->options($app),
   )
 }

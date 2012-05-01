@@ -9,38 +9,62 @@ use File::pushd 1.00 qw/tempd/;
 use App::Cmd::Tester::CaptureExternal;
 use Pantry::App;
 use Pantry::Model::Pantry;
+use JSON;
+use File::Slurp qw/read_file/;
 
-sub _create_node {
-  my $wd = tempd;
-  my $pantry = Pantry::Model::Pantry->new( path => "$wd" );
-
-  my $result = test_app( 'Pantry::App' => [qw(init)] );
-  $result->error and BAIL_OUT("could not initialize pantry in $wd");
-  pass( "created test pantry" );
-
-  $result = test_app( 'Pantry::App' => [qw(create node foo.example.com)] );
-  $result->error and BAIL_OUT("could not create node foo.example.com");
-  pass( "created test node" );
-
-  return ($wd, $pantry);
+sub _thaw_file {
+  my $file = shift;
+  my $data = eval { decode_json( scalar read_file( $file ) ) };
+  die if $@;
 }
 
 sub _try_command {
   my @command = @_;
   my $result = test_app( 'Pantry::App' => [@command] );
   is( $result->exit_code, 0, "'pantry @command'" )
-    or diag $result->output;
+    or diag $result->output || $result->error;
+}
+
+sub _create_node {
+  my $wd = tempd;
+  _try_command(qw(init));
+  _try_command(qw(create node foo.example.com));
+
+  my $pantry = Pantry::Model::Pantry->new( path => "$wd" );
+  my $node = $pantry->node("foo.example.com");
+  if ( -e $node->_path ) {
+    pass("test node file found");
+  }
+  else {
+    fail("test node file found");
+    diag("node foo.example.com not found at " . $node->_path);
+    diag("bailing out of rest of the subtest");
+    return;
+  }
+
+  return ($wd, $pantry);
 }
 
 subtest "apply recipe" => sub {
-  my ($wd, $pantry) = _create_node;
+  my ($wd, $pantry) = _create_node or return;
 
   _try_command(qw(apply node foo.example.com -r nginx));
 
   my $node = $pantry->node("foo.example.com");
-  is_deeply( [$node->run_list], [ 'recipe[nginx]' ], "apply -r nginx successful" );
+  is_deeply( [$node->run_list], [ 'recipe[nginx]' ], "apply -r nginx successful" )
+    or diag explain $node;
 };
 
+
+subtest "apply attribute" => sub {
+  my ($wd, $pantry) = _create_node or return;
+  _try_command(qw(apply node foo.example.com -d nginx.port=80));
+
+  my $node = $pantry->node("foo.example.com")
+    or BAIL_OUT "Couldn't get node for testing";
+  is( $node->get_attribute('nginx.port'), 80, "attribute set successfully" )
+    or diag explain scalar _thaw_file($node->_path);
+};
 
 done_testing;
 # COPYRIGHT
