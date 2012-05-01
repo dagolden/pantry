@@ -54,6 +54,9 @@ sub execute {
     if ($opt->{default}) {
       for my $attr ( @{ $opt->{default} } ) {
         my ($key, $value) = split /=/, $attr, 2; # split on first '='
+        if ( $value =~ /,/ ) {
+          $value = [ split /,/, $value ];
+        }
         $node->set_attribute($key, $value);
       }
     }
