@@ -25,17 +25,22 @@ sub _create_node {
   return ($wd, $pantry);
 }
 
+sub _try_command {
+  my @command = @_;
+  my $result = test_app( 'Pantry::App' => [@command] );
+  is( $result->exit_code, 0, "'pantry @command'" )
+    or diag $result->output;
+}
+
 subtest "apply recipe" => sub {
   my ($wd, $pantry) = _create_node;
 
-  my $result = test_app( 'Pantry::App' => [qw(apply node foo.example.com -r nginx)] );
-
-  is( $result->exit_code, 0, "ran 'pantry apply node -r nginx' without error" )
-    or diag $result->output;
+  _try_command(qw(apply node foo.example.com -r nginx));
 
   my $node = $pantry->node("foo.example.com");
   is_deeply( [$node->run_list], [ 'recipe[nginx]' ], "apply -r nginx successful" );
 };
+
 
 done_testing;
 # COPYRIGHT
