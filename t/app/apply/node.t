@@ -34,7 +34,7 @@ subtest "apply recipe" => sub {
     or diag $result->output;
 
   my $node = $pantry->node("foo.example.com");
-  is_deeply( [$node->run_list], [ 'recipe[nginx]' ], "apply -r nginx successfule" );
+  is_deeply( [$node->run_list], [ 'recipe[nginx]' ], "apply -r nginx successful" );
 };
 
 done_testing;
