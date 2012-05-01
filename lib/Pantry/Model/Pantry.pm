@@ -6,7 +6,7 @@ package Pantry::Model::Pantry;
 # VERSION
 
 use Moose 2;
-use MooseX::Types::Path::Class qw/Dir/;
+use MooseX::Types::Path::Class::MoreCoercions qw/Dir/;
 use namespace::autoclean;
 
 use Path::Class;
