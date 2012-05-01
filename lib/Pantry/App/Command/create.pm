@@ -44,13 +44,12 @@ sub execute {
   my ($type, $name) = splice(@$args, 0, 2);
 
   if ( $type eq 'node' ) {
-    my $path = $self->pantry->node_path($name, "_default");
-    if ( -e $path ) {
+    my $node = $self->pantry->node( $name );
+    if ( -e $node->_path ) {
       $self->usage_error( "Node '$name' already exists" );
     }
     else {
-      my $node = $self->pantry->node( $name );
-      $node->save_as( $path );
+      $node->save;
     }
   }
 
