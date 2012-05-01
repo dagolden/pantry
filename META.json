@@ -4,7 +4,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300009, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "Dist::Zilla version 4.300014, CPAN::Meta::Converter version 2.120630",
    "license" : [
       "apache_2_0"
    ],
@@ -40,10 +40,14 @@
             "File::Temp" : "0.22",
             "IPC::Cmd" : "0",
             "JSON" : "2",
+            "List::AllUtils" : "0",
             "Moose" : "2",
+            "Moose::Role" : "0",
             "Moose::Util" : "0",
             "MooseX::Role::Parameterized" : "0",
+            "MooseX::Types::Path::Class::MoreCoercions" : "0",
             "Net::OpenSSH" : "0",
+            "Path::Class" : "0",
             "Path::Class::Rule" : "0",
             "autodie" : "0",
             "namespace::autoclean" : "0",
@@ -56,11 +60,12 @@
       "test" : {
          "requires" : {
             "App::Cmd::Tester" : "0",
+            "App::Cmd::Tester::CaptureExternal" : "0",
             "Capture::Tiny" : "0",
             "File::Find" : "0",
             "File::pushd" : "1.00",
             "Scalar::Util" : "0",
-            "Test::More" : "0.92"
+            "Test::More" : "0.96"
          }
       }
    },
@@ -75,6 +80,10 @@
       },
       "Pantry::App::Command" : {
          "file" : "lib/Pantry/App/Command.pm",
+         "version" : "0.002"
+      },
+      "Pantry::App::Command::apply" : {
+         "file" : "lib/Pantry/App/Command/apply.pm",
          "version" : "0.002"
       },
       "Pantry::App::Command::create" : {
@@ -103,6 +112,18 @@
       },
       "Pantry::Model::Node" : {
          "file" : "lib/Pantry/Model/Node.pm",
+         "version" : "0.002"
+      },
+      "Pantry::Model::Pantry" : {
+         "file" : "lib/Pantry/Model/Pantry.pm",
+         "version" : "0.002"
+      },
+      "Pantry::Model::Role" : {
+         "file" : "lib/Pantry/Model/Role.pm",
+         "version" : "0.002"
+      },
+      "Pantry::Role::Runlist" : {
+         "file" : "lib/Pantry/Role/Runlist.pm",
          "version" : "0.002"
       },
       "Pantry::Role::Serializable" : {

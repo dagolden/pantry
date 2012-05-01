@@ -26,7 +26,7 @@ sub validate_args {
 
 sub pantry {
   require Pantry::Model::Pantry;
-  state $pantry = Pantry::Model::Pantry->new( path => "." );
+  state $pantry = Pantry::Model::Pantry->new;
   return $pantry;
 }
 

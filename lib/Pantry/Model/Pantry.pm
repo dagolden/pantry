@@ -6,14 +6,14 @@ package Pantry::Model::Pantry;
 # VERSION
 
 use Moose 2;
-use MooseX::Types::Path::Class::MoreCoercions qw/Dir/;
+use MooseX::Types::Path::Class::MoreCoercions 0.002 qw/AbsDir/;
 use namespace::autoclean;
 
 use Path::Class;
 
 has path => (
   is => 'ro',
-  isa => Dir,
+  isa => AbsDir,
   coerce => 1,
   default => sub { dir(".")->absolute }
 );
