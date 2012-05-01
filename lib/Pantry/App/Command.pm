@@ -25,9 +25,10 @@ sub validate_args {
 }
 
 sub pantry {
+  my $self = shift;
   require Pantry::Model::Pantry;
-  state $pantry = Pantry::Model::Pantry->new;
-  return $pantry;
+  $self->{pantry} ||= Pantry::Model::Pantry->new;
+  return $self->{pantry};
 }
 
 1;
