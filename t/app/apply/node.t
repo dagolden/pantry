@@ -14,8 +14,16 @@ use File::Slurp qw/read_file/;
 
 sub _thaw_file {
   my $file = shift;
-  my $data = eval { decode_json( scalar read_file( $file ) ) };
+  my $guts = scalar read_file( $file );
+  my $data = eval { decode_json( $guts ) };
   die if $@;
+  return $data;
+}
+
+sub _dump_node {
+  my $node = shift;
+  my $path = $node->_path;
+  diag "File contents of " . $node->name . ":\n" . join("", explain _thaw_file($path));
 }
 
 sub _try_command {
@@ -63,7 +71,7 @@ subtest "apply attribute" => sub {
   my $node = $pantry->node("foo.example.com")
     or BAIL_OUT "Couldn't get node for testing";
   is( $node->get_attribute('nginx.port'), 80, "attribute set successfully" )
-    or diag explain scalar _thaw_file($node->_path);
+    or _dump_node($node);
 };
 
 done_testing;
