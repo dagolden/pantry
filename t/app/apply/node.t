@@ -84,5 +84,15 @@ subtest "apply list attribute" => sub {
     or _dump_node($node);
 };
 
+subtest "apply attributes with escapes" => sub {
+  my ($wd, $pantry) = _create_node or return;
+  _try_command(qw(apply node foo.example.com -d nginx\.port=80,8000\,8080));
+
+  my $node = $pantry->node("foo.example.com")
+    or BAIL_OUT "Couldn't get node for testing";
+  is_deeply( $node->get_attribute('nginx\.port'), [80,'8000,8080'], "attributes with escapes set successfully" )
+    or _dump_node($node);
+};
+
 done_testing;
 # COPYRIGHT
