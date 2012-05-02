@@ -144,8 +144,7 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "mailto" : "devnull@example.com",
-         "web" : "http://github.com/dagolden/Pantry/issues"
+         "web" : "https://github.com/dagolden/pantry/issues"
       },
       "homepage" : "https://github.com/dagolden/pantry",
       "repository" : {
