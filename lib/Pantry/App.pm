@@ -5,7 +5,7 @@ package Pantry::App;
 # ABSTRACT: Internal pantry application class
 # VERSION
 
-use App::Cmd::Setup 0.311 -app;
+use App::Cmd::Setup 0.317 -app;
 
 sub global_opt_spec {   # none yet, so just an empty stub
   return;
