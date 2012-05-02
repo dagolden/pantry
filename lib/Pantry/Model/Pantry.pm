@@ -10,6 +10,7 @@ use MooseX::Types::Path::Class::MoreCoercions 0.002 qw/AbsDir/;
 use namespace::autoclean;
 
 use Path::Class;
+use Path::Class::Rule;
 
 =attr C<path>
 
@@ -24,10 +25,33 @@ has path => (
   default => sub { dir(".")->absolute }
 );
 
+sub _env_path {
+  my ($self, $env) = @_;
+  $env //= '_default';
+  my $path = $self->path->subdir("environments", $env);
+  $path->mkpath;
+  return $path;
+}
+
 sub _node_path {
   my ($self, $node_name, $env) = @_;
-  $env //= '_default';
-  return $self->path->file("environments/${env}/${node_name}.json");
+  return $self->_env_path($env)->file("${node_name}.json");
+}
+
+=method all_nodes
+
+  my @nodes = $pantry->all_nodes;
+
+In list context, returns a list of nodes.  In scalar context, returns
+a count of nodes.
+
+=cut
+
+sub all_nodes {
+  my ($self, $env) = @_;
+  my @nodes = map { s/\.json$//r } map { $_->basename }
+              $self->_env_path($env)->children;
+  return @nodes;
 }
 
 =method C<node>

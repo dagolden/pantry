@@ -20,6 +20,12 @@ subtest "constructor" => sub {
   _new_pantry_ok();
 };
 
+subtest "list nodes when empty" => sub {
+  my $pantry = _new_pantry_ok();
+  is( scalar $pantry->all_nodes, 0, "all_nodes gives count of 0 (scalar)" );
+  is_deeply( [$pantry->all_nodes], [], "all_nodes gives empty list (list)" );
+};
+
 subtest "create/retrieve a node" => sub {
   my $pantry = _new_pantry_ok();
   ok( my $node = $pantry->node("foo.example.com"), "created a node");
@@ -29,6 +35,16 @@ subtest "create/retrieve a node" => sub {
   );
   ok( my $node2 = $pantry->node("foo.example.com"), "retrieved a node");
   ok( $node2->save, "saved it again" );
+};
+
+subtest "list nodes when some exist" => sub {
+  my $pantry = _new_pantry_ok();
+  ok( $pantry->node("foo.example.com")->save, "created a node");
+  ok( $pantry->node("foo2.example.com")->save, "created another node");
+  is( scalar $pantry->all_nodes, 2, "all_nodes gives count of 2 (scalar)" );
+  is_deeply( [sort $pantry->all_nodes], [sort qw/foo.example.com foo2.example.com/],
+    "all_nodes gives correct list (list)"
+  );
 };
 
 done_testing;
