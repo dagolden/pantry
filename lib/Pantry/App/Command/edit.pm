@@ -68,7 +68,7 @@ sub execute {
 
 sub _edit_file {
   my ($self, $name, @editor) = @_;
-  my $path = $self->pantry->node_path($name);
+  my $path = $self->pantry->node($name)->path;
   if ( -e $path ) {
     system( @editor, $path ) and die "System failed!: $!";
     eval { decode_json(read_file($path,{ binmode => ":raw" })) };

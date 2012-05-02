@@ -90,7 +90,8 @@ sub _process_node {
     or die "Could not rsync solo.rb\n";
   
   # rsync node JSON to remote /etc/chef/node.json
-  my $node_json = $self->pantry->node_path($name);
+  # XXX should really check to be sure it exists
+  my $node_json = $self->pantry->node($name)->path;
   $ssh->rsync_put($rsync_opts, $node_json, "/etc/chef/node.json")
     or die "Could not rsync node.json\n";
 

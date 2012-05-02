@@ -18,7 +18,7 @@ has path => (
   default => sub { dir(".")->absolute }
 );
 
-sub node_path {
+sub _node_path {
   my ($self, $node_name, $env) = @_;
   $env //= '_default';
   return $self->path->file("environments/${env}/${node_name}.json");
@@ -27,7 +27,7 @@ sub node_path {
 sub node {
   my ($self, $node_name, $env) = @_;
   require Pantry::Model::Node;
-  my $path = $self->node_path( $node_name );
+  my $path = $self->_node_path( $node_name );
   if ( -e $path ) {
     return Pantry::Model::Node->new_from_file( $path );
   }
