@@ -29,7 +29,7 @@ sub _thaw_file {
 
 sub _dump_node {
   my $node = shift;
-  my $path = $node->_path;
+  my $path = $node->path;
   diag "File contents of " . $node->name . ":\n" . join("", explain _thaw_file($path));
 }
 
@@ -47,12 +47,12 @@ sub _create_node {
 
   my $pantry = Pantry::Model::Pantry->new( path => "$wd" );
   my $node = $pantry->node("foo.example.com");
-  if ( -e $node->_path ) {
+  if ( -e $node->path ) {
     pass("test node file found");
   }
   else {
     fail("test node file found");
-    diag("node foo.example.com not found at " . $node->_path);
+    diag("node foo.example.com not found at " . $node->path);
     diag("bailing out of rest of the subtest");
     return;
   }

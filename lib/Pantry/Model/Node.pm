@@ -29,6 +29,7 @@ has name => (
 
 has _path => (
   is => 'ro',
+  reader => 'path',
   isa => File,
   coerce => 1,
   predicate => 'has_path',
@@ -49,7 +50,7 @@ has attributes => (
 sub save {
   my ($self) = @_;
   die "No _path attribute set" unless $self->has_path;
-  return $self->save_as( $self->_path );
+  return $self->save_as( $self->path );
 }
 
 my @top_level_keys = qw/name run_list/;

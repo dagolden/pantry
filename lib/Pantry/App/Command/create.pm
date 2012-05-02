@@ -45,7 +45,7 @@ sub execute {
 
   if ( $type eq 'node' ) {
     my $node = $self->pantry->node( $name );
-    if ( -e $node->_path ) {
+    if ( -e $node->path ) {
       $self->usage_error( "Node '$name' already exists" );
     }
     else {
