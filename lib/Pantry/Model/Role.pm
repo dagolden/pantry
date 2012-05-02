@@ -10,10 +10,7 @@ use List::AllUtils qw/uniq first/;
 use namespace::autoclean;
 
 # new_from_file, save_as
-with 'Pantry::Role::Serializable' => {
-  engine => 'JSON',
-  engine_opts => { utf8 => 1, pretty => 1 }
-};
+with 'Pantry::Role::Serializable';
 
 # in_run_list, append_to_runliset
 with 'Pantry::Role::Runlist';

@@ -12,8 +12,6 @@ use namespace::autoclean;
 
 # new_from_file, save_as
 with 'Pantry::Role::Serializable' => {
-  engine => 'JSON',
-  engine_opts => { utf8 => 1, pretty => 1 },
   freezer => '_freeze',
   thawer => '_thaw',
 };
