@@ -83,6 +83,19 @@ will be added to the node's data structure like this:
 Both C<KEY> and C<VALUE> support periods and commas (respectively) to be
 escaped by a backslash.
 
+=head3 strip
+
+  $ pantry strip node NAME --recipe nginx --default nginx.port
+
+Strips recipes or attributes from the given C<NAME>.
+
+To strip a recipe to the node's C<run_list>, specify C<--recipe RECIPE> or C<-r
+RECIPE>.  May be specified multiple times to strip more than one recipe.
+
+To strip an attribute from the node, specify C<--default KEY> or C<-d KEY>.
+The C<KEY> parameter is interpreted and may be escaped just like in C<apply>,
+above.
+
 =head3 sync
 
   $ pantry sync node NAME

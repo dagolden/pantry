@@ -32,7 +32,7 @@
       },
       "runtime" : {
          "requires" : {
-            "App::Cmd::Setup" : "0.311",
+            "App::Cmd::Setup" : "0.317",
             "Class::Load" : "0",
             "File::Basename" : "0",
             "File::Path" : "0",
@@ -62,10 +62,12 @@
             "App::Cmd::Tester" : "0",
             "App::Cmd::Tester::CaptureExternal" : "0",
             "Capture::Tiny" : "0",
+            "Exporter" : "0",
             "File::Find" : "0",
             "File::pushd" : "1.00",
             "Scalar::Util" : "0",
-            "Test::More" : "0.96"
+            "Test::More" : "0.96",
+            "parent" : "0"
          }
       }
    },
@@ -100,6 +102,10 @@
       },
       "Pantry::App::Command::list" : {
          "file" : "lib/Pantry/App/Command/list.pm",
+         "version" : "0.002"
+      },
+      "Pantry::App::Command::strip" : {
+         "file" : "lib/Pantry/App/Command/strip.pm",
          "version" : "0.002"
       },
       "Pantry::App::Command::sync" : {
