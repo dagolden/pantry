@@ -15,7 +15,7 @@ incrementally as features are added
   $ cd my-project
   $ pantry init
   $ pantry create node foo.example.com
-  $ pantry edit node foo.example.com
+  $ pantry apply node foo.example.com --recipe nginx
   $ pantry sync node foo.example.com
 
 =head1 DESCRIPTION
@@ -34,6 +34,8 @@ See the following sections for details and examples by topic.
 
 =head2 Pantry setup
 
+=head3 init
+
   $ pantry init
 
 This initializes a pantry in the current directory.  Currently, it just
@@ -41,20 +43,71 @@ creates some directories for use storing cookbooks, node data, etc.
 
 =head2 Managing nodes
 
+=head3 create
+
   $ pantry create node NAME
 
 Creates a node configuration file for the given C<NAME>.  The C<NAME>
 must be a valid DNS name or IP address.
+
+=head3 apply
+
+  $ pantry apply node NAME --recipe nginx --default nginx.port=80
+
+Applies recipes or attributes to the given C<NAME>.
+
+To apply a recipe to the node's C<run_list>, specify C<--recipe RECIPE> or C<-r
+RECIPE>.  May be specified multiple times to apply more than one recipe.
+
+To apply an attribute to the node, specify C<--default KEY=VALUE> or C<-d
+KEY=VALUE>.  If the C<KEY> has components separated by periods (C<.>), they will
+be interpreted as subkeys of a multi-level hash.  For example:
+
+  $ pantry apply node NAME -d nginx.port=80
+
+will be added to the node's data structure like this:
+
+  {
+    ... # other node data
+    nginx => {
+      port => 80
+    }
+  }
+
+If the C<VALUE> contains commas, the value will be split and serialized as
+an array data structure.  For example:
+
+  $ pantry apply node NAME -d nginx.port=80,8080
+
+will be added to the node's data structure like this:
+
+  {
+    ... # other node data
+    nginx => {
+      port => [80, 8080]
+    }
+  }
+
+Both C<KEY> and C<VALUE> support periods and commas (respectively) to be
+escaped by a backslash.
+
+=head3 sync
+
+  $ pantry sync node NAME
+
+Copies cookbooks and configuration data to the C<NAME> node and invokes
+C<chef-solo> via C<ssh> to start a configuration run.
+
+=head3 edit
 
   $ pantry edit node NAME
 
 Invokes the editor given by the environment variable C<EDITOR> on
 the configuration file for the C<name> node.
 
-  $ pantry sync node NAME
-
-Copies cookbooks and configuration data to the C<NAME> node and invokes
-C<chef-solo> via C<ssh> to start a configuration run.
+The resulting file must be valid JSON in a form acceptable to Chef.  Generally,
+you should use the C<apply> or C<strip> commands instead of editing the node
+file directly.
 
 =head1 AUTHENTICATION
 
