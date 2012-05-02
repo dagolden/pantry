@@ -51,17 +51,13 @@ sub execute {
       $node->remove_from_runlist(map { "recipe[$_]" } @{$opt->{recipe}});
     }
 
-# XXX copy/paste from apply -- save for later use for strip
-#    if ($opt->{default}) {
-#      for my $attr ( @{ $opt->{default} } ) {
-#        my ($key, $value) = split /=/, $attr, 2; # split on first '='
-#        if ( $value =~ /(?<!\\),/ ) {
-#          # split on unescaped commas, then unescape escaped commas
-#          $value = [ map { s/\\,/,/gr } split /(?<!\\),/, $value ];
-#        }
-#        $node->set_attribute($key, $value);
-#      }
-#    }
+    if ($opt->{default}) {
+      for my $attr ( @{ $opt->{default} } ) {
+        my ($key, $value) = split /=/, $attr, 2; # split on first '='
+        # if they gave a value, we ignore it
+        $node->delete_attribute($key);
+      }
+    }
 
     $node->save;
   }

@@ -18,38 +18,49 @@ subtest "remove recipe" => sub {
     or _dump_node($node);
 };
 
+subtest "remove attribute" => sub {
+  my ($wd, $pantry) = _create_node or return;
 
-#subtest "apply attribute" => sub {
-#  my ($wd, $pantry) = _create_node or return;
-#  _try_command(qw(apply node foo.example.com -d nginx.port=80));
-#
-#  my $node = $pantry->node("foo.example.com")
-#    or BAIL_OUT "Couldn't get node for testing";
-#  is( $node->get_attribute('nginx.port'), 80, "attribute set successfully" )
-#    or _dump_node($node);
-#};
-#
-#subtest "apply list attribute" => sub {
-#  no warnings 'qw'; # separating words with commas
-#  my ($wd, $pantry) = _create_node or return;
-#  _try_command(qw(apply node foo.example.com -d nginx.port=80,8080));
-#
-#  my $node = $pantry->node("foo.example.com")
-#    or BAIL_OUT "Couldn't get node for testing";
-#  is_deeply( $node->get_attribute('nginx.port'), [80,8080], "list attribute set successfully" )
-#    or _dump_node($node);
-#};
-#
-#subtest "apply attributes with escapes" => sub {
-#  no warnings 'qw'; # separating words with commas
-#  my ($wd, $pantry) = _create_node or return;
-#  _try_command(qw(apply node foo.example.com -d nginx\.port=80,8000\,8080));
-#
-#  my $node = $pantry->node("foo.example.com")
-#    or BAIL_OUT "Couldn't get node for testing";
-#  is_deeply( $node->get_attribute('nginx\.port'), [80,'8000,8080'], "attributes with escapes set successfully" )
-#    or _dump_node($node);
-#};
-#
+  _try_command(qw(apply node foo.example.com -d nginx.port=80));
+  _try_command(qw(strip node foo.example.com -d nginx.port));
+
+  my $node = $pantry->node("foo.example.com");
+  is( $node->get_attribute('nginx.port'), undef, "attribute stripped successfully" )
+    or _dump_node($node);
+};
+
+subtest "remove attribute with useless value" => sub {
+  my ($wd, $pantry) = _create_node or return;
+
+  _try_command(qw(apply node foo.example.com -d nginx.port=80));
+  _try_command(qw(strip node foo.example.com -d nginx.port=8080));
+
+  my $node = $pantry->node("foo.example.com");
+  is( $node->get_attribute('nginx.port'), undef, "attribute stripped successfully" )
+    or _dump_node($node);
+};
+
+subtest "strip list attribute" => sub {
+  no warnings 'qw'; # separating words with commas
+  my ($wd, $pantry) = _create_node or return;
+
+  _try_command(qw(apply node foo.example.com -d nginx.port=80,8080));
+  _try_command(qw(strip node foo.example.com -d nginx.port));
+
+  my $node = $pantry->node("foo.example.com");
+  is( $node->get_attribute('nginx.port'), undef, "attribute stripped successfully" )
+    or _dump_node($node);
+};
+
+subtest "strip attributes with escapes" => sub {
+  my ($wd, $pantry) = _create_node or return;
+  _try_command(qw(apply node foo.example.com -d nginx\.port=80));
+  _try_command(qw(strip node foo.example.com -d nginx\.port));
+
+  my $node = $pantry->node("foo.example.com");
+  is( $node->get_attribute('nginx\.port'), undef, "attribute stripped successfully" )
+    or _dump_node($node);
+};
+
 done_testing;
 # COPYRIGHT
