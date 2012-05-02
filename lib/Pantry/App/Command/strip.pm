@@ -48,7 +48,7 @@ sub execute {
       or $self->usage_error( "Node '$name' does not exist" );
 
     if ($opt->{recipe}) {
-      $node->remove_from_runlist(map { "recipe[$_]" } @{$opt->{recipe}});
+      $node->remove_from_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
     }
 
     if ($opt->{default}) {

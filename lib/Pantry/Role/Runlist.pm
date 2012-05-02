@@ -2,7 +2,7 @@ use v5.14;
 use strict;
 use warnings;
 package Pantry::Role::Runlist;
-# ABSTRACT: A role to manage entries in a runlist
+# ABSTRACT: A role to manage entries in a run_list
 # VERSION
 
 use Moose::Role;
@@ -20,12 +20,34 @@ has run_list => (
   },
 );
 
+=method C<run_list>
+
+  for my $item ( $node->run_list ) { ... }
+
+Returns a list of items in the C<run_list>
+
+=method C<in_run_list>
+
+  if ( $node->in_run_list("recipe[nginx]") ) { ... }
+
+Tests whether an item is contained in the C<run_list>.
+
+=cut
+
 sub in_run_list {
   my ($self, $item) = @_;
   return grep { $item eq $_ } $self->run_list;
 }
 
-sub append_to_runlist {
+=method C<append_to_run_list>
+
+  $node->append_to_run_list( @items );
+
+Appends a list of items to the C<run_list>.
+
+=cut
+
+sub append_to_run_list {
   my ($self, @items) = @_;
   for my $i (@items) {
     $self->_push_run_list($i)
@@ -34,7 +56,15 @@ sub append_to_runlist {
   return;
 }
 
-sub remove_from_runlist {
+=method C<remove_from_run_list>
+
+  $node->remove_from_run_list( @items );
+
+Removes a list of items from the C<run_list>.
+
+=cut
+
+sub remove_from_run_list {
   my ($self, @items) = @_;
   my %match = map { $_ => 1 } @items;
   my @keep = grep { ! $match{$_} } $self->run_list;
@@ -44,4 +74,9 @@ sub remove_from_runlist {
 }
 
 1;
+
+=head1 DESCRIPTION
+
+This is a L<Moose::Role> that provides a C<run_list> attribute and associated handlers
+to the class that consumes it.
 

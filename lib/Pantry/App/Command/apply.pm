@@ -48,7 +48,7 @@ sub execute {
       or $self->usage_error( "Node '$name' does not exist" );
 
     if ($opt->{recipe}) {
-      $node->append_to_runlist(map { "recipe[$_]" } @{$opt->{recipe}});
+      $node->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
     }
 
     if ($opt->{default}) {
