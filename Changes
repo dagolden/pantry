@@ -10,6 +10,8 @@ Revision history for pantry
 
     - 'pantry list' command added to list nodes managed in a pantry
 
+    - 'pantry show' command added to print out node JSON data
+
     [Fixed]
 
     - 'pantry sync' now includes the "--delete" flag during rsync

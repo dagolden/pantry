@@ -35,9 +35,17 @@ sub _dump_node {
 
 sub _try_command {
   my @command = @_;
+  my $opts = {
+    exit_code => 0,
+  };
+  if ( ref $command[-1] eq 'HASH' ) {
+    $opts = pop @command;
+  }
+
   my $result = test_app( 'Pantry::App' => [@command] );
-  is( $result->exit_code, 0, "'pantry @command' exit code" )
+  is( $result->exit_code, $opts->{exit_code}, "'pantry @command' exit code" )
     or diag $result->output || $result->error;
+  return $result;
 }
 
 sub _create_node {
