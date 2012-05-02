@@ -8,14 +8,13 @@ version 0.002
 
 =head1 SYNOPSIS
 
-N.B. This program doesn't do much yet, but I'll expand this synopses
-incrementally as features are added
-
   $ mkdir my-project
   $ cd my-project
   $ pantry init
   $ pantry create node foo.example.com
+  $ pantry list nodes
   $ pantry apply node foo.example.com --recipe nginx
+  $ pantry apply node foo.example.com --default nginx.port=80
   $ pantry sync node foo.example.com
 
 =head1 DESCRIPTION
@@ -32,7 +31,7 @@ Arguments to the C<pantry> command line tool follow a regular structure:
 
 See the following sections for details and examples by topic.
 
-=head2 Pantry setup
+=head2 Pantry setup and introspection
 
 =head3 init
 
@@ -40,6 +39,12 @@ See the following sections for details and examples by topic.
 
 This initializes a pantry in the current directory.  Currently, it just
 creates some directories for use storing cookbooks, node data, etc.
+
+=head3 list
+
+  $ pantry list nodes
+
+Prints to STDOUT a list of nodes managed within the pantry.
 
 =head2 Managing nodes
 
