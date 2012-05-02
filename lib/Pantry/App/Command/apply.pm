@@ -56,7 +56,7 @@ sub execute {
         my ($key, $value) = split /=/, $attr, 2; # split on first '='
         if ( $value =~ /(?<!\\),/ ) {
           # split on unescaped commas, then unescape escaped commas
-          $value = [ map { s/\\,/,/g; $_ } split /(?<!\\),/, $value ];
+          $value = [ map { s/\\,/,/gr } split /(?<!\\),/, $value ];
         }
         $node->set_attribute($key, $value);
       }
