@@ -13,8 +13,4 @@ sub global_opt_spec {   # none yet, so just an empty stub
 
 1;
 
-=for Pod::Coverage node_path
-
-=cut
-
 # vim: ts=2 sts=2 sw=2 et:

@@ -11,6 +11,12 @@ use namespace::autoclean;
 
 use Path::Class;
 
+=attr C<path>
+
+Path to the pantry directory. Defaults to the current directory.
+
+=cut
+
 has path => (
   is => 'ro',
   isa => AbsDir,
@@ -23,6 +29,16 @@ sub _node_path {
   $env //= '_default';
   return $self->path->file("environments/${env}/${node_name}.json");
 }
+
+=method C<node>
+
+  my $node = $pantry->node("foo.example.com");
+
+Returns a L<Pantry::Model::Node> object corresponding to the given node.
+If the node exists in the pantry, it will be loaded from the saved node file.
+Otherwise, it will be created in memory (but will not be persisted to disk).
+
+=cut
 
 sub node {
   my ($self, $node_name, $env) = @_;
@@ -37,4 +53,16 @@ sub node {
 }
 
 1;
+
+=head1 SYNOPSIS
+
+  my $pantry = Pantry::Model::Pantry->new;
+  my $node = $pantry->node("foo.example.com");
+
+=head1 DESCRIPTION
+
+Models a 'pantry' -- a directory containing files used to manage servers with
+Chef Solo by Opscode.
+
+=cut
 

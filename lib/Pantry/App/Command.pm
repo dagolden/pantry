@@ -34,4 +34,8 @@ sub pantry {
 
 1;
 
+=for Pod::Coverage pantry
+
+=cut
+
 # vim: ts=2 sts=2 sw=2 et:
