@@ -69,6 +69,15 @@ sub execute {
 
 =for Pod::Coverage options validate
 
+=head1 SYNOPSIS
+
+  $ pantry strip node foo.example.com --recipe nginx --default nginx.port
+
+=head1 DESCRIPTION
+
+This class implements the C<pantry strip> command, which is used to strip recipes or attributes
+from a node.
+
 =cut
 
 # vim: ts=2 sts=2 sw=2 et:

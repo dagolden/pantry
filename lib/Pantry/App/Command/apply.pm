@@ -72,6 +72,15 @@ sub execute {
 
 =for Pod::Coverage options validate
 
+=head1 SYNOPSIS
+
+  $ pantry apply node foo.example.com --recipe nginx --default nginx.port=8080
+
+=head1 DESCRIPTION
+
+This class implements the C<pantry apply> command, which is used to apply recipes or attributes
+to a node.
+
 =cut
 
 # vim: ts=2 sts=2 sw=2 et:

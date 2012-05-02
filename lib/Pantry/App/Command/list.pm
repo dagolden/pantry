@@ -57,6 +57,21 @@ sub _list_node {
 
 =for Pod::Coverage options validate
 
+=head1 SYNOPSIS
+
+  $ pantry list nodes
+
+=head1 DESCRIPTION
+
+This class implements the C<pantry list> command, which is used to generate a list
+of items in a pantry directory.
+
+Supported types are:
+
+=for :list
+* C<node>, C<nodes> -- list nodes
+
 =cut
+
 
 # vim: ts=2 sts=2 sw=2 et:

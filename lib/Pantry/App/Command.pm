@@ -2,7 +2,7 @@ use v5.14;
 use warnings;
 
 package Pantry::App::Command;
-# ABSTRACT: Implements common command options
+# ABSTRACT: Pantry command superclass
 # VERSION
 
 use App::Cmd::Setup -command;
@@ -35,6 +35,11 @@ sub pantry {
 1;
 
 =for Pod::Coverage pantry
+
+=head1 DESCRIPTION
+
+This internal implementation class defines common command line options
+and provides methods needed by all command subclasses.
 
 =cut
 

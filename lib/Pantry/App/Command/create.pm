@@ -60,6 +60,15 @@ sub execute {
 
 =for Pod::Coverage options validate
 
+=head1 SYNOPSIS
+
+  $ pantry create node foo.example.com
+
+=head1 DESCRIPTION
+
+This class implements the C<pantry create> command, which is used to create a new node data file
+in a pantry.
+
 =cut
 
 # vim: ts=2 sts=2 sw=2 et:

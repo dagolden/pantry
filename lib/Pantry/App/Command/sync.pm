@@ -125,6 +125,15 @@ HERE
 
 =for Pod::Coverage options validate
 
+=head1 SYNOPSIS
+
+  $ pantry sync node foo.example.com
+
+=head1 DESCRIPTION
+
+This class implements the C<pantry sync> command, which is used to rsync recipes
+and node data to a server and then run C<chef-solo> on the server to finish configuration.
+
 =cut
 
 # vim: ts=2 sts=2 sw=2 et:

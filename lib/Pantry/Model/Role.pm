@@ -2,7 +2,7 @@ use v5.14;
 use warnings;
 
 package Pantry::Model::Role;
-# ABSTRACT: Pantry data model for roles
+# ABSTRACT: Pantry data model for Chef roles
 # VERSION
 
 use Moose 2;
@@ -59,3 +59,10 @@ sub _build_description {
 
 1;
 
+=head1 DESCRIPTION
+
+Under development.
+
+=cut
+
+# vim: ts=2 sts=2 sw=2 et:
