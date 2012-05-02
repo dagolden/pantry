@@ -55,6 +55,12 @@ Prints to STDOUT a list of nodes managed within the pantry.
 Creates a node configuration file for the given C<NAME>.  The C<NAME>
 must be a valid DNS name or IP address.
 
+=head3 show
+
+  $ pantry show node NAME
+
+Prints to STDOUT the JSON data for the given C<NAME>.
+
 =head3 apply
 
   $ pantry apply node NAME --recipe nginx --default nginx.port=80
