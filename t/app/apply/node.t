@@ -75,6 +75,7 @@ subtest "apply attribute" => sub {
 };
 
 subtest "apply list attribute" => sub {
+  no warnings 'qw'; # separating words with commas
   my ($wd, $pantry) = _create_node or return;
   _try_command(qw(apply node foo.example.com -d nginx.port=80,8080));
 
@@ -85,6 +86,7 @@ subtest "apply list attribute" => sub {
 };
 
 subtest "apply attributes with escapes" => sub {
+  no warnings 'qw'; # separating words with commas
   my ($wd, $pantry) = _create_node or return;
   _try_command(qw(apply node foo.example.com -d nginx\.port=80,8000\,8080));
 
