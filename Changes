@@ -2,6 +2,24 @@ Revision history for pantry
 
 {{$NEXT}}
 
+    [Added]
+
+    - 'pantry apply' and 'pantry strip' commands added to support
+      applying/stripping recipes and attributes for nodes at the command
+      line instead of requiring an external editor
+
+    - 'pantry list' command added to list nodes managed in a pantry
+
+    [Fixed]
+
+    - 'pantry sync' now includes the "--delete" flag during rsync
+
+    [Changed]
+
+    - pantry now uses model classes (Pantry::Model::*) to separate
+      manipulation of pantry objects from the command line app
+      interface
+
 0.001     2012-01-13 18:22:46 America/New_York
     - Initial release
 
