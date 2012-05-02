@@ -36,7 +36,7 @@ sub _dump_node {
 sub _try_command {
   my @command = @_;
   my $result = test_app( 'Pantry::App' => [@command] );
-  is( $result->exit_code, 0, "'pantry @command'" )
+  is( $result->exit_code, 0, "'pantry @command' exit code" )
     or diag $result->output || $result->error;
 }
 
