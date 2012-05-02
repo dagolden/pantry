@@ -25,6 +25,26 @@ my @cases = (
     args => [],
     opts => { recipe => [ 'arecipe', 'brecipe' ] },
   },
+  {
+    cli => [qw(--default nginx.port=80)],
+    args => [],
+    opts => { default => [ 'nginx.port=80' ] },
+  },
+  {
+    cli => [qw(-d nginx.port=80)],
+    args => [],
+    opts => { default => [ 'nginx.port=80' ] },
+  },
+  {
+    cli => [qw(-d nginx.port)],
+    args => [],
+    opts => { default => [ 'nginx.port' ] },
+  },
+  {
+    cli => [qw(-d nginx.port=80 -d nginx.user=nobody)],
+    args => [],
+    opts => { default => [ 'nginx.port=80', 'nginx.user=nobody' ] },
+  },
 );
 
 for my $case ( @cases ) {
