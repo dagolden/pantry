@@ -24,6 +24,20 @@ sub description {
   return $self->target_description;
 }
 
+sub target_desc {
+  my ($self) = @_;
+  return << 'HERE';
+The TARGET parameter consists of a TYPE and a NAME separated by whitespace.
+
+The TYPE indicates what kind of pantry object to operate on and the NAME
+indicates which specific one. (e.g. "node foo.example.com")
+
+Valid TARGET types include:
+
+        node      NAME must be a node name that is *NOT* in the pantry
+HERE
+}
+
 sub options {
   return;
 }
