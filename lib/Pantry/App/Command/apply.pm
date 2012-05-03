@@ -14,6 +14,13 @@ sub abstract {
   return 'apply recipes or attributes to a node'
 }
 
+sub description {
+  return <<'HERE';
+The apply command adds recipes or attributes to a node data file
+in the pantry directory.
+HERE
+}
+
 sub options {
   return;
 }
