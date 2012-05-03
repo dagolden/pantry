@@ -49,7 +49,7 @@ a count of nodes.
 
 sub all_nodes {
   my ($self, $env) = @_;
-  my @nodes = map { s/\.json$//r } map { $_->basename }
+  my @nodes = sort map { s/\.json$//r } map { $_->basename }
               $self->_env_path($env)->children;
   return @nodes;
 }

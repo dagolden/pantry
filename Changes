@@ -2,6 +2,10 @@ Revision history for pantry
 
 {{$NEXT}}
 
+    [Changed]
+
+    - 'pantry list' outputs nodes alphabetically
+
 0.003     2012-05-02 18:06:55 America/New_York
 
     [Fixed]
