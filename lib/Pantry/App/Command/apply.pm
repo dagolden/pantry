@@ -14,15 +14,23 @@ sub abstract {
   return 'apply recipes or attributes to a node'
 }
 
+sub usage_desc {
+  my ($self) = shift;
+  return $self->target_usage;
+}
+
 sub description {
-  return <<'HERE';
-The apply command adds recipes or attributes to a node data file
-in the pantry directory.
+  my ($self) = @_;
+  my $preamble = <<'HERE';
+The 'apply' command adds recipes or attributes to a target data file.
 HERE
+
+  return join("\n", $preamble, $self->target_description, $self->options_description);
 }
 
 sub options {
-  return;
+  my ($self) = @_;
+  return $self->data_options;
 }
 
 sub validate {

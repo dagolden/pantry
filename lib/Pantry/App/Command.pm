@@ -12,9 +12,6 @@ sub opt_spec {
     return (
     # Universal
     [ 'help' => "This usage screen" ],
-    # Selectors/qualifiers
-    [ 'recipe|r=s@' => "A recipe" ],
-    [ 'default|d=s@' => "Default attribute" ],
     $class->options($app),
   )
 }
@@ -29,6 +26,40 @@ sub validate_args {
     exit 0;
   }
   $self->validate( $opt, $args );
+}
+
+sub target_usage {
+  my ($self) = shift;
+  my ($cmd) = $self->command_names;
+  return "%c $cmd <TARGET> [OPTIONS]"
+}
+
+sub target_description {
+  my ($self) = @_;
+  return << 'HERE';
+The TARGET parameter consists of a TYPE and a NAME separated by whitespace.
+The TYPE indicates what kind of pantry object to operate on and the NAME
+specifies which specific one. (e.g. "node foo.example.com")
+
+Valid TARGET types include:
+
+        node      the NAME must be a node name in the pantry
+HERE
+}
+
+sub options_description {
+  my ($self) = @_;
+  return << 'HERE';
+OPTIONS parameters provide additional data or modify how the command
+runs.  Valid options include:
+HERE
+}
+
+sub data_options {
+  return (
+    [ 'recipe|r=s@' => "A recipe (without 'recipe[...]')" ],
+    [ 'default|d=s@' => "Default attribute (as KEY or KEY=VALUE)" ],
+  );
 }
 
 sub pantry {
