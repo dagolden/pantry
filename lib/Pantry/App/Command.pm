@@ -21,7 +21,13 @@ sub opt_spec {
  
 sub validate_args {
   my ( $self, $opt, $args ) = @_;
-  die $self->_usage_text if $opt->{help};
+  if ( $opt->{help} ) {
+    my ($command) = $self->command_names;
+    $self->app->execute_command(
+      $self->app->prepare_command("help", $command)
+    );
+    exit;
+  }
   $self->validate( $opt, $args );
 }
 
