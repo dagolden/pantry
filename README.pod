@@ -4,7 +4,7 @@ Pantry - Configuration management tool for chef-solo
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -120,7 +120,9 @@ above.
   $ pantry sync node NAME
 
 Copies cookbooks and configuration data to the C<NAME> node and invokes
-C<chef-solo> via C<ssh> to start a configuration run.
+C<chef-solo> via C<ssh> to start a configuration run.  After configuration,
+the latest run-report for the node is updated in the 'reports' directory
+of the pantry.
 
 =head3 edit
 
