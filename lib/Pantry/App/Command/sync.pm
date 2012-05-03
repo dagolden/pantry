@@ -8,6 +8,7 @@ package Pantry::App::Command::sync;
 use Pantry::App -command;
 use autodie;
 use Net::OpenSSH;
+use Path::Class;
 use File::Temp 0.22 qw/tempfile/;
 
 Net::OpenSSH->VERSION("0.56_01");
@@ -88,7 +89,7 @@ sub _process_node {
   close $fh;
   $ssh->rsync_put($rsync_opts, $solo_rb, "/etc/chef/solo.rb")
     or die "Could not rsync solo.rb\n";
-  
+
   # rsync node JSON to remote /etc/chef/node.json
   # XXX should really check to be sure it exists
   my $node_json = $self->pantry->node($name)->path->stringify;
@@ -107,6 +108,12 @@ sub _process_node {
 
   # scp get run report
   # NOT IMPLEMENTED YET
+  my $report = $ssh->capture("ls -t /var/chef-solo/reports | head -1");
+  chomp $report;
+  # XXX should check that the report timestamp makes sense -- xdg, 2012-05-03
+
+  dir("reports")->mkpath;
+  $ssh->rsync_get($rsync_opts, "/var/chef-solo/reports/$report", "reports/$name");
 
 }
 

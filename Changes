@@ -2,6 +2,13 @@ Revision history for pantry
 
 {{$NEXT}}
 
+    [Added]
+
+    - 'pantry sync' downloads the node run-report to the 'reports'
+      directory in the pantry.  This is useful for examining the
+      state of the node and eventually may be useful for searching
+      nodes based on configuration/state data.
+
     [Fixed]
 
     - 'pantry sync' was crashing due to Net::OpenSSH not working with
