@@ -9,7 +9,7 @@ use Pantry::App -command;
 use autodie;
 
 sub abstract {
-  return 'initialize a pantry in the current directory';
+  return 'Initialize a pantry in the current directory';
 }
 
 sub options {

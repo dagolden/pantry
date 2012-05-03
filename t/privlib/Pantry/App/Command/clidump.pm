@@ -16,7 +16,8 @@ sub abstract {
 }
 
 sub options {
-  return;
+  my ($self) = @_;
+  return $self->data_options;
 }
 
 sub validate {

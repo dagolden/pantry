@@ -11,7 +11,7 @@ use autodie;
 use namespace::clean;
 
 sub abstract {
-  return 'apply recipes or attributes to a node'
+  return 'Apply recipes or attributes to a node'
 }
 
 sub usage_desc {
@@ -21,11 +21,7 @@ sub usage_desc {
 
 sub description {
   my ($self) = @_;
-  my $preamble = <<'HERE';
-The 'apply' command adds recipes or attributes to a target data file.
-HERE
-
-  return join("\n", $preamble, $self->target_description, $self->options_description);
+  return $self->target_description;
 }
 
 sub options {

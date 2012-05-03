@@ -16,7 +16,17 @@ Net::OpenSSH->VERSION("0.56_01");
 use namespace::clean;
 
 sub abstract {
-  return 'run chef-solo on remote node';
+  return 'Run chef-solo on remote node';
+}
+
+sub usage_desc {
+  my ($self) = shift;
+  return $self->target_usage;
+}
+
+sub description {
+  my ($self) = @_;
+  return $self->target_description;
 }
 
 sub options {

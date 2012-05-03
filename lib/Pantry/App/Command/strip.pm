@@ -11,11 +11,22 @@ use autodie;
 use namespace::clean;
 
 sub abstract {
-  return 'strip recipes or attributes from a node'
+  return 'Strip recipes or attributes from a node'
+}
+
+sub usage_desc {
+  my ($self) = shift;
+  return $self->target_usage;
+}
+
+sub description {
+  my ($self) = @_;
+  return $self->target_description;
 }
 
 sub options {
-  return;
+  my ($self) = @_;
+  return $self->data_options;
 }
 
 sub validate {

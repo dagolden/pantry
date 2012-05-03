@@ -9,13 +9,14 @@ use App::Cmd::Setup -command;
 
 sub opt_spec {
   my ($class, $app) = @_;
-    return (
-    # Universal
-    [ 'help' => "This usage screen" ],
+  # XXX should these be sorted on long name? -- xdg, 2012-05-03
+  return (
     $class->options($app),
+    # Universal
+    [ 'help|h' => "This usage screen" ],
   )
 }
- 
+
 sub validate_args {
   my ( $self, $opt, $args ) = @_;
   if ( $opt->{help} ) {
@@ -28,26 +29,43 @@ sub validate_args {
   $self->validate( $opt, $args );
 }
 
+sub usage_desc {
+  my ($self) = shift;
+  my ($cmd) = $self->command_names;
+  return "%c $cmd [OPTIONS]"
+}
+
 sub target_usage {
   my ($self) = shift;
   my ($cmd) = $self->command_names;
   return "%c $cmd <TARGET> [OPTIONS]"
 }
 
+sub description {
+  my ($self) = @_;
+  return join("\n", $self->abstract . ".\n", $self->options_desc);
+}
+
 sub target_description {
+  my ($self) = @_;
+  return join("\n", $self->abstract . ".\n", $self->target_desc, $self->options_desc);
+}
+
+sub target_desc {
   my ($self) = @_;
   return << 'HERE';
 The TARGET parameter consists of a TYPE and a NAME separated by whitespace.
+
 The TYPE indicates what kind of pantry object to operate on and the NAME
-specifies which specific one. (e.g. "node foo.example.com")
+indicates which specific one. (e.g. "node foo.example.com")
 
 Valid TARGET types include:
 
-        node      the NAME must be a node name in the pantry
+        node      NAME must be a node name in the pantry
 HERE
 }
 
-sub options_description {
+sub options_desc {
   my ($self) = @_;
   return << 'HERE';
 OPTIONS parameters provide additional data or modify how the command
@@ -71,7 +89,14 @@ sub pantry {
 
 1;
 
-=for Pod::Coverage pantry
+=for Pod::Coverage
+data_options
+options_desc
+pantry
+target_desc
+target_description
+target_usage
+
 
 =head1 DESCRIPTION
 

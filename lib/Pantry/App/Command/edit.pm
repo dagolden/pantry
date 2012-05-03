@@ -15,7 +15,17 @@ use JSON qw/decode_json/;
 use namespace::clean;
 
 sub abstract {
-  return 'edit items in a pantry (nodes, roles, etc.)';
+  return 'Edit items in a pantry (nodes, roles, etc.)';
+}
+
+sub usage_desc {
+  my ($self) = shift;
+  return $self->target_usage;
+}
+
+sub description {
+  my ($self) = @_;
+  return $self->target_description;
 }
 
 sub options {
