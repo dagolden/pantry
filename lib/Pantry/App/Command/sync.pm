@@ -91,7 +91,7 @@ sub _process_node {
   
   # rsync node JSON to remote /etc/chef/node.json
   # XXX should really check to be sure it exists
-  my $node_json = $self->pantry->node($name)->path;
+  my $node_json = $self->pantry->node($name)->path->stringify;
   $ssh->rsync_put($rsync_opts, $node_json, "/etc/chef/node.json")
     or die "Could not rsync node.json\n";
 

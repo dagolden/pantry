@@ -2,6 +2,12 @@ Revision history for pantry
 
 {{$NEXT}}
 
+    [Fixed]
+
+    - 'pantry sync' was crashing due to Net::OpenSSH not working with
+      Path::Class objects; fixed by stringifying paths before handing
+      off to Net::OpenSSH
+
     [Changed]
 
     - 'pantry list' outputs nodes alphabetically
