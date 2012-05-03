@@ -26,7 +26,7 @@ sub validate_args {
     $self->app->execute_command(
       $self->app->prepare_command("help", $command)
     );
-    exit;
+    exit 0;
   }
   $self->validate( $opt, $args );
 }
