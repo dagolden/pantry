@@ -10,8 +10,9 @@ use Pantry::App;
 
 my @created_dirs = qw(
   cookbooks
-  roles
   environments
+  reports
+  roles
 );
 
 {

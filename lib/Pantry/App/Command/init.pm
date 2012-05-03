@@ -22,8 +22,9 @@ sub validate {
 
 my @pantry_dirs = qw(
   cookbooks
-  roles
   environments
+  reports
+  roles
 );
 
 sub execute {
