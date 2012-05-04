@@ -66,38 +66,37 @@ sub execute {
   my ($self, $opt, $args) = @_;
 
   my ($command) = $self->command_names;
+  my $command_type = $self->command_type;
   my ($method, @params);
 
-  if ($self->command_type eq 'DEFAULT') {
+  if ($command_type eq 'DEFAULT') {
     $method = "_${command}";
   }
-  elsif ($self->command_type eq 'TYPE') {
-    my ($type) = splice @$args, 0, 1;
-    $method = "_${command}_${type}";
-  }
-  elsif ($self->command_type eq 'TARGET' || $self->command_type eq 'CREATE') {
-    my ($type, $name) = splice @$args, 0, 2;
-    $method = "_${command}_${type}";
-    push @params, $name;
-  }
-  elsif ($self->command_type eq 'DUAL_TARGET') {
-    my ($type, $name, $dest) = splice @$args, 0, 3;
-    $method = "_${command}_${type}";
-    push @params, $name, $dest;
-  }
   else {
-    $method = "_execute";
-    push @params, @$args;
+    my $type = shift @$args;
+    $method = "_${command}_${type}";
   }
 
-  if ( $self->can($method) ) {
-    $self->$method($opt, @params);
-  }
-  else {
+  unless ( $self->can($method) ) {
     die "No $method method defined for command $command";
   }
 
+  # TARGET and CREATE types might read from STDIN
+  if ( $command_type =~ /TARGET|CREATE/ && $args->[0] eq '-') {
+    while ( my $name = <STDIN> ) {
+      chomp $name;
+      $self->$method($opt, $name);
+    }
+  }
+  else {
+    $self->$method($opt, @$args);
+  }
+
   return;
+}
+
+sub _iterate_stdin {
+  my ($self, $method, $opt) = @_;
 }
 
 sub pantry {
@@ -151,7 +150,10 @@ indicates which specific one. (e.g. "node foo.example.com")
 
 Valid TARGET types include:
 
-        node      NAME must be a node name in the pantry
+        node      NAME refers to a node name in the pantry
+
+If NAME is '-', then the command will be executed on a list of names
+read from STDIN.
 HERE
   },
   DUAL_TARGET => {
@@ -164,7 +166,7 @@ indicates which specific one. (e.g. "node foo.example.com")
 
 Valid TARGET types include:
 
-        node      NAME must be a node name in the pantry
+        node      NAME refers to a node name in the pantry
 
 The DESTINATION parameter indicates where the NAME should be put.
 HERE
@@ -179,7 +181,10 @@ indicates which specific one. (e.g. "node foo.example.com")
 
 Valid TARGET types include:
 
-        node      NAME must be a node name that is *NOT* in the pantry
+        node      NAME refers to a node name that is *NOT* in the pantry
+
+If NAME is '-', then the command will be executed on a list of names
+read from STDIN.
 HERE
   },
 );
