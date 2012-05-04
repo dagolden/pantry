@@ -83,6 +83,21 @@ Valid TARGET types include:
         node      NAME must be a node name in the pantry
 HERE
   },
+  DUAL_TARGET => {
+    usage => "%c CMD <TARGET> <DESTINATION> [OPTIONS]",
+    target_desc => << 'HERE',
+The TARGET parameter consists of a TYPE and a NAME separated by whitespace.
+
+The TYPE indicates what kind of pantry object to operate on and the NAME
+indicates which specific one. (e.g. "node foo.example.com")
+
+Valid TARGET types include:
+
+        node      NAME must be a node name in the pantry
+
+The DESTINATION parameter indicates where the NAME should be put.
+HERE
+  },
   CREATE => {
     usage => "%c CMD <TARGET> [OPTIONS]",
     target_desc => << 'HERE',

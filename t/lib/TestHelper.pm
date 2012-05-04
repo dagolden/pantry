@@ -8,6 +8,7 @@ our @EXPORT = qw(
   _thaw_file
   _dump_node
   _try_command
+  _create_pantry
   _create_node
 );
 
@@ -48,14 +49,20 @@ sub _try_command {
   return $result;
 }
 
+sub _create_pantry {
+  my $wd = tempd;
+  _try_command(qw(init));
+  my $pantry = Pantry::Model::Pantry->new( path => "$wd" );
+  return ($wd, $pantry);
+}
+
 sub _create_node {
   my ($name) = @_;
   $name //= 'foo.example.com';
-  my $wd = tempd;
-  _try_command(qw(init));
+  my ($wd, $pantry) = _create_pantry;
+
   _try_command(qw(create node), $name);
 
-  my $pantry = Pantry::Model::Pantry->new( path => "$wd" );
   my $node = $pantry->node($name);
   if ( -e $node->path ) {
     pass("test node file found");

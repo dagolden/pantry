@@ -9,6 +9,8 @@ Revision history for pantry
       state of the node and eventually may be useful for searching
       nodes based on configuration/state data.
 
+    - 'pantry rename' command added to rename nodes
+
     [Fixed]
 
     - 'pantry sync' was crashing due to Net::OpenSSH not working with
