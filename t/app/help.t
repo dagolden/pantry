@@ -14,6 +14,7 @@ my @untargeted= qw(
 my @targeted = qw(
   apply
   edit
+  rename
   show
   strip
   sync
