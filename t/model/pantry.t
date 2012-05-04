@@ -26,6 +26,13 @@ subtest "list nodes when empty" => sub {
   is_deeply( [$pantry->all_nodes], [], "all_nodes gives empty list (list)" );
 };
 
+subtest "node are lower case" => sub {
+  my $pantry = _new_pantry_ok();
+  ok( my $node = $pantry->node("FOO.example.com"), "created a node");
+  is( $node->name, lc $node->name, "node name is lc" );
+  is( $node->path->basename, lc $node->path->basename, "node basename is lc" );
+};
+
 subtest "create/retrieve a node" => sub {
   my $pantry = _new_pantry_ok();
   ok( my $node = $pantry->node("foo.example.com"), "created a node");

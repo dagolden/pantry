@@ -21,6 +21,10 @@ Revision history for pantry
 
     [Changed]
 
+    - node names (and data file paths) are always converted to lower case
+      (since they are supposed to be DNS names, which are case insensitive
+      anyway)
+
     - 'pantry list' outputs nodes alphabetically
 
 0.003     2012-05-02 18:06:55 America/New_York
