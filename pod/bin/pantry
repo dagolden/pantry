@@ -13,7 +13,7 @@
 
 C<pantry> is a utility to make it easier to manage a collection of
 computers with the configuration management tool
-L<http://wiki.opscode.com/display/chef/Chef+Solo|chef-solo>
+L<chef-solo|http://wiki.opscode.com/display/chef/Chef+Solo>
 
 =head1 USAGE
 
@@ -185,8 +185,8 @@ the problem in slightly different ways, neither of which fit my priorities.
 Nevertheless, if you use chef-solo, you might consider them as well:
 
 =for :list
-* L<https://github.com/tobami/littlechef|littlechef> (Python)
-* L<https://github.com/igal/pocketknife|pocketknife> (Ruby)
+* L<littlechef|http://github.com/tobami/littlechef> (Python)
+* L<pocketknife|http://github.com/igal/pocketknife> (Ruby)
 
 =cut
 
