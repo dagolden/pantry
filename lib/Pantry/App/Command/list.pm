@@ -18,19 +18,8 @@ sub command_type {
   return 'TYPE';
 }
 
-sub validate {
-  my ($self, $opts, $args) = @_;
-  my ($type) = @$args;
-
-  # validate type
-  if ( ! length $type ) {
-    $self->usage_error( "This command requires a target type" );
-  }
-  elsif ( $type !~ /nodes?/ ) {
-    $self->usage_error( "Invalid type '$type'" );
-  }
-
-  return;
+sub valid_types {
+  return qw/node nodes/
 }
 
 sub _list_nodes {

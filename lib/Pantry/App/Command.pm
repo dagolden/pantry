@@ -23,6 +23,8 @@ sub opt_spec {
 
 sub validate_args {
   my ( $self, $opt, $args ) = @_;
+
+  # redispatch to help if requested
   if ( $opt->{help} ) {
     my ($command) = $self->command_names;
     $self->app->execute_command(
@@ -30,6 +32,33 @@ sub validate_args {
     );
     exit 0;
   }
+
+  my $command_type = $self->command_type;
+
+  # everything other than default needs a type to operate on
+  if ( $command_type ne 'DEFAULT' ) {
+    my ($type) =  @$args;
+    unless ( grep { $type eq $_ } $self->valid_types ) {
+      $self->usage_error( "Invalid type '$type'" );
+    }
+  }
+
+  # things with targets need a name to operate on
+  if ( grep { $command_type eq $_ } qw/TARGET CREATE DUAL_TARGET/ ) {
+    my ($type, $name) = @$args;
+    if ( ! length $name ) {
+      $self->usage_error( "This command requires the name for the thing to modify" );
+    }
+  }
+
+  # things with two targets need both
+  if ( $command_type eq 'DUAL_TARGET' ) {
+    my ($type, $name, $dest) = @$args;
+    if ( ! length $dest) {
+      $self->usage_error( "This command requires a destination name" );
+    }
+  }
+
   $self->validate( $opt, $args );
 }
 
@@ -81,6 +110,10 @@ sub pantry {
 #--------------------------------------------------------------------------#
 # override in subclasses to customize
 #--------------------------------------------------------------------------#
+
+sub valid_types {
+  return;
+}
 
 sub options {
   return;

@@ -18,24 +18,8 @@ sub command_type {
   return 'CREATE';
 }
 
-sub validate {
-  my ($self, $opts, $args) = @_;
-  my ($type, $name) = @$args;
-
-  # validate type
-  if ( ! length $type ) {
-    $self->usage_error( "This command requires a target type and name" );
-  }
-  elsif ( $type ne 'node' ) {
-    $self->usage_error( "Invalid type '$type'" );
-  }
-
-  # validate name
-  if ( ! length $name ) {
-    $self->usage_error( "This command requires the name for the thing to create" );
-  }
-
-  return;
+sub valid_types {
+  return qw/node/
 }
 
 sub _create_node {
