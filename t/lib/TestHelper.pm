@@ -49,18 +49,20 @@ sub _try_command {
 }
 
 sub _create_node {
+  my ($name) = @_;
+  $name //= 'foo.example.com';
   my $wd = tempd;
   _try_command(qw(init));
-  _try_command(qw(create node foo.example.com));
+  _try_command(qw(create node), $name);
 
   my $pantry = Pantry::Model::Pantry->new( path => "$wd" );
-  my $node = $pantry->node("foo.example.com");
+  my $node = $pantry->node($name);
   if ( -e $node->path ) {
     pass("test node file found");
   }
   else {
     fail("test node file found");
-    diag("node foo.example.com not found at " . $node->path);
+    diag("node $name not found at " . $node->path);
     diag("bailing out of rest of the subtest");
     return;
   }
