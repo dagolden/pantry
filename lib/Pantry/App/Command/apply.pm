@@ -14,14 +14,8 @@ sub abstract {
   return 'Apply recipes or attributes to a node'
 }
 
-sub usage_desc {
-  my ($self) = shift;
-  return $self->target_usage;
-}
-
-sub description {
-  my ($self) = @_;
-  return $self->target_description;
+sub help_type {
+  return 'TARGET';
 }
 
 sub options {

@@ -12,14 +12,6 @@ sub abstract {
   return 'Initialize a pantry in the current directory';
 }
 
-sub options {
-  return;
-}
-
-sub validate {
-  return;
-}
-
 my @pantry_dirs = qw(
   cookbooks
   environments

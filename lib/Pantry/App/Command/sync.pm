@@ -19,18 +19,8 @@ sub abstract {
   return 'Run chef-solo on remote node';
 }
 
-sub usage_desc {
-  my ($self) = shift;
-  return $self->target_usage;
-}
-
-sub description {
-  my ($self) = @_;
-  return $self->target_description;
-}
-
-sub options {
-  return;
+sub help_type {
+  return 'TARGET';
 }
 
 sub validate {

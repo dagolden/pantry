@@ -15,18 +15,8 @@ sub abstract {
   return 'Show items in a pantry (nodes, roles, etc.)';
 }
 
-sub usage_desc {
-  my ($self) = shift;
-  return $self->target_usage;
-}
-
-sub description {
-  my ($self) = @_;
-  return $self->target_description;
-}
-
-sub options {
-  return;
+sub help_type {
+  return 'TARGET';
 }
 
 sub validate {

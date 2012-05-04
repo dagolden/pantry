@@ -14,29 +14,8 @@ sub abstract {
   return 'List pantry objects of a particular type';
 }
 
-sub usage_desc {
-  my ($self) = shift;
-  my ($cmd) = $self->command_names;
-  return "%c $cmd <TYPE> [OPTIONS]"
-}
-
-sub description {
-  my ($self) = @_;
-  return $self->target_description;
-}
-
-sub target_desc {
-  my ($self) = @_;
-  return << 'HERE';
-The TYPE parameter indicates what kind of pantry object to list.
-Valid types include:
-
-        node, nodes   lists nodes 
-HERE
-}
-
-sub options {
-  return;
+sub help_type {
+  return 'TYPE';
 }
 
 sub validate {
