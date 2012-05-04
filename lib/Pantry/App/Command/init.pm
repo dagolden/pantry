@@ -19,8 +19,8 @@ my @pantry_dirs = qw(
   roles
 );
 
-sub execute {
-  my ($self, $opt, $args) = @_;
+sub _init {
+  my ($self, $opt) = @_;
 
   for my $d ( @pantry_dirs ) {
     if ( -d $d ) {

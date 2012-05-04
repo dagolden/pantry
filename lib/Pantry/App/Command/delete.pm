@@ -14,7 +14,7 @@ sub abstract {
   return 'Delete an item in a pantry (nodes, roles, etc.)';
 }
 
-sub help_type {
+sub command_type {
   return 'TARGET';
 }
 
@@ -44,27 +44,23 @@ sub validate {
   return;
 }
 
-sub execute {
-  my ($self, $opt, $args) = @_;
+sub _delete_node {
+  my ($self, $opt, $name) = @_;
 
-  my ($type, $name) = splice(@$args, 0, 2);
-
-  if ( $type eq 'node' ) {
-    my $node = $self->pantry->node( $name );
-    if ( ! -e $node->path ) {
-      die( "Node '$name' doesn't exist\n" );
-    }
-
-    unless ( $opt->{force} ) {
-      my $confirm = IO::Prompt::Tiny::prompt("Delete node '$name'?", "no");
-      unless ($confirm =~ /^y(?:es)?$/i) {
-        print "$name will not be deleted\n";
-        exit 0;
-      }
-    }
-
-    unlink $node->path;
+  my $node = $self->pantry->node( $name );
+  if ( ! -e $node->path ) {
+    die( "Node '$name' doesn't exist\n" );
   }
+
+  unless ( $opt->{force} ) {
+    my $confirm = IO::Prompt::Tiny::prompt("Delete node '$name'?", "no");
+    unless ($confirm =~ /^y(?:es)?$/i) {
+      print "$name will not be deleted\n";
+      exit 0;
+    }
+  }
+
+  unlink $node->path;
 
   return;
 }

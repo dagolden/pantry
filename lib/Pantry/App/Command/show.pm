@@ -15,7 +15,7 @@ sub abstract {
   return 'Show items in a pantry (nodes, roles, etc.)';
 }
 
-sub help_type {
+sub command_type {
   return 'TARGET';
 }
 
@@ -39,24 +39,8 @@ sub validate {
   return;
 }
 
-sub execute {
-  my ($self, $opt, $args) = @_;
-
-  my ($type, $name) = splice(@$args, 0, 2);
-
-  if ($type eq 'node') {
-    $self->_show_node($name);
-  }
-
-  return;
-}
-
-#--------------------------------------------------------------------------#
-# Internal
-#--------------------------------------------------------------------------#
-
 sub _show_node {
-  my ($self, $name) = @_;
+  my ($self, $opt, $name) = @_;
   my $path = $self->pantry->node($name)->path;
   if ( -e $path ) {
     print scalar read_file($path);

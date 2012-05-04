@@ -33,6 +33,44 @@ sub validate_args {
   $self->validate( $opt, $args );
 }
 
+sub execute {
+  my ($self, $opt, $args) = @_;
+
+  my ($command) = $self->command_names;
+  my ($method, @params);
+
+  if ($self->command_type eq 'DEFAULT') {
+    $method = "_${command}";
+  }
+  elsif ($self->command_type eq 'TYPE') {
+    my ($type) = splice @$args, 0, 1;
+    $method = "_${command}_${type}";
+  }
+  elsif ($self->command_type eq 'TARGET' || $self->command_type eq 'CREATE') {
+    my ($type, $name) = splice @$args, 0, 2;
+    $method = "_${command}_${type}";
+    push @params, $name;
+  }
+  elsif ($self->command_type eq 'DUAL_TARGET') {
+    my ($type, $name, $dest) = splice @$args, 0, 3;
+    $method = "_${command}_${type}";
+    push @params, $name, $dest;
+  }
+  else {
+    $method = "_execute";
+    push @params, @$args;
+  }
+
+  if ( $self->can($method) ) {
+    $self->$method($opt, @params);
+  }
+  else {
+    die "No $method method defined for command $command";
+  }
+
+  return;
+}
+
 sub pantry {
   my $self = shift;
   require Pantry::Model::Pantry;
@@ -56,7 +94,7 @@ sub validate{
 # help boilerplate
 #--------------------------------------------------------------------------#
 
-my %help_types = (
+my %command_types = (
   DEFAULT => {
     usage => "%c CMD [OPTIONS]",
     target_desc => '',
@@ -113,21 +151,21 @@ HERE
   },
 );
 
-sub help_type {
+sub command_type {
   return 'DEFAULT';
 }
 
 sub usage_desc {
   my ($self) = shift;
   my ($cmd) = $self->command_names;
-  my $usage = $help_types{$self->help_type}{usage};
+  my $usage = $command_types{$self->command_type}{usage};
   $usage =~ s/CMD/$cmd/;
   return $usage;
 }
 
 sub description {
   my ($self) = @_;
-  my $target = $help_types{$self->help_type}{target_desc};
+  my $target = $command_types{$self->command_type}{target_desc};
   return join("\n",
     $self->abstract . ".\n", ($target ? $target : ()), $self->options_desc
   );

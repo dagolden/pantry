@@ -18,7 +18,7 @@ sub abstract {
   return 'Edit items in a pantry (nodes, roles, etc.)';
 }
 
-sub help_type {
+sub command_type {
   return 'TARGET';
 }
 
@@ -42,10 +42,8 @@ sub validate {
   return;
 }
 
-sub execute {
-  my ($self, $opt, $args) = @_;
-
-  my ($type, $name) = splice(@$args, 0, 2);
+sub _edit_node {
+  my ($self, $opt, $name) = @_;
 
   my @editor = defined $ENV{EDITOR} ? split / /, $ENV{EDITOR} : ();
   if ( @editor ) {

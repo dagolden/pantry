@@ -14,7 +14,7 @@ sub abstract {
   return 'Create items in a pantry (nodes, roles, etc.)';
 }
 
-sub help_type {
+sub command_type {
   return 'CREATE';
 }
 
@@ -38,19 +38,15 @@ sub validate {
   return;
 }
 
-sub execute {
-  my ($self, $opt, $args) = @_;
+sub _create_node {
+  my ($self, $opt, $name) = @_;
 
-  my ($type, $name) = splice(@$args, 0, 2);
-
-  if ( $type eq 'node' ) {
-    my $node = $self->pantry->node( $name );
-    if ( -e $node->path ) {
-      $self->usage_error( "Node '$name' already exists" );
-    }
-    else {
-      $node->save;
-    }
+  my $node = $self->pantry->node( $name );
+  if ( -e $node->path ) {
+    $self->usage_error( "Node '$name' already exists" );
+  }
+  else {
+    $node->save;
   }
 
   return;

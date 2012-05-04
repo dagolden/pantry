@@ -14,7 +14,7 @@ sub abstract {
   return 'Apply recipes or attributes to a node'
 }
 
-sub help_type {
+sub command_type {
   return 'TARGET';
 }
 
@@ -43,34 +43,27 @@ sub validate {
   return;
 }
 
-sub execute {
-  my ($self, $opt, $args) = @_;
+sub _apply_node {
+  my ($self, $opt, $name) = @_;
+  my $node = $self->pantry->node( $name )
+    or $self->usage_error( "Node '$name' does not exist" );
 
-  my ($type, $name) = splice(@$args, 0, 2);
-
-  if ( $type eq 'node' ) {
-    my $node = $self->pantry->node( $name )
-      or $self->usage_error( "Node '$name' does not exist" );
-
-    if ($opt->{recipe}) {
-      $node->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
-    }
-
-    if ($opt->{default}) {
-      for my $attr ( @{ $opt->{default} } ) {
-        my ($key, $value) = split /=/, $attr, 2; # split on first '='
-        if ( $value =~ /(?<!\\),/ ) {
-          # split on unescaped commas, then unescape escaped commas
-          $value = [ map { s/\\,/,/gr } split /(?<!\\),/, $value ];
-        }
-        $node->set_attribute($key, $value);
-      }
-    }
-
-    $node->save;
+  if ($opt->{recipe}) {
+    $node->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
   }
 
-  return;
+  if ($opt->{default}) {
+    for my $attr ( @{ $opt->{default} } ) {
+      my ($key, $value) = split /=/, $attr, 2; # split on first '='
+      if ( $value =~ /(?<!\\),/ ) {
+        # split on unescaped commas, then unescape escaped commas
+        $value = [ map { s/\\,/,/gr } split /(?<!\\),/, $value ];
+      }
+      $node->set_attribute($key, $value);
+    }
+  }
+
+  $node->save;
 }
 
 1;

@@ -14,7 +14,7 @@ sub abstract {
   return 'Rename an item in a pantry (nodes, roles, etc.)';
 }
 
-sub help_type {
+sub command_type {
   return 'DUAL_TARGET';
 }
 
@@ -43,24 +43,20 @@ sub validate {
   return;
 }
 
-sub execute {
-  my ($self, $opt, $args) = @_;
+sub _rename_node{
+  my ($self, $opt, $name, $dest) = @_;
 
-  my ($type, $name, $dest) = splice(@$args, 0, 3);
-
-  if ( $type eq 'node' ) {
-    my $node = $self->pantry->node( $name );
-    my $dest_path = $self->pantry->node( $dest )->path;
-    if ( ! -e $node->path ) {
-      die( "Node '$name' doesn't exist\n" );
-    }
-    elsif ( -e $dest_path ) {
-      die( "Node '$dest' already exists. Won't over-write it.\n" );
-    }
-    else {
-      $node->save_as( $dest_path );
-      unlink $node->path;
-    }
+  my $node = $self->pantry->node( $name );
+  my $dest_path = $self->pantry->node( $dest )->path;
+  if ( ! -e $node->path ) {
+    die( "Node '$name' doesn't exist\n" );
+  }
+  elsif ( -e $dest_path ) {
+    die( "Node '$dest' already exists. Won't over-write it.\n" );
+  }
+  else {
+    $node->save_as( $dest_path );
+    unlink $node->path;
   }
 
   return;

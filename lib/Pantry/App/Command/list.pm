@@ -14,7 +14,7 @@ sub abstract {
   return 'List pantry objects of a particular type';
 }
 
-sub help_type {
+sub command_type {
   return 'TYPE';
 }
 
@@ -33,24 +33,13 @@ sub validate {
   return;
 }
 
-sub execute {
-  my ($self, $opt, $args) = @_;
-
-  my ($type) = shift @$args;
-
-  $self->_list_node;
-
-  return;
-}
-
-#--------------------------------------------------------------------------#
-# Internal
-#--------------------------------------------------------------------------#
-
-sub _list_node {
-  my ($self) = @_;
+sub _list_nodes {
+  my ($self, $opt) = @_;
   say $_ for $self->pantry->all_nodes;
 }
+
+*_list_node = *_list_nodes; # alias
+
 1;
 
 =for Pod::Coverage options validate

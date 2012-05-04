@@ -19,7 +19,7 @@ sub abstract {
   return 'Run chef-solo on remote node';
 }
 
-sub help_type {
+sub command_type {
   return 'TARGET';
 }
 
@@ -43,20 +43,6 @@ sub validate {
   return;
 }
 
-sub execute {
-  my ($self, $opt, $args) = @_;
-
-  my ($type, $name) = splice(@$args, 0, 2);
-
-  $self->_process_node($name);
-
-  return;
-}
-
-#--------------------------------------------------------------------------#
-# Internal
-#--------------------------------------------------------------------------#
-
 my $rsync_opts = {
   verbose => 0, # XXX should trigger off a global option
   compress => 1,
@@ -66,8 +52,8 @@ my $rsync_opts = {
   times => 1,
 };
 
-sub _process_node {
-  my ($self, $name) = @_;
+sub _sync_node {
+  my ($self, $opt, $name) = @_;
 
   say "Synchronizing $name";
 

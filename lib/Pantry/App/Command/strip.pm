@@ -14,7 +14,7 @@ sub abstract {
   return 'Strip recipes or attributes from a node'
 }
 
-sub help_type {
+sub command_type {
   return 'TARGET';
 }
 
@@ -43,29 +43,25 @@ sub validate {
   return;
 }
 
-sub execute {
-  my ($self, $opt, $args) = @_;
+sub _strip_node {
+  my ($self, $opt, $name) = @_;
 
-  my ($type, $name) = splice(@$args, 0, 2);
+  my $node = $self->pantry->node( $name )
+    or $self->usage_error( "Node '$name' does not exist" );
 
-  if ( $type eq 'node' ) {
-    my $node = $self->pantry->node( $name )
-      or $self->usage_error( "Node '$name' does not exist" );
-
-    if ($opt->{recipe}) {
-      $node->remove_from_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
-    }
-
-    if ($opt->{default}) {
-      for my $attr ( @{ $opt->{default} } ) {
-        my ($key, $value) = split /=/, $attr, 2; # split on first '='
-        # if they gave a value, we ignore it
-        $node->delete_attribute($key);
-      }
-    }
-
-    $node->save;
+  if ($opt->{recipe}) {
+    $node->remove_from_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
   }
+
+  if ($opt->{default}) {
+    for my $attr ( @{ $opt->{default} } ) {
+      my ($key, $value) = split /=/, $attr, 2; # split on first '='
+      # if they gave a value, we ignore it
+      $node->delete_attribute($key);
+    }
+  }
+
+  $node->save;
 
   return;
 }
