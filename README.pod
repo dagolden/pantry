@@ -21,7 +21,7 @@ version 0.004
 
 C<pantry> is a utility to make it easier to manage a collection of
 computers with the configuration management tool
-L<chef-solo|http://wiki.opscode.com/display/chef/Chef+Solo>
+L<http://wiki.opscode.com/display/chef/Chef+Solo|chef-solo>
 
 =head1 USAGE
 
@@ -196,11 +196,11 @@ Nevertheless, if you use chef-solo, you might consider them as well:
 
 =item *
 
-L<littlechef|https://github.com/tobami/littlechef> (Python)
+L<https://github.com/tobami/littlechef|littlechef> (Python)
 
 =item *
 
-L<pocketknife|https://github.com/igal/pocketknife> (Ruby)
+L<https://github.com/igal/pocketknife|pocketknife> (Ruby)
 
 =back
 
