@@ -103,6 +103,10 @@
          "file" : "lib/Pantry/App/Command/list.pm",
          "version" : "0.004"
       },
+      "Pantry::App::Command::rename" : {
+         "file" : "lib/Pantry/App/Command/rename.pm",
+         "version" : "0.004"
+      },
       "Pantry::App::Command::show" : {
          "file" : "lib/Pantry/App/Command/show.pm",
          "version" : "0.004"

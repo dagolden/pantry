@@ -55,6 +55,14 @@ Prints to STDOUT a list of nodes managed within the pantry.
 Creates a node configuration file for the given C<NAME>.  The C<NAME>
 must be a valid DNS name or IP address.
 
+=head3 rename
+
+  $ pantry rename node NAME DESTINATION
+
+Renames a node to a new name.  The old node data file
+is renamed.  The C<NAME> must exist and the
+C<DESTINATION> must be a valid DNS name or IP address.
+
 =head3 show
 
   $ pantry show node NAME

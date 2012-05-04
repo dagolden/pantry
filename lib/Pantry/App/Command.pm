@@ -152,12 +152,14 @@ sub data_options {
 
 =for Pod::Coverage
 data_options
+help_type
+options
 options_desc
 pantry
 target_desc
 target_description
 target_usage
-
+validate
 
 =head1 DESCRIPTION
 
