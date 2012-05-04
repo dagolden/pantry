@@ -24,20 +24,23 @@ sub opt_spec {
 sub validate_args {
   my ( $self, $opt, $args ) = @_;
 
+  my ($command) = $self->command_names;
+  my $command_type = $self->command_type;
+
   # redispatch to help if requested
   if ( $opt->{help} ) {
-    my ($command) = $self->command_names;
     $self->app->execute_command(
       $self->app->prepare_command("help", $command)
     );
     exit 0;
   }
 
-  my $command_type = $self->command_type;
-
   # everything other than default needs a type to operate on
   if ( $command_type ne 'DEFAULT' ) {
     my ($type) =  @$args;
+    unless ($type) {
+      $self->usage_error( "The '$command' command needs a type argument." );
+    }
     unless ( grep { $type eq $_ } $self->valid_types ) {
       $self->usage_error( "Invalid type '$type'" );
     }
