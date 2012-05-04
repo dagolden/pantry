@@ -11,6 +11,8 @@ Revision history for pantry
 
     - 'pantry rename' command added to rename nodes
 
+    - 'pantry delete' command added to delete nodes
+
     [Fixed]
 
     - 'pantry sync' was crashing due to Net::OpenSSH not working with

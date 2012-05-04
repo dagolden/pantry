@@ -13,6 +13,7 @@ my @untargeted= qw(
 
 my @targeted = qw(
   apply
+  delete
   edit
   rename
   show

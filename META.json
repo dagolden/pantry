@@ -37,6 +37,7 @@
             "File::Path" : "0",
             "File::Slurp" : "0",
             "File::Temp" : "0.22",
+            "IO::Prompt::Tiny" : "0",
             "IPC::Cmd" : "0",
             "JSON" : "2",
             "List::AllUtils" : "0",
@@ -89,6 +90,10 @@
       },
       "Pantry::App::Command::create" : {
          "file" : "lib/Pantry/App/Command/create.pm",
+         "version" : "0.004"
+      },
+      "Pantry::App::Command::delete" : {
+         "file" : "lib/Pantry/App/Command/delete.pm",
          "version" : "0.004"
       },
       "Pantry::App::Command::edit" : {

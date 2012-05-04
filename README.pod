@@ -63,6 +63,14 @@ Renames a node to a new name.  The old node data file
 is renamed.  The C<NAME> must exist and the
 C<DESTINATION> must be a valid DNS name or IP address.
 
+=head3 delete 
+
+  $ pantry delete node NAME
+
+Deletes a node. The C<NAME> must exist. Unless the C<--force>
+or C<-f> options are given, the user will be prompted to confirm
+deletion.
+
 =head3 show
 
   $ pantry show node NAME
