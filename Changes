@@ -13,6 +13,10 @@ Revision history for pantry
 
     - 'pantry delete' command added to delete nodes
 
+    - pantry commands that take a single 'node NAME' target may
+      specify a NAME of '-' to run the command against a list of
+      names read from STDIN
+
     [Fixed]
 
     - 'pantry sync' was crashing due to Net::OpenSSH not working with
