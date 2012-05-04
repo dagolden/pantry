@@ -57,7 +57,10 @@ sub execute {
 
     unless ( $opt->{force} ) {
       my $confirm = IO::Prompt::Tiny::prompt("Delete node '$name'?", "no");
-      exit 0 unless $confirm =~ /^y(?:es)?$/i;
+      unless ($confirm =~ /^y(?:es)?$/i) {
+        print "$name will not be deleted\n";
+        exit 0;
+      }
     }
 
     unlink $node->path;
