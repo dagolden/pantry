@@ -6,6 +6,7 @@ package Pantry::Model::Role;
 # VERSION
 
 use Moose 2;
+use MooseX::Types::Path::Class::MoreCoercions qw/File/;
 use List::AllUtils qw/uniq first/;
 use namespace::autoclean;
 
@@ -37,6 +38,14 @@ has json_class => (
 # Chef role attributes
 #--------------------------------------------------------------------------#
 
+has _path => (
+  is => 'ro',
+  reader => 'path',
+  isa => File,
+  coerce => 1,
+  predicate => 'has_path',
+);
+
 has name => (
   is => 'ro',
   isa => 'Str',
@@ -52,6 +61,19 @@ has description => (
 sub _build_description {
   my $self = shift;
   return "The " . $self->name . " role";
+}
+
+=method save
+
+Saves the node to a file in the pantry.  If the private C<_path>
+attribute has not been set, an exception is thrown.
+
+=cut
+
+sub save {
+  my ($self) = @_;
+  die "No _path attribute set" unless $self->has_path;
+  return $self->save_as( $self->path );
 }
 
 1;

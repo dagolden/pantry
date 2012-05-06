@@ -19,7 +19,7 @@ sub command_type {
 }
 
 sub valid_types {
-  return qw/node/
+  return qw/node role/
 }
 
 sub _create_node {
@@ -31,6 +31,20 @@ sub _create_node {
   }
   else {
     $node->save;
+  }
+
+  return;
+}
+
+sub _create_role {
+  my ($self, $opt, $name) = @_;
+
+  my $role = $self->pantry->role( $name );
+  if ( -e $role->path ) {
+    $self->usage_error( "Role '$name' already exists" );
+  }
+  else {
+    $role->save;
   }
 
   return;

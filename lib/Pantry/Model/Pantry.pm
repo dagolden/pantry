@@ -33,6 +33,13 @@ sub _env_path {
   return $path;
 }
 
+sub _role_path {
+  my ($self, $role_name) = @_;
+  my $path = $self->path->subdir("roles");
+  $path->mkpath;
+  return $path->file("${role_name}.json");
+}
+
 sub _node_path {
   my ($self, $node_name, $env) = @_;
   return $self->_env_path($env)->file("${node_name}.json");
@@ -76,6 +83,30 @@ sub node {
     return Pantry::Model::Node->new( name => $node_name, _path => $path );
   }
 }
+
+=method C<role>
+
+  my $node = $pantry->role("web");
+
+Returns a L<Pantry::Model::Role> object corresponding to the given role.
+If the role exists in the pantry, it will be loaded from the saved role file.
+Otherwise, it will be created in memory (but will not be persisted to disk).
+
+=cut
+
+sub role {
+  my ($self, $role_name, $env) = @_;
+  $role_name = lc $role_name;
+  require Pantry::Model::Role;
+  my $path = $self->_role_path( $role_name );
+  if ( -e $path ) {
+    return Pantry::Model::Role->new_from_file( $path );
+  }
+  else {
+    return Pantry::Model::Role->new( name => $role_name, _path => $path );
+  }
+}
+
 
 1;
 
