@@ -116,7 +116,6 @@ for my $c ( @cases ) {
 
       my $data = _thaw_file( $obj->path );
       $st->{expected}{name} //= $c->{name};
-      $st->{expected}{name} //= $c->{name};
       for my $k ( keys %{$templates{$c->{type}}} ) {
         $st->{expected}{$k} //= $templates{$c->{type}}{$k};
       }
