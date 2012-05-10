@@ -15,12 +15,12 @@ my @cases = (
     names => ['foo.example.com', 'bar.example.com'],
     new => sub { my ($p,$n) = @_; $p->node($n) },
   },
-#  {
-#    label => "roles",
-#    type => "role",
-#    names => ['web', 'db'],
-#    new => sub { my ($p,$n) = @_; $p->role($n) },
-#  },
+  {
+    label => "roles",
+    type => "role",
+    names => ['web', 'db'],
+    new => sub { my ($p,$n) = @_; $p->role($n) },
+  },
 );
 
 for my $c ( @cases ) {

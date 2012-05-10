@@ -25,7 +25,7 @@ has path => (
   default => sub { dir(".")->absolute }
 );
 
-sub _env_path {
+sub _env_dir {
   my ($self, $env) = @_;
   $env //= '_default';
   my $path = $self->path->subdir("environments", $env);
@@ -33,16 +33,21 @@ sub _env_path {
   return $path;
 }
 
-sub _role_path {
-  my ($self, $role_name) = @_;
+sub _role_dir {
+  my ($self) = @_;
   my $path = $self->path->subdir("roles");
   $path->mkpath;
-  return $path->file("${role_name}.json");
+  return $path;
+}
+
+sub _role_path {
+  my ($self, $role_name) = @_;
+  return $self->_role_dir->file("${role_name}.json");
 }
 
 sub _node_path {
   my ($self, $node_name, $env) = @_;
-  return $self->_env_path($env)->file("${node_name}.json");
+  return $self->_env_dir($env)->file("${node_name}.json");
 }
 
 =method all_nodes
@@ -57,7 +62,7 @@ a count of nodes.
 sub all_nodes {
   my ($self, $env) = @_;
   my @nodes = sort map { s/\.json$//r } map { $_->basename }
-              $self->_env_path($env)->children;
+              $self->_env_dir($env)->children;
   return @nodes;
 }
 
@@ -82,6 +87,22 @@ sub node {
   else {
     return Pantry::Model::Node->new( name => $node_name, _path => $path );
   }
+}
+
+=method all_roles
+
+  my @roles = $pantry->all_roles;
+
+In list context, returns a list of roles.  In scalar context, returns
+a count of roles.
+
+=cut
+
+sub all_roles {
+  my ($self, $env) = @_;
+  my @roles = sort map { s/\.json$//r } map { $_->basename }
+              $self->_role_dir->children;
+  return @roles;
 }
 
 =method C<role>
