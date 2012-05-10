@@ -21,22 +21,23 @@ my @cases = (
       },
     },
   },
-#  {
-#    label => "role",
-#    type => "role",
-#    name => 'web',
-#    new => sub { my ($p,$n) = @_; $p->role($n) },
-#    expected => {
-#      json_class => "Chef::Role",
-#      chef_type => "role",
-#      run_list => [ 'recipe[nginx]' ],
-#      default => {
-#        nginx => {
-#          port => 80
-#        },
-#      },
-#    },
-#  },
+  {
+    label => "role",
+    type => "role",
+    name => 'web',
+    new => sub { my ($p,$n) = @_; $p->role($n) },
+    expected => {
+      json_class => "Chef::Role",
+      chef_type => "role",
+      run_list => [ 'recipe[nginx]' ],
+      default_attributes => {
+        nginx => {
+          port => 80
+        },
+      },
+      override_attributes => {},
+    },
+  },
 );
 
 for my $c ( @cases ) {

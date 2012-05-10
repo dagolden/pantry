@@ -20,17 +20,27 @@ sub command_type {
 }
 
 sub valid_types {
-  return qw/node/
+  return qw/node role/
 }
 
 sub _show_node {
   my ($self, $opt, $name) = @_;
-  my $path = $self->pantry->node($name)->path;
+  return $self->_show_obj($opt, 'node', $name);
+}
+
+sub _show_role {
+  my ($self, $opt, $name) = @_;
+  return $self->_show_obj($opt, 'role', $name);
+}
+
+sub _show_obj {
+  my ($self, $opt, $type, $name) = @_;
+  my $path = $self->pantry->$type($name)->path;
   if ( -e $path ) {
     print scalar read_file($path);
   }
   else {
-    $self->usage_error( "Node '$name' does not exist" );
+    $self->usage_error( "$type '$name' does not exist" );
   }
   return;
 }
