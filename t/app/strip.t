@@ -87,37 +87,90 @@ my @cases = (
       },
     ],
   },
-#  {
-#    type => "role",
-#    name => 'web',
-#    new => sub { my ($p,$n) = @_; $p->role($n) },
-#    subtests => [
-#      {
-#        label => "strip recipe",
-#        apply => [ qw/-r nginx/ ],
-#        strip => [ qw/-r nginx/ ],
-#        expected => {
-#          run_list => [ 'recipe[nginx]' ],
-#        },
-#      },
-#      {
-#        argv => [ qw/-d nginx.port=80/ ],
-#        expected => {
-#          default_attributes => {
-#            nginx => { port => 80 },
-#          },
-#        },
-#      },
-#      {
-#        argv => [ qw/--override nginx.port=80/ ],
-#        expected => {
-#          override_attributes => {
-#            nginx => { port => 80 },
-#          },
-#        },
-#      },
-#    ],
-#  },
+  {
+    type => "role",
+    name => 'web',
+    new => sub { my ($p,$n) = @_; $p->role($n) },
+    subtests => [
+      {
+        label => "strip recipe",
+        apply => [ qw/-r nginx/ ],
+        strip => [ qw/-r nginx/ ],
+        expected => { },
+      },
+      {
+        label => "strip only one recipe",
+        apply => [ qw/-r nginx -r postfix/ ],
+        strip => [ qw/-r nginx/ ],
+        expected => {
+          run_list => [ qw/recipe[postfix]/ ],
+        },
+      },
+      {
+        label => "strip default attribute",
+        apply => [ qw/-d nginx.port=80/ ],
+        strip => [ qw/-d nginx.port/ ],
+        expected => { },
+      },
+      {
+        label => "strip override attribute",
+        apply => [ qw/--override nginx.port=80/ ],
+        strip => [ qw/--override nginx.port/ ],
+        expected => { },
+      },
+      {
+        label => "strip only one attribute",
+        apply => [ qw/-d nginx.port=80 -d nginx.user=nobody/ ],
+        strip => [ qw/-d nginx.user/ ],
+        expected => {
+          default_attributes => {
+            nginx => { port => 80 },
+          },
+        },
+      },
+      {
+        label => "strip only one attribute default/override",
+        apply => [ qw/-d nginx.port=80 --override nginx.user=nobody/ ],
+        strip => [ qw/--override nginx.user/ ],
+        expected => {
+          default_attributes => {
+            nginx => { port => 80 },
+          },
+        },
+      },
+      {
+        label => "strip entire attribute hash shoudn't work",
+        apply => [ qw/-d nginx.port=80 -d nginx.user=nobody/ ],
+        strip => [ qw/-d nginx/ ],
+        expected => {
+          default_attributes => {
+            nginx => {
+              port => 80,
+              user => 'nobody',
+            },
+          },
+        },
+      },
+      {
+        label => "strip attribute with useless value",
+        apply => [ qw/-d nginx.port=80/ ],
+        strip => [ qw/-d nginx.port=8080/ ],
+        expected => { },
+      },
+      {
+        label => "strip attribute list",
+        apply => [ qw/-d nginx.port=80,8080/ ],
+        strip => [ qw/-d nginx.port/ ],
+        expected => { },
+      },
+      {
+        label => "strip escaped attribute",
+        apply => [ qw/-d nginx\.port=80/ ],
+        strip => [ qw/-d nginx\.port/ ],
+        expected => { },
+      },
+    ],
+  },
 );
 
 for my $c ( @cases ) {

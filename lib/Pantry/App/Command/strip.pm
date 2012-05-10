@@ -19,7 +19,7 @@ sub command_type {
 }
 
 sub valid_types {
-  return qw/node/
+  return qw/node role/
 }
 
 sub options {
@@ -45,7 +45,42 @@ sub _strip_node {
     }
   }
 
+  if ($opt->{override}) {
+    warn "Override attributes do not apply to nodes.  Skipping them.\n";
+  }
+
   $node->save;
+
+  return;
+}
+
+sub _strip_role {
+  my ($self, $opt, $name) = @_;
+
+  my $role = $self->pantry->role( $name )
+    or $self->usage_error( "role '$name' does not exist" );
+
+  if ($opt->{recipe}) {
+    $role->remove_from_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
+  }
+
+  if ($opt->{default}) {
+    for my $attr ( @{ $opt->{default} } ) {
+      my ($key, $value) = split /=/, $attr, 2; # split on first '='
+      # if they gave a value, we ignore it
+      $role->delete_default_attribute($key);
+    }
+  }
+
+  if ($opt->{override}) {
+    for my $attr ( @{ $opt->{override} } ) {
+      my ($key, $value) = split /=/, $attr, 2; # split on first '='
+      # if they gave a value, we ignore it
+      $role->delete_override_attribute($key);
+    }
+  }
+
+  $role->save;
 
   return;
 }
