@@ -8,6 +8,7 @@ package Pantry::Model::Node;
 use Moose 2;
 use MooseX::Types::Path::Class::MoreCoercions qw/File/;
 use List::AllUtils qw/uniq first/;
+use Pantry::Model::Util qw/hash_to_dot dot_to_hash/;
 use namespace::autoclean;
 
 # new_from_file, save_as
@@ -104,7 +105,7 @@ sub _freeze {
   my $attr = delete $data->{attributes};
   for my $k ( keys %$attr ) {
     next if grep { $k eq $_ } @top_level_keys;
-    $self->_dot_to_hash($data, $k, $attr->{$k});
+    dot_to_hash($data, $k, $attr->{$k});
   }
   return $data;
 }
@@ -116,49 +117,13 @@ sub _thaw {
     next if grep { $k eq $_ } @top_level_keys;
     my $v = delete $data->{$k};
     $k =~ s{\.}{\\.}g; # escape existing dots in key
-    for my $pair ( $self->_hash_to_dot($k, $v) ) {
+    for my $pair ( hash_to_dot($k, $v) ) {
       my ($key, $value) = @$pair;
       $attr->{$key} = $value;
     }
   }
   $data->{attributes} = $attr;
   return $data;
-}
-
-sub _dot_to_hash {
-  my ($self, $hash, $key, $value) = @_;
-
-  my ($top_key, $rest) = split qr{(?<!\\)\.}, $key, 2;
-  if ( $rest ) {
-    my $new_hash = $hash->{$top_key} || {};
-    $self->_dot_to_hash($new_hash, $rest, $value);
-    $hash->{$top_key} = $new_hash;
-  }
-  else {
-    # un-escape '\.'
-    $key =~ s{\\\.}{.}g;
-    $hash->{$key} = $value;
-    return;
-  }
-}
-
-sub _hash_to_dot {
-  my ($self, $key, $value) = @_;
-  if ( ref $value eq 'HASH' ) {
-    my @pairs;
-    for my $k ( keys %$value ) {
-      my $v = $value->{$k};
-      $k =~ s{\.}{\\.}g; # escape existing dots in key
-      for my $item ( $self->_hash_to_dot($k, $v) ) {
-        $item->[0] = "$key\.$item->[0]";
-        push @pairs, $item;
-      }
-    }
-    return @pairs;
-  }
-  else {
-    return [$key, $value];
-  }
 }
 
 1;
