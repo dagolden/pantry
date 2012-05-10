@@ -29,64 +29,76 @@ sub valid_types {
 
 sub _apply_node {
   my ($self, $opt, $name) = @_;
-  my $node = $self->pantry->node( $name )
-    or $self->usage_error( "Node '$name' does not exist" );
-
-  if ($opt->{recipe}) {
-    $node->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
-  }
-
-  if ($opt->{default}) {
-    for my $attr ( @{ $opt->{default} } ) {
-      my ($key, $value) = split /=/, $attr, 2; # split on first '='
-      if ( $value =~ /(?<!\\),/ ) {
-        # split on unescaped commas, then unescape escaped commas
-        $value = [ map { s/\\,/,/gr } split /(?<!\\),/, $value ];
-      }
-      $node->set_attribute($key, $value);
-    }
-  }
-
-  if ($opt->{override}) {
-    warn "Override attributes do not apply to nodes.  Skipping them.\n";
-  }
-
-  $node->save;
+  $self->_apply_obj($opt, 'node', $name);
 }
 
 sub _apply_role {
   my ($self, $opt, $name) = @_;
-  my $role = $self->pantry->role( $name )
-    or $self->usage_error( "Role '$name' does not exist" );
-
-  if ($opt->{recipe}) {
-    $role->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
-  }
-
-  if ($opt->{default}) {
-    for my $attr ( @{ $opt->{default} } ) {
-      my ($key, $value) = split /=/, $attr, 2; # split on first '='
-      if ( $value =~ /(?<!\\),/ ) {
-        # split on unescaped commas, then unescape escaped commas
-        $value = [ map { s/\\,/,/gr } split /(?<!\\),/, $value ];
-      }
-      $role->set_default_attribute($key, $value);
-    }
-  }
-
-  if ($opt->{override}) {
-    for my $attr ( @{ $opt->{override} } ) {
-      my ($key, $value) = split /=/, $attr, 2; # split on first '='
-      if ( $value =~ /(?<!\\),/ ) {
-        # split on unescaped commas, then unescape escaped commas
-        $value = [ map { s/\\,/,/gr } split /(?<!\\),/, $value ];
-      }
-      $role->set_override_attribute($key, $value);
-    }
-  }
-
-  $role->save;
+  $self->_apply_obj($opt, 'role', $name);
 }
+
+my %setters = (
+  node => {
+    default => 'set_attribute',
+    override => undef,
+  },
+  role => {
+    default => 'set_default_attribute',
+    override => 'set_override_attribute',
+  },
+);
+
+sub _apply_obj {
+  my ($self, $opt, $type, $name) = @_;
+
+  my $obj = $self->_check_name($type, $name);
+
+  $self->_apply_recipe($obj, $opt);
+
+  for my $k ( sort keys %{$setters{$type}} ) {
+    if ( my $method = $setters{$type}{$k} ) {
+      $self->_set_attributes($obj, $opt, $k, $method);
+    }
+    else {
+      $k = ucfirst $k;
+      warn "$k attributes do not apply to $type objects.  Skipping them.\n";
+    }
+  }
+
+  $obj->save;
+  return;
+}
+
+sub _check_name {
+  my ($self, $type, $name) = @_;
+  my $obj = $self->pantry->$type( $name )
+    or $self->usage_error( "$type '$name' does not exist" );
+  return $obj;
+}
+
+sub _apply_recipe {
+  my ($self, $obj, $opt) = @_;
+  if ($opt->{recipe}) {
+    $obj->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
+  }
+  return;
+}
+
+sub _set_attributes {
+  my ($self, $obj, $opt, $which, $method) = @_;
+  if ($opt->{$which}) {
+    for my $attr ( @{ $opt->{$which} } ) {
+      my ($key, $value) = split /=/, $attr, 2; # split on first '='
+      if ( $value =~ /(?<!\\),/ ) {
+        # split on unescaped commas, then unescape escaped commas
+        $value = [ map { s/\\,/,/gr } split /(?<!\\),/, $value ];
+      }
+      $obj->$method($key, $value);
+    }
+  }
+  return;
+}
+
 
 1;
 
