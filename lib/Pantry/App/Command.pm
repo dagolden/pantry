@@ -224,6 +224,7 @@ sub data_options {
   return (
     [ 'recipe|r=s@' => "A recipe (without 'recipe[...]')" ],
     [ 'default|d=s@' => "Default attribute (as KEY or KEY=VALUE)" ],
+    [ 'override=s@' => "Override attribute (as KEY or KEY=VALUE) (roles only)" ],
   );
 }
 

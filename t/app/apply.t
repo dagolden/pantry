@@ -9,6 +9,19 @@ use lib 't/lib';
 use TestHelper;
 use JSON;
 
+my %templates = (
+  node => {
+    run_list => [],
+  },
+  role => {
+    json_class => "Chef::Role",
+    chef_type => "role",
+    run_list => [],
+    default_attributes => {},
+    override_attributes => {},
+  },
+);
+
 my @cases = (
   {
     type => "node",
@@ -45,21 +58,51 @@ my @cases = (
     ],
   },
 
-#  {
-#    type => "role",
-#    name => 'web',
-#    new => sub { my ($p,$n) = @_; $p->role($n) },
-#    expected => {
-#      json_class => "Chef::Role",
-#      chef_type => "role",
-#      run_list => [ 'recipe[nginx]' ],
-#      default => {
-#        nginx => {
-#          port => 80
-#        },
-#      },
-#    },
-#  },
+  {
+    type => "role",
+    name => 'web',
+    new => sub { my ($p,$n) = @_; $p->role($n) },
+    subtests => [
+      {
+        argv => [ qw/-r nginx/ ],
+        expected => {
+          run_list => [ 'recipe[nginx]' ],
+        },
+      },
+      {
+        argv => [ qw/-d nginx.port=80/ ],
+        expected => {
+          default_attributes => {
+            nginx => { port => 80 },
+          },
+        },
+      },
+      {
+        argv => [ qw/--override nginx.port=80/ ],
+        expected => {
+          override_attributes => {
+            nginx => { port => 80 },
+          },
+        },
+      },
+      {
+        argv => [ qw/-d nginx.port=80,8080/ ],
+        expected => {
+          default_attributes => {
+            nginx => { port => [80,8080] },
+          },
+        },
+      },
+      {
+        argv => [ qw/-d nginx\.port=80,8000\,8080/ ],
+        expected => {
+          default_attributes => {
+            'nginx.port' => [80,'8000,8080'],
+          },
+        },
+      },
+    ],
+  },
 );
 
 for my $c ( @cases ) {
@@ -73,6 +116,10 @@ for my $c ( @cases ) {
 
       my $data = _thaw_file( $obj->path );
       $st->{expected}{name} //= $c->{name};
+      $st->{expected}{name} //= $c->{name};
+      for my $k ( keys %{$templates{$c->{type}}} ) {
+        $st->{expected}{$k} //= $templates{$c->{type}}{$k};
+      }
 
       is_deeply( $data, $st->{expected}, "data file correct" )
         or diag explain $data;

@@ -24,7 +24,7 @@ sub options {
 }
 
 sub valid_types {
-  return qw/node/
+  return qw/node role/
 }
 
 sub _apply_node {
@@ -47,7 +47,45 @@ sub _apply_node {
     }
   }
 
+  if ($opt->{override}) {
+    warn "Override attributes do not apply to nodes.  Skipping them.\n";
+  }
+
   $node->save;
+}
+
+sub _apply_role {
+  my ($self, $opt, $name) = @_;
+  my $role = $self->pantry->role( $name )
+    or $self->usage_error( "Role '$name' does not exist" );
+
+  if ($opt->{recipe}) {
+    $role->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
+  }
+
+  if ($opt->{default}) {
+    for my $attr ( @{ $opt->{default} } ) {
+      my ($key, $value) = split /=/, $attr, 2; # split on first '='
+      if ( $value =~ /(?<!\\),/ ) {
+        # split on unescaped commas, then unescape escaped commas
+        $value = [ map { s/\\,/,/gr } split /(?<!\\),/, $value ];
+      }
+      $role->set_default_attribute($key, $value);
+    }
+  }
+
+  if ($opt->{override}) {
+    for my $attr ( @{ $opt->{override} } ) {
+      my ($key, $value) = split /=/, $attr, 2; # split on first '='
+      if ( $value =~ /(?<!\\),/ ) {
+        # split on unescaped commas, then unescape escaped commas
+        $value = [ map { s/\\,/,/gr } split /(?<!\\),/, $value ];
+      }
+      $role->set_override_attribute($key, $value);
+    }
+  }
+
+  $role->save;
 }
 
 1;
