@@ -29,61 +29,73 @@ sub options {
 
 sub _strip_node {
   my ($self, $opt, $name) = @_;
-
-  my $node = $self->pantry->node( $name )
-    or $self->usage_error( "Node '$name' does not exist" );
-
-  if ($opt->{recipe}) {
-    $node->remove_from_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
-  }
-
-  if ($opt->{default}) {
-    for my $attr ( @{ $opt->{default} } ) {
-      my ($key, $value) = split /=/, $attr, 2; # split on first '='
-      # if they gave a value, we ignore it
-      $node->delete_attribute($key);
-    }
-  }
-
-  if ($opt->{override}) {
-    warn "Override attributes do not apply to nodes.  Skipping them.\n";
-  }
-
-  $node->save;
-
-  return;
+  $self->_strip_obj($opt, 'node', $name);
 }
 
 sub _strip_role {
   my ($self, $opt, $name) = @_;
+  $self->_strip_obj($opt, 'role', $name);
+}
 
-  my $role = $self->pantry->role( $name )
-    or $self->usage_error( "role '$name' does not exist" );
+my %strippers = (
+  node => {
+    default => 'delete_attribute',
+    override => undef,
+  },
+  role => {
+    default => 'delete_default_attribute',
+    override => 'delete_override_attribute',
+  },
+);
 
-  if ($opt->{recipe}) {
-    $role->remove_from_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
-  }
+sub _strip_obj {
+  my ($self, $opt, $type, $name) = @_;
 
-  if ($opt->{default}) {
-    for my $attr ( @{ $opt->{default} } ) {
-      my ($key, $value) = split /=/, $attr, 2; # split on first '='
-      # if they gave a value, we ignore it
-      $role->delete_default_attribute($key);
+  my $obj = $self->_check_name($type, $name);
+
+  $self->_delete_recipe($obj, $opt);
+
+  for my $k ( sort keys %{$strippers{$type}} ) {
+    if ( my $method = $strippers{$type}{$k} ) {
+      $self->_delete_attributes($obj, $opt, $k, $method);
+    }
+    else {
+      $k = ucfirst $k;
+      warn "$k attributes do not apply to $type objects.  Skipping them.\n";
     }
   }
 
-  if ($opt->{override}) {
-    for my $attr ( @{ $opt->{override} } ) {
-      my ($key, $value) = split /=/, $attr, 2; # split on first '='
-      # if they gave a value, we ignore it
-      $role->delete_override_attribute($key);
-    }
-  }
-
-  $role->save;
-
+  $obj->save;
   return;
 }
+
+sub _check_name {
+  my ($self, $type, $name) = @_;
+  my $obj = $self->pantry->$type( $name )
+    or $self->usage_error( "$type '$name' does not exist" );
+  return $obj;
+}
+
+sub _delete_recipe {
+  my ($self, $obj, $opt) = @_;
+  if ($opt->{recipe}) {
+    $obj->remove_from_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
+  }
+  return;
+}
+
+sub _delete_attributes {
+  my ($self, $obj, $opt, $which, $method) = @_;
+  if ($opt->{$which}) {
+    for my $attr ( @{ $opt->{$which} } ) {
+      my ($key, $value) = split /=/, $attr, 2; # split on first '='
+      # if they gave a value, we ignore it
+      $obj->$method($key);
+    }
+  }
+  return;
+}
+
 
 1;
 
