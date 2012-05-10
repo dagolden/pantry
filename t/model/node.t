@@ -6,10 +6,8 @@ use File::pushd qw/tempd/;
 use File::Slurp qw/read_file/;
 use JSON;
 
-sub _thaw_file {
-  my $file = shift;
-  my $data = eval { decode_json( scalar read_file( $file ) ) };
-}
+use lib 't/lib';
+use TestHelper;
 
 use Pantry::Model::Node;
 
