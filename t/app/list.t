@@ -6,7 +6,6 @@ use Test::More 0.92;
 
 use lib 't/lib';
 use TestHelper;
-use JSON;
 
 my @cases = (
   {
