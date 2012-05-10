@@ -19,10 +19,10 @@ sub command_type {
 }
 
 sub valid_types {
-  return qw/node/
+  return qw/node role/
 }
 
-sub _rename_node{
+sub _rename_node {
   my ($self, $opt, $name, $dest) = @_;
 
   my $node = $self->pantry->node( $name );
@@ -36,6 +36,25 @@ sub _rename_node{
   else {
     $node->save_as( $dest_path );
     unlink $node->path;
+  }
+
+  return;
+}
+
+sub _rename_role {
+  my ($self, $opt, $name, $dest) = @_;
+
+  my $role = $self->pantry->role( $name );
+  my $dest_path = $self->pantry->role( $dest )->path;
+  if ( ! -e $role->path ) {
+    die( "role '$name' doesn't exist\n" );
+  }
+  elsif ( -e $dest_path ) {
+    die( "role '$dest' already exists. Won't over-write it.\n" );
+  }
+  else {
+    $role->save_as( $dest_path );
+    unlink $role->path;
   }
 
   return;

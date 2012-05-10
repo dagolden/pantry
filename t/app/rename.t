@@ -14,12 +14,12 @@ my @cases = (
     name => 'foo.example.com',
     new => sub { my ($p,$n) = @_; $p->node($n) },
   },
-#  {
-#    label => "role",
-#    type => "role",
-#    name => 'web',
-#    new => sub { my ($p,$n) = @_; $p->role($n) },
-#  },
+  {
+    label => "role",
+    type => "role",
+    name => 'web',
+    new => sub { my ($p,$n) = @_; $p->role($n) },
+  },
 );
 
 local $ENV{PERL_MM_USE_DEFAULT} = 1;
