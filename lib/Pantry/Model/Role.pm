@@ -21,24 +21,6 @@ with 'Pantry::Role::Serializable' => {
 with 'Pantry::Role::Runlist';
 
 #--------------------------------------------------------------------------#
-# static keys/values required by Chef
-#--------------------------------------------------------------------------#
-
-has chef_type => (
-  is => 'bare',
-  isa => 'Str',
-  default => 'role',
-  init_arg => undef,
-);
-
-has json_class => (
-  is => 'bare',
-  isa => 'Str',
-  default => 'Chef::Role',
-  init_arg => undef,
-);
-
-#--------------------------------------------------------------------------#
 # Chef role attributes
 #--------------------------------------------------------------------------#
 
@@ -168,11 +150,14 @@ sub _freeze {
     }
     $data->{$attr} = $new;
   }
+  $data->{json_class} = "Chef::Role";
+  $data->{chef_type} = "role";
   return $data;
 }
 
 sub _thaw {
   my ($self, $data) = @_;
+  delete $data->{$_} for qw/json_class chef_type/;
   for my $attr ( qw/default_attributes override_attributes/ ) {
     my $old = delete $data->{$attr};
     my $new = {};
