@@ -244,7 +244,7 @@ sub _check_name {
     return $objs[0];
   }
   else {
-    die "$type '$name' is ambiguous:\n" . join("\n", map { "  " . $_->name } @objs);
+    die join("\n", "$type '$name' is ambiguous:", (map { "  " . $_->name } @objs), "");
   }
 }
 
