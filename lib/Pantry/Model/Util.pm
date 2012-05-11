@@ -46,3 +46,10 @@ sub hash_to_dot {
 
 1;
 
+=for Pod::Coverage hash_to_dot dot_to_hash
+
+=head1 DESCRIPTION
+
+Internal functions.  No user-serviceable parts
+
+=cut
