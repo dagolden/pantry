@@ -53,7 +53,7 @@ sub _strip_obj {
 
   my $obj = $self->_check_name($type, $name);
 
-  $self->_delete_recipe($obj, $opt);
+  $self->_delete_runlist($obj, $opt);
 
   for my $k ( sort keys %{$strippers{$type}} ) {
     if ( my $method = $strippers{$type}{$k} ) {
@@ -76,8 +76,11 @@ sub _check_name {
   return $obj;
 }
 
-sub _delete_recipe {
+sub _delete_runlist{
   my ($self, $obj, $opt) = @_;
+  if ($opt->{role}) {
+    $obj->remove_from_run_list(map { "role[$_]" } @{$opt->{role}});
+  }
   if ($opt->{recipe}) {
     $obj->remove_from_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
   }

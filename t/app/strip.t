@@ -43,6 +43,28 @@ my @cases = (
         },
       },
       {
+        label => "strip role",
+        apply => [ qw/-R web/ ],
+        strip => [ qw/-R web/ ],
+        expected => { },
+      },
+      {
+        label => "strip only one role",
+        apply => [ qw/-R web -R mail/ ],
+        strip => [ qw/-R web/ ],
+        expected => {
+          run_list => [ qw/role[mail]/ ],
+        },
+      },
+      {
+        label => "strip only role of mixed roles/recipes",
+        apply => [ qw/-R web -r postfix/ ],
+        strip => [ qw/-R web/ ],
+        expected => {
+          run_list => [ qw/recipe[postfix]/ ],
+        },
+      },
+      {
         label => "strip attribute",
         apply => [ qw/-d nginx.port=80/ ],
         strip => [ qw/-d nginx.port/ ],
