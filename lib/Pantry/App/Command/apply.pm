@@ -11,7 +11,7 @@ use autodie;
 use namespace::clean;
 
 sub abstract {
-  return 'Apply recipes or attributes to a node'
+  return 'Apply recipes or attributes to a node or role'
 }
 
 sub command_type {

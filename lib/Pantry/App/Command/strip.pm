@@ -11,7 +11,7 @@ use autodie;
 use namespace::clean;
 
 sub abstract {
-  return 'Strip recipes or attributes from a node'
+  return 'Strip recipes or attributes from a node or role'
 }
 
 sub command_type {

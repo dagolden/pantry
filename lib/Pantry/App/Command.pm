@@ -141,6 +141,7 @@ The TYPE parameter indicates what kind of pantry object to list.
 Valid types include:
 
         node, nodes   lists nodes
+        role, roles   lists roles
 HERE
   },
   TARGET => {
@@ -154,6 +155,7 @@ indicates which specific one. (e.g. "node foo.example.com")
 Valid TARGET types include:
 
         node      NAME refers to a node name in the pantry
+        role      NAME refers to a role name in the pantry
 
 If NAME is '-', then the command will be executed on a list of names
 read from STDIN.
@@ -170,6 +172,7 @@ indicates which specific one. (e.g. "node foo.example.com")
 Valid TARGET types include:
 
         node      NAME refers to a node name in the pantry
+        role      NAME refers to a role name in the pantry
 
 The DESTINATION parameter indicates where the NAME should be put.
 HERE
@@ -185,6 +188,7 @@ indicates which specific one. (e.g. "node foo.example.com")
 Valid TARGET types include:
 
         node      NAME refers to a node name that is *NOT* in the pantry
+        role      NAME refers to a role name that is *NOT* in the pantry
 
 If NAME is '-', then the command will be executed on a list of names
 read from STDIN.
