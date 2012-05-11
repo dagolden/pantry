@@ -41,10 +41,7 @@ sub _delete_role {
 sub _delete_obj {
   my ($self, $opt, $type, $name) = @_;
 
-  my $obj = $self->pantry->$type( $name );
-  if ( ! -e $obj->path ) {
-    die( "obj '$name' doesn't exist\n" );
-  }
+  my $obj = $self->_check_name($type, $name);
 
   unless ( $opt->{force} ) {
     my $confirm = IO::Prompt::Tiny::prompt("Delete $type '$name'?", "no");

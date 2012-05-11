@@ -40,7 +40,7 @@ for my $c ( @cases ) {
     my $obj = $c->{new}->($pantry, $c->{name});
     my $new = $c->{new}->($pantry, "renamed");
     my $result = _try_command('rename', $c->{type}, $c->{name}, "renamed", { exit_code => -1});
-    like( $result->error, qr/doesn't exist/, "error message" );
+    like( $result->error, qr/does not exist/, "error message" );
     ok( ! -e $obj->path, "original object not there" );
     ok( ! -e $new->path, "renamed object not there" );
   };

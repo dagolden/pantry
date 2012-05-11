@@ -24,37 +24,29 @@ sub valid_types {
 
 sub _rename_node {
   my ($self, $opt, $name, $dest) = @_;
-
-  my $node = $self->pantry->node( $name );
-  my $dest_path = $self->pantry->node( $dest )->path;
-  if ( ! -e $node->path ) {
-    die( "Node '$name' doesn't exist\n" );
-  }
-  elsif ( -e $dest_path ) {
-    die( "Node '$dest' already exists. Won't over-write it.\n" );
-  }
-  else {
-    $node->save_as( $dest_path );
-    unlink $node->path;
-  }
-
-  return;
+  return $self->_rename_obj($opt, 'node', $name, $dest);
 }
 
 sub _rename_role {
   my ($self, $opt, $name, $dest) = @_;
+  return $self->_rename_obj($opt, 'role', $name, $dest);
+}
 
-  my $role = $self->pantry->role( $name );
-  my $dest_path = $self->pantry->role( $dest )->path;
-  if ( ! -e $role->path ) {
-    die( "role '$name' doesn't exist\n" );
+sub _rename_obj {
+  my ($self, $opt, $type, $name, $dest) = @_;
+
+  my $obj = $self->_check_name($type, $name);
+  my $dest_path = $self->pantry->$type( $dest )->path;
+
+  if ( ! -e $obj->path ) {
+    die( "$type '$name' doesn't exist\n" );
   }
   elsif ( -e $dest_path ) {
-    die( "role '$dest' already exists. Won't over-write it.\n" );
+    die( "$type '$dest' already exists. Won't over-write it.\n" );
   }
   else {
-    $role->save_as( $dest_path );
-    unlink $role->path;
+    $obj->save_as( $dest_path );
+    unlink $obj->path;
   }
 
   return;

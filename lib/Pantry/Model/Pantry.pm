@@ -145,6 +145,21 @@ sub role {
   }
 }
 
+=method find_role
+
+  my @roles = $pantry->find_role( $leading_part );
+
+Finds one or more role matching a leading part.  For example, given roles 'web'
+and 'mysql' in a pantry, use C<<$pantry->find_role("my")>> to get 'mysql'.
+
+Returns a list of role objects if any are found.
+
+=cut
+
+sub find_role {
+  my ($self, $pattern) = @_;
+  return map { $self->role($_) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_roles;
+}
 
 1;
 

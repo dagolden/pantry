@@ -51,7 +51,9 @@ Prints to STDOUT a list of nodes or roles managed within the pantry.
 
 In this section, when a node NAME is required, the name is
 expected to be a valid DNS name or IP address.  The name
-will be converted to lowercase for consistency.
+will be converted to lowercase for consistency.  When referring
+to an existing node, you may often abbreviate it to a unique
+prefix, e.g. "foo" for "foo.example.com".
 
 Also, whenever a command takes a single 'node NAME' target,
 you may give a single dash ('-') as the NAME and the command
@@ -177,7 +179,9 @@ file directly.
 =head2 Managing roles
 
 In this section, when a role NAME is required, any name without whitespace is
-acceptable. The name will be converted to lowercase for consistency.
+acceptable. The name will be converted to lowercase for consistency.  When
+referring to an existing role, you may often abbreviate it to a unique prefix,
+e.g. "web" for "webserver".
 
 Also, whenever a command takes a single 'node NAME' target,
 you may give a single dash ('-') as the NAME and the command

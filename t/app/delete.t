@@ -44,7 +44,7 @@ for my $c ( @cases ) {
   subtest "$c->{label}: delete a missing node" => sub {
     my ($wd, $pantry) = _create_pantry();
     my $result = _try_command('delete', $c->{type}, $c->{name}, { exit_code => -1});
-    like( $result->error, qr/doesn't exist/, "error message" );
+    like( $result->error, qr/does not exist/, "error message" );
   };
 }
 

@@ -47,7 +47,9 @@ sub _edit_obj {
     $self->usage_error( "EDITOR not set or not found" );
   }
 
-  my $path = $self->pantry->$type($name)->path;
+  my $obj = $self->_check_name($type, $name);
+  my $path = $obj->path;
+
   if ( -e $path ) {
     system( @editor, $path ) and die "System failed!: $!";
     eval { decode_json(read_file($path,{ binmode => ":raw" })) };

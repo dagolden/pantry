@@ -69,13 +69,6 @@ sub _strip_obj {
   return;
 }
 
-sub _check_name {
-  my ($self, $type, $name) = @_;
-  my $obj = $self->pantry->$type( $name )
-    or $self->usage_error( "$type '$name' does not exist" );
-  return $obj;
-}
-
 sub _delete_runlist{
   my ($self, $obj, $opt) = @_;
   if ($opt->{role}) {

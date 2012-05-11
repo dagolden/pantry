@@ -35,12 +35,10 @@ sub _show_role {
 
 sub _show_obj {
   my ($self, $opt, $type, $name) = @_;
-  my $path = $self->pantry->$type($name)->path;
+  my $obj = $self->_check_name($type, $name);
+  my $path = $obj->path;
   if ( -e $path ) {
     print scalar read_file($path);
-  }
-  else {
-    $self->usage_error( "$type '$name' does not exist" );
   }
   return;
 }

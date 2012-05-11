@@ -233,6 +233,21 @@ sub data_options {
   );
 }
 
+sub _check_name {
+  my ($self, $type, $name) = @_;
+  my $meth = "find_$type";
+  my @objs = $self->pantry->$meth( $name );
+  if (@objs == 0) {
+    die "$type '$name' does not exist\n";
+  }
+  elsif ( @objs == 1 ) {
+    return $objs[0];
+  }
+  else {
+    die "$type '$name' is ambiguous:\n" . join("\n", map { "  " . $_->name } @objs);
+  }
+}
+
 1;
 
 =for Pod::Coverage

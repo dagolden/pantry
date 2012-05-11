@@ -38,6 +38,8 @@ my $rsync_opts = {
 
 sub _sync_node {
   my ($self, $opt, $name) = @_;
+  my $obj = $self->_check_name('node', $name);
+  $name = $obj->name; # canonical name
 
   say "Synchronizing $name";
 
