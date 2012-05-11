@@ -2,6 +2,15 @@ Revision history for pantry
 
 {{$NEXT}}
 
+    [Added]
+
+    - Added support for Chef roles: creating, deleting, apply
+      recipes, etc.  Chef roles may also be applied to node
+      and role run_lists
+
+    - Node and role names can often be abbreviated to
+      a unique prefix, e.g. "foo" for "foo.example.com"
+
 0.004     2012-05-04 16:01:12 America/New_York
 
     [Added]
