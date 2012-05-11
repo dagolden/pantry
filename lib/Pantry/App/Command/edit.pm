@@ -23,34 +23,31 @@ sub command_type {
 }
 
 sub valid_types {
-  return qw/node/
+  return qw/node role/
 }
 
 sub _edit_node {
   my ($self, $opt, $name) = @_;
+  $self->_edit_obj($opt, 'node', $name);
+}
+
+sub _edit_role {
+  my ($self, $opt, $name) = @_;
+  $self->_edit_obj($opt, 'role', $name);
+}
+
+sub _edit_obj {
+  my ($self, $opt, $type, $name) = @_;
 
   my @editor = defined $ENV{EDITOR} ? split / /, $ENV{EDITOR} : ();
-  if ( @editor ) {
-    $editor[0] = can_run($editor[0]);
-  }
-
-  if ( @editor ) {
-    $self->_edit_file($name, @editor);
+  if ( @editor && (my $bin = can_run($editor[0])) ) {
+    $editor[0] = $bin;
   }
   else {
     $self->usage_error( "EDITOR not set or not found" );
   }
 
-  return;
-}
-
-#--------------------------------------------------------------------------#
-# Internal
-#--------------------------------------------------------------------------#
-
-sub _edit_file {
-  my ($self, $name, @editor) = @_;
-  my $path = $self->pantry->node($name)->path;
+  my $path = $self->pantry->$type($name)->path;
   if ( -e $path ) {
     system( @editor, $path ) and die "System failed!: $!";
     eval { decode_json(read_file($path,{ binmode => ":raw" })) };
@@ -60,7 +57,8 @@ sub _edit_file {
     }
   }
   else {
-    $self->usage_error("Node '$name' does not exist");
+    $type = ucfirst $type;
+    $self->usage_error("$type '$name' does not exist");
   }
 }
 
