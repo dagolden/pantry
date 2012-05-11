@@ -70,6 +70,10 @@ sub _sync_node {
   $ssh->rsync_put($rsync_opts, "cookbooks", "/var/chef-solo")
     or die "Could not rsync cookbooks\n";
 
+  # rsync roles to remote /var/chef-solo/roles
+  $ssh->rsync_put($rsync_opts, "roles", "/var/chef-solo")
+    or die "Could not rsync roles\n";
+
   # ssh execute chef-solo
   my $command = "chef-solo";
   $command .= " -l debug" if $ENV{PANTRY_CHEF_DEBUG};
@@ -91,6 +95,7 @@ sub _solo_rb_guts {
   return << 'HERE';
 file_cache_path "/var/chef-solo"
 cookbook_path "/var/chef-solo/cookbooks"
+role_path "/var/chef-solo/roles"
 json_attribs "/etc/chef/node.json"
 require 'chef/handler/json_file'
 report_handlers << Chef::Handler::JsonFile.new(:path => "/var/chef-solo/reports")
