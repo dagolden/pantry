@@ -41,6 +41,12 @@ my @cases = (
         },
       },
       {
+        argv => [ qw/-r postfix -r iptables -R web/ ],
+        expected => {
+          run_list => [ qw/role[web] recipe[postfix] recipe[iptables]/ ],
+        },
+      },
+      {
         argv => [ qw/-d nginx.port=80/ ],
         expected => {
           run_list => [],

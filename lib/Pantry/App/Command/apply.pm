@@ -78,11 +78,11 @@ sub _check_name {
 
 sub _apply_runlist {
   my ($self, $obj, $opt) = @_;
-  if ($opt->{recipe}) {
-    $obj->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
-  }
   if ($opt->{role}) {
     $obj->append_to_run_list(map { "role[$_]" } @{$opt->{role}});
+  }
+  if ($opt->{recipe}) {
+    $obj->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
   }
   return;
 }
