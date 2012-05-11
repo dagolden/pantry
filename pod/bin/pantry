@@ -263,7 +263,6 @@ stay unlocked.
 In the future, I hope to extend pantry to support some or all of the following:
 
 =for :list
-* Chef role creation and application
 * environments
 * tagging nodes
 * searching nodes based on configuration

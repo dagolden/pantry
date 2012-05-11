@@ -4,7 +4,7 @@ Pantry - Configuration management tool for chef-solo
 
 =head1 VERSION
 
-version 0.005
+version 0.006
 
 =head1 SYNOPSIS
 
@@ -271,10 +271,6 @@ stay unlocked.
 In the future, I hope to extend pantry to support some or all of the following:
 
 =over 4
-
-=item *
-
-Chef role creation and application
 
 =item *
 
