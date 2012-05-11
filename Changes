@@ -2,6 +2,8 @@ Revision history for pantry
 
 {{$NEXT}}
 
+0.005     2012-05-11 13:25:40 America/New_York
+
     [Added]
 
     - Added support for Chef roles: creating, deleting, apply
