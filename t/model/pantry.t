@@ -54,5 +54,20 @@ subtest "list nodes when some exist" => sub {
   );
 };
 
+subtest "find nodes matching a partial name" => sub {
+  my $pantry = _new_pantry_ok();
+  for my $name (qw/foo bar baz/) {
+    ok( my $node = $pantry->node("$name.example.com"), "created $name");
+    $node->save;
+  }
+  my @found = $pantry->find_node("foo");
+  is ( scalar @found, 1, "search on 'foo' found 1 node" );
+  is ( $found[0]->name, 'foo.example.com', "found correct node" );
+  @found = $pantry->find_node("ba");
+  is ( scalar @found, 2, "search on 'ba' found 2 nodes" );
+  @found = $pantry->find_node("zzz");
+  is ( scalar @found, 0, "search on 'zzz' found 0 nodes" );
+};
+
 done_testing;
 # COPYRIGHT

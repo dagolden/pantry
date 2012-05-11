@@ -89,6 +89,23 @@ sub node {
   }
 }
 
+=method find_node
+
+  my @nodes = $pantry->find_node( $leading_part );
+
+Finds one or more node matching a leading part.  For example, given
+nodes 'foo.example.com' and 'bar.example.com' in a pantry, use
+C<<$pantry->find_node("foo")>> to get 'foo.example.com'.
+
+Returns a list of node objects if any are found.
+
+=cut
+
+sub find_node {
+  my ($self, $pattern) = @_;
+  return map { $self->node($_) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_nodes;
+}
+
 =method all_roles
 
   my @roles = $pantry->all_roles;
