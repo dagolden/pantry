@@ -59,7 +59,7 @@ sub _apply_obj {
     if ( my $method = $setters{$type}{$k} ) {
       $self->_set_attributes($obj, $opt, $k, $method);
     }
-    else {
+    elsif ( $opt->{$k} ) {
       $k = ucfirst $k;
       warn "$k attributes do not apply to $type objects.  Skipping them.\n";
     }

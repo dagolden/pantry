@@ -59,7 +59,7 @@ sub _strip_obj {
     if ( my $method = $strippers{$type}{$k} ) {
       $self->_delete_attributes($obj, $opt, $k, $method);
     }
-    else {
+    elsif ( $opt->{$k} ) {
       $k = ucfirst $k;
       warn "$k attributes do not apply to $type objects.  Skipping them.\n";
     }
