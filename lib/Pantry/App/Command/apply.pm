@@ -53,7 +53,7 @@ sub _apply_obj {
 
   my $obj = $self->_check_name($type, $name);
 
-  $self->_apply_recipe($obj, $opt);
+  $self->_apply_runlist($obj, $opt);
 
   for my $k ( sort keys %{$setters{$type}} ) {
     if ( my $method = $setters{$type}{$k} ) {
@@ -76,10 +76,13 @@ sub _check_name {
   return $obj;
 }
 
-sub _apply_recipe {
+sub _apply_runlist {
   my ($self, $obj, $opt) = @_;
   if ($opt->{recipe}) {
     $obj->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
+  }
+  if ($opt->{role}) {
+    $obj->append_to_run_list(map { "role[$_]" } @{$opt->{role}});
   }
   return;
 }

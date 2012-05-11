@@ -35,6 +35,12 @@ my @cases = (
         },
       },
       {
+        argv => [ qw/-R web/ ],
+        expected => {
+          run_list => [ 'role[web]' ],
+        },
+      },
+      {
         argv => [ qw/-d nginx.port=80/ ],
         expected => {
           run_list => [],
@@ -67,6 +73,12 @@ my @cases = (
         argv => [ qw/-r nginx/ ],
         expected => {
           run_list => [ 'recipe[nginx]' ],
+        },
+      },
+      {
+        argv => [ qw/-R web/ ],
+        expected => {
+          run_list => [ 'role[web]' ],
         },
       },
       {
