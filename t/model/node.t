@@ -39,6 +39,23 @@ subtest "_path attribute" => sub {
   is( $thawed->name, $node->name, "thawed name matches original name" );
 };
 
+# create with a host/port/user
+subtest "custom host/port/user" => sub {
+  my $wd=tempd;
+
+  my $node = Pantry::Model::Node->new(
+    name => "foo.example.com",
+    pantry_host => 'localhost',
+    pantry_port => '2222',
+    pantry_user => 'vagrant',
+  );
+  ok( $node->save_as("node.json"), "saved a node with custom host/port/user" );
+  ok( my $thawed = Pantry::Model::Node->new_from_file("node.json"), "thawed node");
+  is( $node->pantry_host, 'localhost', "custom host set correctly");
+  is( $node->pantry_port, '2222', "custom port set correctly");
+  is( $node->pantry_user, 'vagrant', "custom user set correctly");
+};
+
 # runlist manipulation
 subtest 'append to / remove from runlist' => sub {
   my $node = Pantry::Model::Node->new(

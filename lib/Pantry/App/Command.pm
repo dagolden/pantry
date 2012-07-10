@@ -224,6 +224,14 @@ runs.  Valid options include:
 HERE
 }
 
+sub ssh_options {
+  return (
+    [ 'host=s'        => "override SSH hostname (nodes only)" ],
+    [ 'port=i'        => "override SSH port     (nodes only)" ],
+    [ 'user=s'        => "override SSH username (nodes only)"],
+  );
+}
+
 sub data_options {
   return (
     [ 'recipe|r=s@'   => "A recipe (without 'recipe[...]')" ],

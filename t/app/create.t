@@ -18,6 +18,19 @@ my @cases = (
     },
   },
   {
+    label => "node with overrides",
+    type => "node",
+    name => 'foo.example.com',
+    opts => [qw/--host localhost --port 2222 --user vagrant/],
+    new => sub { my ($p,$n) = @_; $p->node($n) },
+    empty => {
+      run_list => [],
+      pantry_host => 'localhost',
+      pantry_port => 2222,
+      pantry_user => 'vagrant',
+    },
+  },
+  {
     label => "role",
     type => "role",
     name => 'web',
@@ -39,7 +52,7 @@ for my $c ( @cases ) {
 
     ok( ! -e $obj->path, "$c->{type} '$c->{name}' not created yet" );
 
-    _try_command('create', $c->{type}, $c->{name});
+    _try_command('create', $c->{type}, $c->{name}, @{ $c->{opts} || [] });
 
     ok( -e $obj->path, "$c->{type} '$c->{name}' created" );
 
@@ -48,7 +61,7 @@ for my $c ( @cases ) {
     is ( delete $data->{name}, $c->{name}, "$c->{type} name set correctly in data file" );
 
     is_deeply( $data, $c->{empty}, "remaining fields correctly set for empty $c->{type}" )
-      or diag explain $data;
+      or diag explain($data);
   }
 }
 

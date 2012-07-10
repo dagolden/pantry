@@ -85,6 +85,44 @@ has attributes => (
   },
 );
 
+=attr pantry_host
+
+This optional attribute holds an alternate hostname or IP address to use for
+the SSH connection within C<pantry sync>.  In all other respects, the node will
+still be referenced by the C<name> attribute.
+
+=cut
+
+has pantry_host => (
+  is => 'ro',
+  isa => 'Str',
+);
+
+=attr pantry_port
+
+This optional attribute holds an alternate port number to use for the SSH
+connection within C<pantry sync>.
+
+=cut
+
+has pantry_port => (
+  is => 'ro',
+  isa => 'Int',
+);
+
+=attr pantry_user
+
+This optional attribute holds an alternate user for the SSH
+connection within C<pantry sync>.  (The default is C<root>.)
+
+=cut
+
+
+has pantry_user => (
+  is => 'ro',
+  isa => 'Str',
+);
+
 =method save
 
 Saves the node to a file in the pantry.  If the private C<_path>
@@ -98,7 +136,7 @@ sub save {
   return $self->save_as( $self->path );
 }
 
-my @top_level_keys = qw/name run_list/;
+my @top_level_keys = qw/name run_list pantry_host pantry_port pantry_user/;
 
 sub _freeze {
   my ($self, $data) = @_;
