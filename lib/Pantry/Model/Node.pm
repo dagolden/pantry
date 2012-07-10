@@ -114,6 +114,7 @@ has pantry_port => (
 
 This optional attribute holds an alternate user for the SSH
 connection within C<pantry sync>.  (The default is C<root>.)
+This user B<must> have password-less sudo permissions.
 
 =cut
 
