@@ -90,14 +90,11 @@ sub _sync_node {
     or die "Could not rsync roles\n";
 
   # ssh execute chef-solo
-##  my $path = $ssh->capture($sudo . "echo \$PATH");
-##  say "PATH: $path";
-##  my $chef_solo = $ssh->capture($sudo . "which chef-solo");
-##  chomp $chef_solo;
   my $command = $sudo_i . "chef-solo -c $dest_dir/solo.rb";
   $command .= " -l debug" if $ENV{PANTRY_CHEF_DEBUG};
   $ssh->system({tty => $sudo ? 1 : 0}, $command) # XXX eventually capture output
     or die "Error running chef-solo\n";
+  # cleanup report permissions if running under sudo so we can find/download it
   $ssh->system($sudo . "chown -R $user $dest_dir/reports") if $sudo;
   # scp get run report
   my $report = $ssh->capture("ls -t $dest_dir/reports | head -1");
