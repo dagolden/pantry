@@ -36,6 +36,10 @@ my $rsync_opts = {
   times => 1,
 };
 
+sub _remote_pantry_dir {
+  return "/var/pantry";
+};
+
 sub _sync_node {
   my ($self, $opt, $name) = @_;
   my $obj = $self->_check_name('node', $name);
@@ -56,7 +60,7 @@ sub _sync_node {
     if $ssh->error;
 
   # ensure destination directory and ownership
-  my $dest_dir = "/var/pantry";
+  my $dest_dir = $self->_remote_pantry_dir;
   $ssh->system($sudo . "mkdir -p $dest_dir")
     or die "Could not create $dest_dir\n";
   if ( $sudo ) {
@@ -106,14 +110,16 @@ sub _sync_node {
 }
 
 sub _solo_rb_guts {
-  return << 'HERE';
-file_cache_path "/var/pantry"
-cookbook_path "/var/pantry/cookbooks"
-role_path "/var/pantry/roles"
-json_attribs "/var/pantry/node.json"
+  my ($self) = @_;
+  my $dest_dir = $self->_remote_pantry_dir;
+  return << "HERE";
+file_cache_path "$dest_dir"
+cookbook_path "$dest_dir/cookbooks"
+role_path "$dest_dir/roles"
+json_attribs "$dest_dir/node.json"
 require 'chef/handler/json_file'
-report_handlers << Chef::Handler::JsonFile.new(:path => "/var/pantry/reports")
-exception_handlers << Chef::Handler::JsonFile.new(:path => "/var/pantry/reports")
+report_handlers << Chef::Handler::JsonFile.new(:path => "$dest_dir/reports")
+exception_handlers << Chef::Handler::JsonFile.new(:path => "$dest_dir/reports")
 HERE
 }
 
