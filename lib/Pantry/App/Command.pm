@@ -262,6 +262,7 @@ sub _check_name {
 command_type
 valid_types
 data_options
+ssh_options
 options
 options_desc
 pantry
