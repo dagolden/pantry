@@ -143,5 +143,34 @@ subtest 'node attribute escape dots' => sub {
     or diag explain $thawed;
 };
 
+subtest 'boolean values' => sub {
+  my $wd=tempd;
+  my $node = Pantry::Model::Node->new(
+    name => "foo.example.com",
+    _path => "node.json",
+  );
+  $node->set_attribute('nginx\.enabled' => JSON::true);
+  $node->set_attribute('nginx\.logging' => JSON::false);
+  ok( $node->get_attribute('nginx\.enabled'), "nginx.enabled is true");
+  isa_ok( $node->get_attribute('nginx\.enabled'), "JSON::Boolean", 'nginx.enabled is JSON::Boolean' );
+  ok( ! $node->get_attribute('nginx\.logging'), "nginx.logging is true");
+  isa_ok( $node->get_attribute('nginx\.logging'), "JSON::Boolean", 'nginx.logging is JSON::Boolean' );
+  $node->save;
+  my $data = _thaw_file("node.json");
+  is_deeply( $data, {
+      name => 'foo.example.com',
+      run_list => [],
+      'nginx.enabled' => JSON::true,
+      'nginx.logging' => JSON::false,
+    },
+    "boolean objects in freeze and thaw data"
+  ) or diag explain $data;
+  ok( my $thawed = Pantry::Model::Node->new_from_file("node.json"), "thawed node");
+  ok( $thawed->get_attribute('nginx\.enabled'), "thawed nginx.enabled is true");
+  isa_ok( $thawed->get_attribute('nginx\.enabled'), "JSON::Boolean", 'thawed nginx.enabled is JSON::Boolean' );
+  ok( ! $thawed->get_attribute('nginx\.logging'), "thawed nginx.logging is true");
+  isa_ok( $thawed->get_attribute('nginx\.logging'), "JSON::Boolean", 'thawed nginx.logging is JSON::Boolean' );
+};
+
 done_testing;
 # COPYRIGHT

@@ -51,7 +51,9 @@ has _path => (
 
 This attribute holds node attribute data as key-value pairs.  Keys may
 be separated by a period to indicate nesting (literal periods must be
-escaped by a backslash).  Values should be scalars or array references.
+escaped by a backslash).  Values should be scalars or array references,
+except for boolean values which should be set as L<JSON::Boolean>
+values like C<JSON::true> and C<JSON::false>.
 
 =method set_attribute
 

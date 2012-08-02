@@ -2,6 +2,10 @@ Revision history for pantry
 
 {{$NEXT}}
 
+    [Added]
+
+    - Node model now tested with JSON::Boolean values
+
 0.006     2012-07-12 14:34:17 America/New_York
 
     [Added]
