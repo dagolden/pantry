@@ -129,6 +129,9 @@ will be added to the node's data structure like this:
 Both C<KEY> and C<VALUE> support periods and commas (respectively) to be
 escaped by a backslash.
 
+If a C<VALUE> is a literal string containing 'true' or 'false', it will be
+replaced in the configuration data with actual JSON boolean values.
+
 N.B. While the term C<--default> is used for command line consistency, attributes
 set on nodes actually have what Chef terms "normal" precedence.
 

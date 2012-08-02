@@ -4,6 +4,7 @@ use warnings;
 no warnings 'qw'; # separating words with commas
 use autodie;
 use Test::More 0.92;
+use Test::Deep 0.110 qw/cmp_deeply/;
 
 use lib 't/lib';
 use TestHelper;
@@ -67,6 +68,20 @@ my @cases = (
           'nginx.port' => [80,'8000,8080'],
         },
       },
+      {
+        argv => [ qw/-d nginx\.enable=false/ ],
+        expected => {
+          run_list => [],
+          'nginx.enable' => JSON::false,
+        },
+      },
+      {
+        argv => [ qw/-d nginx\.enable=true/ ],
+        expected => {
+          run_list => [],
+          'nginx.enable' => JSON::true,
+        },
+      },
     ],
   },
 
@@ -119,6 +134,22 @@ my @cases = (
           },
         },
       },
+      {
+        argv => [ qw/-d nginx\.enable=false/ ],
+        expected => {
+          default_attributes => {
+            'nginx.enable' => JSON::false,
+          }
+        },
+      },
+      {
+        argv => [ qw/-d nginx\.enable=true/ ],
+        expected => {
+          default_attributes => {
+            'nginx.enable' => JSON::true,
+          }
+        },
+      },
     ],
   },
 );
@@ -138,7 +169,7 @@ for my $c ( @cases ) {
         $st->{expected}{$k} //= $templates{$c->{type}}{$k};
       }
 
-      is_deeply( $data, $st->{expected}, "data file correct" )
+      cmp_deeply( $data, $st->{expected}, "data file correct" )
         or diag explain $data;
     };
   }

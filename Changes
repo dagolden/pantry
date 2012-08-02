@@ -4,7 +4,8 @@ Revision history for pantry
 
     [Added]
 
-    - Node model now tested with JSON::Boolean values
+    - 'pantry apply' now converts 'true' and 'false' to
+      actual JSON booleans in the configuration file
 
 0.006     2012-07-12 14:34:17 America/New_York
 
