@@ -2,6 +2,8 @@ Revision history for pantry
 
 {{$NEXT}}
 
+0.007     2012-08-02 19:20:08 America/New_York
+
     [Added]
 
     - 'pantry apply' now converts 'true' and 'false' to
