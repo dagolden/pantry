@@ -24,7 +24,7 @@ sub options {
 }
 
 sub valid_types {
-  return qw/node role/
+  return qw/node role cookbook/
 }
 
 sub _create_node {
@@ -55,6 +55,20 @@ sub _create_role {
   }
   else {
     $role->save;
+  }
+
+  return;
+}
+
+sub _create_cookbook {
+  my ($self, $opt, $name) = @_;
+
+  my $cookbook = $self->pantry->cookbook( $name );
+  if ( -e $cookbook->path ) {
+    $self->usage_error( "Cookbook '$name' already exists" );
+  }
+  else {
+    $cookbook->create_boilerplate;
   }
 
   return;

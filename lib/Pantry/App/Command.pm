@@ -189,6 +189,7 @@ Valid TARGET types include:
 
         node      NAME refers to a node name that is *NOT* in the pantry
         role      NAME refers to a role name that is *NOT* in the pantry
+        cookbook  NAME refers to a cookbook that is *NOT* in the pantry
 
 If NAME is '-', then the command will be executed on a list of names
 read from STDIN.

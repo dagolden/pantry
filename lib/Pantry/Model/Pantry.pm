@@ -40,6 +40,13 @@ sub _role_dir {
   return $path;
 }
 
+sub _cookbook_dir {
+  my ($self) = @_;
+  my $path = $self->path->subdir("cookbooks");
+  $path->mkpath;
+  return $path;
+}
+
 sub _role_path {
   my ($self, $role_name) = @_;
   return $self->_role_dir->file("${role_name}.json");
@@ -48,6 +55,11 @@ sub _role_path {
 sub _node_path {
   my ($self, $node_name, $env) = @_;
   return $self->_env_dir($env)->file("${node_name}.json");
+}
+
+sub _cookbook_path {
+  my ($self, $cookbook_name) = @_;
+  return $self->_cookbook_dir->subdir("${cookbook_name}");
 }
 
 =method all_nodes
@@ -160,6 +172,22 @@ Returns a list of role objects if any are found.
 sub find_role {
   my ($self, $pattern) = @_;
   return map { $self->role($_) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_roles;
+}
+
+=method C<cookbook>
+
+  my $node = $pantry->cookbook("myapp");
+
+Returns a L<Pantry::Model::Cookbook> object corresponding to the given cookbook.
+
+=cut
+
+sub cookbook {
+  my ($self, $cookbook_name, $env) = @_;
+  $cookbook_name = lc $cookbook_name;
+  require Pantry::Model::Cookbook;
+  my $path = $self->_cookbook_path( $cookbook_name );
+  return Pantry::Model::Cookbook->new( name => $cookbook_name, _path => $path );
 }
 
 1;
