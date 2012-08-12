@@ -65,6 +65,26 @@ subtest "list nodes when some exist" => sub {
   );
 };
 
+subtest "list nodes in default environment only" => sub {
+  my $pantry = _new_pantry_ok();
+  ok( $pantry->node("foo.example.com")->save, "created a node");
+  ok( $pantry->node("foo2.example.com", {env => 'test'})->save, "created another node in test env");
+  is( scalar $pantry->all_nodes, 1, "all_nodes gives count of 1 (scalar)" );
+  is_deeply( [sort $pantry->all_nodes], [sort qw/foo.example.com/],
+    "all_nodes gives correct list (list)"
+  );
+};
+
+subtest "list nodes in specified environment" => sub {
+  my $pantry = _new_pantry_ok();
+  ok( $pantry->node("foo.example.com")->save, "created a node");
+  ok( $pantry->node("foo2.example.com", {env => 'test'})->save, "created another node in test env");
+  is( scalar $pantry->all_nodes( {env => 'test'} ), 1, "all_nodes(\\\%opt) gives count of 1 (scalar)" );
+  is_deeply( [sort $pantry->all_nodes], [sort qw/foo.example.com/],
+    "all_nodes(\\\%opt) gives correct list (list)"
+  );
+};
+
 subtest "find nodes matching a partial name" => sub {
   my $pantry = _new_pantry_ok();
   for my $name (qw/foo bar baz/) {

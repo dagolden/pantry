@@ -72,9 +72,9 @@ a count of nodes.
 =cut
 
 sub all_nodes {
-  my ($self, $env) = @_;
+  my ($self, $options) = @_;
   my @nodes = sort map { s/\.json$//r } map { $_->basename }
-              $self->_env_dir($env)->children;
+              $self->_env_dir($options->{env})->children;
   return @nodes;
 }
 
