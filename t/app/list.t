@@ -17,7 +17,7 @@ my @cases = (
   {
     label => "nodes in specified environment",
     type => "node",
-    args => '-E test',
+    args => [qw/-E test/],
     names => ['foo.example.com', 'bar.example.com'],
     new => sub { my ($p,$n) = @_; $p->node($n, {env => 'test'}) },
   },
@@ -32,13 +32,13 @@ my @cases = (
 for my $c ( @cases ) {
   subtest "list $c->{label}" => sub {
     my ($wd, $pantry) = _create_pantry();
-    $c->{args} ||= '';
+    my @args = @{$c->{args} || []};
 
     for my $name ( @{$c->{names}} ) {
-      _try_command('create', $c->{type}, $name, $c->{args});
+      _try_command('create', $c->{type}, $name, @args);
     }
 
-    my $result = _try_command('list', $c->{type}, $c->{args});
+    my $result = _try_command('list', $c->{type}, @args);
 
     my $err;
     for my $name ( @{$c->{names}} ) {
