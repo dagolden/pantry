@@ -15,6 +15,13 @@ my @cases = (
     new => sub { my ($p,$n) = @_; $p->node($n) },
   },
   {
+    label => "nodes in specified environment",
+    type => "node",
+    args => '-E test',
+    names => ['foo.example.com', 'bar.example.com'],
+    new => sub { my ($p,$n) = @_; $p->node($n, {env => 'test'}) },
+  },
+  {
     label => "roles",
     type => "role",
     names => ['web', 'db'],
@@ -23,14 +30,15 @@ my @cases = (
 );
 
 for my $c ( @cases ) {
-  subtest "$c->{type}: list" => sub {
+  subtest "list $c->{label}" => sub {
     my ($wd, $pantry) = _create_pantry();
+    $c->{args} ||= '';
 
     for my $name ( @{$c->{names}} ) {
-      _try_command('create', $c->{type}, $name);
+      _try_command('create', $c->{type}, $name, $c->{args});
     }
 
-    my $result = _try_command('list', $c->{type});
+    my $result = _try_command('list', $c->{type}, $c->{args});
 
     my $err;
     for my $name ( @{$c->{names}} ) {

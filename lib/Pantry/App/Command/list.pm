@@ -18,13 +18,18 @@ sub command_type {
   return 'TYPE';
 }
 
+sub options {
+  my ($self) = @_;
+  return ($self->selector_options);
+}
+
 sub valid_types {
   return qw/node nodes role roles/
 }
 
 sub _list_nodes {
   my ($self, $opt) = @_;
-  say $_ for $self->pantry->all_nodes;
+  say $_ for $self->pantry->all_nodes($opt);
 }
 
 *_list_node = *_list_nodes; # alias
