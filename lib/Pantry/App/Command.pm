@@ -242,10 +242,16 @@ sub data_options {
   );
 }
 
+sub selector_options {
+  return (
+    [ 'env|E=s'       => "Deployment environment selector" ],
+  );
+}
+
 sub _check_name {
-  my ($self, $type, $name) = @_;
+  my ($self, $type, $name, $options) = @_;
   my $meth = "find_$type";
-  my @objs = $self->pantry->$meth( $name );
+  my @objs = $self->pantry->$meth( $name, $options );
   if (@objs == 0) {
     die "$type '$name' does not exist\n";
   }

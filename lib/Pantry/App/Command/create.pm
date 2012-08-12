@@ -20,7 +20,7 @@ sub command_type {
 
 sub options {
   my ($self) = @_;
-  return $self->ssh_options;
+  return ($self->ssh_options, $self->selector_options);
 }
 
 sub valid_types {
@@ -34,6 +34,7 @@ sub _create_node {
   for my $k ( qw/host port user/ ) {
     $options{"pantry_$k"} = $opt->$k if $opt->$k;
   }
+  $options{env} = $opt->{env} if $opt->{env};
 
   my $node = $self->pantry->node( $name, \%options);
   if ( -e $node->path ) {

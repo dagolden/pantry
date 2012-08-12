@@ -32,6 +32,16 @@ my @cases = (
     },
   },
   {
+    label => "node in test environment",
+    type => "node",
+    name => 'foo.example.com',
+    opts => [qw/-E test/],
+    new => sub { my ($p,$n) = @_; $p->node($n, {env => 'test'}) },
+    empty => {
+      run_list => [],
+    },
+  },
+  {
     label => "role",
     type => "role",
     name => 'web',
