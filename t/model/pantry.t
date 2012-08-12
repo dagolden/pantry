@@ -100,5 +100,24 @@ subtest "find nodes matching a partial name" => sub {
   is ( scalar @found, 0, "search on 'zzz' found 0 nodes" );
 };
 
+subtest "find nodes matching a partial name in an environment" => sub {
+  my $pantry = _new_pantry_ok();
+  for my $name (qw/foo bar baz/) {
+    ok( my $node = $pantry->node("$name.example.com"), "created $name");
+    $node->save;
+  }
+  for my $name (qw/wibble wobble/) {
+    ok( my $node = $pantry->node("$name.example.com", {env => 'test'}),
+      "created $name in test env"
+    );
+    $node->save;
+  }
+  my @found = $pantry->find_node("wibble");
+  is ( scalar @found, 0, "search on 'wibble' in default env found 0 nodes" );
+  @found = $pantry->find_node("wibble", {env => 'test'});
+  is ( scalar @found, 1, "search on 'wibble' in test env found 1 node" );
+  is ( $found[0]->name, 'wibble.example.com', "found correct node" );
+};
+
 done_testing;
 # COPYRIGHT

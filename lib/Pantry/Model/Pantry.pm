@@ -115,8 +115,8 @@ Returns a list of node objects if any are found.
 =cut
 
 sub find_node {
-  my ($self, $pattern) = @_;
-  return map { $self->node($_) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_nodes;
+  my ($self, $pattern, $options) = @_;
+  return map { $self->node($_) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_nodes($options);
 }
 
 =method all_roles
