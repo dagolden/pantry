@@ -44,6 +44,17 @@ subtest "create/retrieve a node" => sub {
   ok( $node2->save, "saved it again" );
 };
 
+subtest "create/retrieve a node in an environement" => sub {
+  my $pantry = _new_pantry_ok();
+  ok( my $node = $pantry->node("foo.example.com", { env => "test" }), "created a node in test environment");
+  $node->save;
+  ok( -e file( $pantry->path =>, 'environments', 'test', 'foo.example.com.json'),
+      "saved a node to test environment directory"
+  );
+  ok( my $node2 = $pantry->node("foo.example.com", { env => "test"}), "retrieved a node from test environement");
+  ok( $node2->save, "saved it again" );
+};
+
 subtest "list nodes when some exist" => sub {
   my $pantry = _new_pantry_ok();
   ok( $pantry->node("foo.example.com")->save, "created a node");

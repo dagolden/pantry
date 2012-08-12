@@ -93,7 +93,7 @@ sub node {
   $options //= {};
   $node_name = lc $node_name;
   require Pantry::Model::Node;
-  my $path = $self->_node_path( $node_name );
+  my $path = $self->_node_path( $node_name, $options->{env} );
   if ( -e $path ) {
     return Pantry::Model::Node->new_from_file( $path );
   }
