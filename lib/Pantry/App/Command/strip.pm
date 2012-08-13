@@ -24,7 +24,7 @@ sub valid_types {
 
 sub options {
   my ($self) = @_;
-  return $self->data_options;
+  return ($self->data_options, $self->selector_options);
 }
 
 sub _strip_node {
@@ -51,7 +51,9 @@ my %strippers = (
 sub _strip_obj {
   my ($self, $opt, $type, $name) = @_;
 
-  my $obj = $self->_check_name($type, $name);
+  my $options;
+  $options->{env} = $opt->{env} if $opt->{env};
+  my $obj = $self->_check_name($type, $name, $options);
 
   $self->_delete_runlist($obj, $opt);
 
