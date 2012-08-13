@@ -4,7 +4,7 @@ Pantry - Configuration management tool for chef-solo
 
 =head1 VERSION
 
-version 0.008
+version 0.009
 
 =head1 SYNOPSIS
 
@@ -63,6 +63,15 @@ You can combine this with the C<pantry list> command to do
 batch operations.  For example, to sync all nodes:
 
   $ pantry list nodes | pantry sync node -
+
+Pantry supports grouping nodes into arbitrarily named environments,
+such as "test", "staging" or "production".  Any node command can
+be given an environment selector with the C<--env ENV_NAME> or
+C<-E ENV_NAME> options and all operations will be restricted to that
+environment name.  This even works with "list" for a handy way to sync
+all nodes:
+
+  $ pantry list nodes -E staging | pantry sync node -
 
 =head3 create
 
@@ -277,7 +286,7 @@ In the future, I hope to extend pantry to support some or all of the following:
 
 =item *
 
-environments
+better documentation/constraints for environments
 
 =item *
 
@@ -290,6 +299,10 @@ searching nodes based on configuration
 =item *
 
 data bags
+
+=item *
+
+encrypted data bags (or equivalent functionality)
 
 =item *
 
@@ -330,7 +343,7 @@ pocketknife L<http://github.com/igal/pocketknife> (Ruby)
 =head2 Bugs / Feature Requests
 
 Please report any bugs or feature requests through the issue tracker
-at L<https://github.com/dagolden/pantry/issues>.
+at L<https://rt.cpan.org/Public/Dist/Display.html?Name=Pantry>.
 You will be notified automatically of any progress on your issue.
 
 =head2 Source Code
@@ -340,7 +353,7 @@ public review and contribution under the terms of the license.
 
 L<https://github.com/dagolden/pantry>
 
-  git clone https://github.com/dagolden/pantry.git
+  git clone git://github.com/dagolden/pantry.git
 
 =head1 AUTHOR
 

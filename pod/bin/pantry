@@ -56,6 +56,15 @@ batch operations.  For example, to sync all nodes:
 
   $ pantry list nodes | pantry sync node -
 
+Pantry supports grouping nodes into arbitrarily named environments,
+such as "test", "staging" or "production".  Any node command can
+be given an environment selector with the C<--env ENV_NAME> or
+C<-E ENV_NAME> options and all operations will be restricted to that
+environment name.  This even works with "list" for a handy way to sync
+all nodes:
+
+  $ pantry list nodes -E staging | pantry sync node -
+
 =head3 create
 
   $ pantry create node NAME
@@ -266,10 +275,11 @@ stay unlocked.
 In the future, I hope to extend pantry to support some or all of the following:
 
 =for :list
-* environments
+* better documentation/constraints for environments
 * tagging nodes
 * searching nodes based on configuration
 * data bags
+* encrypted data bags (or equivalent functionality)
 * cookbook download from Opscode community repository
 * bootstrapping Chef over ssh
 

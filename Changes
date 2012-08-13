@@ -2,6 +2,12 @@ Revision history for pantry
 
 {{$NEXT}}
 
+    [Added]
+
+    - All pantry node commands now support an environment
+      selector (e.g. "-E staging") to restrict node operations
+      to a particular environment
+
 0.008     2012-08-02 22:53:18 America/New_York
 
     [Added]
