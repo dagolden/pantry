@@ -23,7 +23,9 @@ sub valid_types {
 }
 
 sub options {
+  my ($self) = @_;
   return (
+    $self->selector_options,
     ['force|f', "force deletion without confirmation"],
   );
 }
@@ -41,7 +43,9 @@ sub _delete_role {
 sub _delete_obj {
   my ($self, $opt, $type, $name) = @_;
 
-  my $obj = $self->_check_name($type, $name);
+  my $options;
+  $options->{env} = $opt->{env} if $opt->{env};
+  my $obj = $self->_check_name($type, $name, $options);
 
   unless ( $opt->{force} ) {
     my $confirm = IO::Prompt::Tiny::prompt("Delete $type '$name'?", "no");
