@@ -21,7 +21,7 @@ sub command_type {
 
 sub options {
   my ($self) = @_;
-  return $self->data_options;
+  return ($self->data_options, $self->selector_options);
 }
 
 sub valid_types {
@@ -52,7 +52,9 @@ my %setters = (
 sub _apply_obj {
   my ($self, $opt, $type, $name) = @_;
 
-  my $obj = $self->_check_name($type, $name);
+  my $options;
+  $options->{env} = $opt->{env} if $opt->{env};
+  my $obj = $self->_check_name($type, $name, $options);
 
   $self->_apply_runlist($obj, $opt);
 

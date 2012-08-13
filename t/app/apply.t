@@ -23,66 +23,76 @@ my %templates = (
   },
 );
 
+my @node_subtests = (
+  {
+    argv => [ qw/-r nginx/ ],
+    expected => {
+      run_list => [ 'recipe[nginx]' ],
+    },
+  },
+  {
+    argv => [ qw/-R web/ ],
+    expected => {
+      run_list => [ 'role[web]' ],
+    },
+  },
+  {
+    argv => [ qw/-r postfix -r iptables -R web/ ],
+    expected => {
+      run_list => [ qw/role[web] recipe[postfix] recipe[iptables]/ ],
+    },
+  },
+  {
+    argv => [ qw/-d nginx.port=80/ ],
+    expected => {
+      run_list => [],
+      nginx => { port => 80 },
+    },
+  },
+  {
+    argv => [ qw/-d nginx.port=80,8080/ ],
+    expected => {
+      run_list => [],
+      nginx => { port => [80,8080] },
+    },
+  },
+  {
+    argv => [ qw/-d nginx\.port=80,8000\,8080/ ],
+    expected => {
+      run_list => [],
+      'nginx.port' => [80,'8000,8080'],
+    },
+  },
+  {
+    argv => [ qw/-d nginx\.enable=false/ ],
+    expected => {
+      run_list => [],
+      'nginx.enable' => JSON::false,
+    },
+  },
+  {
+    argv => [ qw/-d nginx\.enable=true/ ],
+    expected => {
+      run_list => [],
+      'nginx.enable' => JSON::true,
+    },
+  },
+);
+
 my @cases = (
   {
     type => "node",
     name => 'foo.example.com',
     new => sub { my ($p,$n) = @_; $p->node($n) },
-    subtests => [
-      {
-        argv => [ qw/-r nginx/ ],
-        expected => {
-          run_list => [ 'recipe[nginx]' ],
-        },
-      },
-      {
-        argv => [ qw/-R web/ ],
-        expected => {
-          run_list => [ 'role[web]' ],
-        },
-      },
-      {
-        argv => [ qw/-r postfix -r iptables -R web/ ],
-        expected => {
-          run_list => [ qw/role[web] recipe[postfix] recipe[iptables]/ ],
-        },
-      },
-      {
-        argv => [ qw/-d nginx.port=80/ ],
-        expected => {
-          run_list => [],
-          nginx => { port => 80 },
-        },
-      },
-      {
-        argv => [ qw/-d nginx.port=80,8080/ ],
-        expected => {
-          run_list => [],
-          nginx => { port => [80,8080] },
-        },
-      },
-      {
-        argv => [ qw/-d nginx\.port=80,8000\,8080/ ],
-        expected => {
-          run_list => [],
-          'nginx.port' => [80,'8000,8080'],
-        },
-      },
-      {
-        argv => [ qw/-d nginx\.enable=false/ ],
-        expected => {
-          run_list => [],
-          'nginx.enable' => JSON::false,
-        },
-      },
-      {
-        argv => [ qw/-d nginx\.enable=true/ ],
-        expected => {
-          run_list => [],
-          'nginx.enable' => JSON::true,
-        },
-      },
-    ],
+    subtests => \@node_subtests,
+  },
+
+  {
+    type => "node",
+    name => 'foo.example.com',
+    new => sub { my ($p,$n) = @_; $p->node($n, {env => 'test'}) },
+    env_args => [qw/-E test/],
+    subtests => \@node_subtests,
   },
 
   {
@@ -156,12 +166,14 @@ my @cases = (
 
 for my $c ( @cases ) {
   for my $st ( @{$c->{subtests}} ) {
-    subtest "$c->{type} NAME @{$st->{argv}}" => sub {
+    my @argv = @{$st->{argv}};
+    push @argv, @{$c->{env_args}} if exists $c->{env_args};
+    subtest "$c->{type} NAME @argv" => sub {
       my ($wd, $pantry) = _create_pantry();
       my $obj = $c->{new}->($pantry, $c->{name});
 
-      _try_command('create', $c->{type}, $c->{name});
-      _try_command('apply', $c->{type}, $c->{name}, @{$st->{argv}}) ;
+      _try_command('create', $c->{type}, $c->{name}, @{$c->{env_args} || []});
+      _try_command('apply', $c->{type}, $c->{name}, @argv) ;
 
       my $data = _thaw_file( $obj->path );
       $st->{expected}{name} //= $c->{name};
