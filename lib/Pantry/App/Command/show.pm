@@ -19,6 +19,11 @@ sub command_type {
   return 'TARGET';
 }
 
+sub options {
+  my ($self) = @_;
+  return $self->selector_options;
+}
+
 sub valid_types {
   return qw/node role/
 }
@@ -35,7 +40,9 @@ sub _show_role {
 
 sub _show_obj {
   my ($self, $opt, $type, $name) = @_;
-  my $obj = $self->_check_name($type, $name);
+  my $options;
+  $options->{env} = $opt->{env} if $opt->{env};
+  my $obj = $self->_check_name($type, $name, $options);
   my $path = $obj->path;
   if ( -e $path ) {
     print scalar read_file($path);
