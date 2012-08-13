@@ -268,12 +268,13 @@ sub _check_name {
 
 =for Pod::Coverage
 command_type
-valid_types
 data_options
-ssh_options
 options
 options_desc
 pantry
+selector_options
+ssh_options
+valid_types
 validate
 
 =head1 DESCRIPTION
