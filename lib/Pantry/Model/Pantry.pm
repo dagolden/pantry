@@ -25,12 +25,21 @@ has path => (
   default => sub { dir(".")->absolute }
 );
 
+# directory where nodes are stored in an environment
 sub _env_dir {
   my ($self, $env) = @_;
   $env //= '_default';
   my $path = $self->path->subdir("environments", $env);
   $path->mkpath;
   return $path;
+}
+
+# file path where environment JSON file is located
+sub _environment_path {
+  my ($self, $env) = @_;
+  my $path = $self->path->subdir("environments");
+  $path->mkpath;
+  return $path->file("${env}.json");
 }
 
 sub _role_dir {
@@ -172,6 +181,27 @@ Returns a list of role objects if any are found.
 sub find_role {
   my ($self, $pattern) = @_;
   return map { $self->role($_) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_roles;
+}
+
+=method C<environment>
+
+  my $node = $pantry->environment("staging");
+
+Returns a L<Pantry::Model::Environment> object corresponding to the given environment.
+
+=cut
+
+sub environment {
+  my ($self, $environment_name, $options) = @_;
+  $environment_name = lc $environment_name;
+  require Pantry::Model::Environment;
+  my $path = $self->_environment_path( $environment_name );
+  if ( -e $path ) {
+    return Pantry::Model::Environment->new_from_file( $path );
+  }
+  else {
+    return Pantry::Model::Environment->new( name => $environment_name, _path => $path );
+  }
 }
 
 =method C<cookbook>
