@@ -155,7 +155,7 @@ Otherwise, it will be created in memory (but will not be persisted to disk).
 =cut
 
 sub role {
-  my ($self, $role_name, $env) = @_;
+  my ($self, $role_name, $options) = @_;
   $role_name = lc $role_name;
   require Pantry::Model::Role;
   my $path = $self->_role_path( $role_name );
@@ -179,7 +179,7 @@ Returns a list of role objects if any are found.
 =cut
 
 sub find_role {
-  my ($self, $pattern) = @_;
+  my ($self, $pattern, $options) = @_;
   return map { $self->role($_) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_roles;
 }
 
