@@ -142,6 +142,33 @@ my @deep_attribute_subtests = (
   },
 );
 
+my @env_run_list_subtests = (
+  {
+    argv     => [qw/-r nginx -E test/],
+    expected => {
+      env_run_lists => {
+        test => ['recipe[nginx]'],
+      },
+    },
+  },
+  {
+    argv     => [qw/-R web -E test/],
+    expected => {
+      env_run_lists => {
+        test =>  ['role[web]'],
+      },
+    },
+  },
+  {
+    argv     => [qw/-r postfix -r iptables -R web -E test/],
+    expected => {
+      env_run_lists => {
+        test => [qw/role[web] recipe[postfix] recipe[iptables]/],
+      }
+    },
+  },
+);
+
 my @cases = (
   {
     type => "node",
@@ -162,7 +189,7 @@ my @cases = (
     type => "role",
     name => 'web',
     new  => sub { my ( $p, $n ) = @_; $p->role($n) },
-    subtests => [ @recipe_role_subtests, @deep_attribute_subtests ],
+    subtests => [ @recipe_role_subtests, @env_run_list_subtests, @deep_attribute_subtests ],
   },
 
   {

@@ -65,7 +65,20 @@ sub _apply_obj {
   $options->{env} = $opt->{env} if $opt->{env};
   my $obj = $self->_check_name($type, $name, $options);
 
-  $self->_apply_runlist($obj, $opt) unless $type eq 'environment';
+  if ( $type eq 'node' ) {
+    $self->_apply_runlist($obj, $opt)
+  }
+  elsif ( $type eq 'role' ) {
+    if ( $options->{env} ) {
+      $self->_apply_env_runlist($obj, $opt)
+    }
+    else {
+      $self->_apply_runlist($obj, $opt)
+    }
+  }
+  else {
+    # nothing else has run lists
+  }
 
   for my $k ( sort keys %{$setters{$type}} ) {
     if ( my $method = $setters{$type}{$k} ) {
@@ -88,6 +101,17 @@ sub _apply_runlist {
   }
   if ($opt->{recipe}) {
     $obj->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
+  }
+  return;
+}
+
+sub _apply_env_runlist {
+  my ($self, $obj, $opt) = @_;
+  if ($opt->{role}) {
+    $obj->append_to_env_run_list($opt->{env}, [map { "role[$_]" } @{$opt->{role}}]);
+  }
+  if ($opt->{recipe}) {
+    $obj->append_to_env_run_list($opt->{env}, [map { "recipe[$_]" } @{$opt->{recipe}}]);
   }
   return;
 }
