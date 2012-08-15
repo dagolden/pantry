@@ -24,7 +24,7 @@ sub options{
 }
 
 sub valid_types {
-  return qw/node role/
+  return qw/node role environment/
 }
 
 sub _rename_node {
@@ -35,6 +35,11 @@ sub _rename_node {
 sub _rename_role {
   my ($self, $opt, $name, $dest) = @_;
   return $self->_rename_obj($opt, 'role', $name, $dest);
+}
+
+sub _rename_environment {
+  my ($self, $opt, $name, $dest) = @_;
+  return $self->_rename_obj($opt, 'environment', $name, $dest);
 }
 
 sub _rename_obj {
