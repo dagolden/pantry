@@ -19,7 +19,7 @@ sub command_type {
 }
 
 sub valid_types {
-  return qw/node role/
+  return qw/node role environment/
 }
 
 sub options {
@@ -37,12 +37,21 @@ sub _strip_role {
   $self->_strip_obj($opt, 'role', $name);
 }
 
+sub _strip_environment {
+  my ($self, $opt, $name) = @_;
+  $self->_strip_obj($opt, 'environment', $name);
+}
+
 my %strippers = (
   node => {
     default => 'delete_attribute',
     override => undef,
   },
   role => {
+    default => 'delete_default_attribute',
+    override => 'delete_override_attribute',
+  },
+  environment => {
     default => 'delete_default_attribute',
     override => 'delete_override_attribute',
   },
