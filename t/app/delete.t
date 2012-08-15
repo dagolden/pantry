@@ -27,6 +27,12 @@ my @cases = (
     name => 'web',
     new => sub { my ($p,$n) = @_; $p->role($n) },
   },
+  {
+    label => "environment",
+    type => "environment",
+    name => 'test',
+    new => sub { my ($p,$n) = @_; $p->environment($n) },
+  },
 );
 
 local $ENV{PERL_MM_USE_DEFAULT} = 1;

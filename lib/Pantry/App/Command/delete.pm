@@ -19,7 +19,7 @@ sub command_type {
 }
 
 sub valid_types {
-  return qw/node role/
+  return qw/node role environment/
 }
 
 sub options {
@@ -38,6 +38,11 @@ sub _delete_node {
 sub _delete_role {
   my ($self, $opt, $name) = @_;
   $self->_delete_obj($opt, "role", $name);
+}
+
+sub _delete_environment {
+  my ($self, $opt, $name) = @_;
+  $self->_delete_obj($opt, "environment", $name);
 }
 
 sub _delete_obj {
