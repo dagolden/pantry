@@ -20,6 +20,7 @@ my %templates = (
     json_class          => "Chef::Role",
     chef_type           => "role",
     run_list            => [],
+    env_run_lists       => {},
     default_attributes  => {},
     override_attributes => {},
   },

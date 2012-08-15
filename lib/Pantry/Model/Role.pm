@@ -7,7 +7,9 @@ package Pantry::Model::Role;
 
 use Moose 2;
 use MooseX::Types::Path::Class::MoreCoercions qw/File/;
+use Carp qw/croak/;
 use List::AllUtils qw/uniq first/;
+use Pantry::Model::EnvRunList;
 use Pantry::Model::Util qw/hash_to_dot dot_to_hash/;
 use namespace::autoclean;
 
@@ -125,6 +127,49 @@ has override_attributes => (
   },
 );
 
+has env_run_lists => (
+  is => 'bare',
+  isa => 'HashRef[Pantry::Model::EnvRunList]',
+  traits => ['Hash'],
+  default => sub { +{} },
+  handles => {
+    set_env_run_list => 'set',
+    get_env_run_list => 'get',
+    delete_env_run_list => 'delete',
+  },
+);
+
+sub append_to_env_run_list {
+  my ($self, $env, $items) = @_;
+  croak "append_to_env_runlist requires an environment name"
+    unless $env;
+  croak "append_to_env_runlist requires an array reference of items to append"
+    unless ref($items) eq 'ARRAY';
+
+  my $runlist;
+  unless ( $runlist = $self->get_env_run_list($env) ) {
+    $runlist = Pantry::Model::EnvRunList->new;
+    $self->set_env_run_list( $env => $runlist );
+  }
+
+  $runlist->append_to_run_list( @$items );
+  return;
+}
+
+sub remove_from_env_run_list {
+  my ($self, $env, $items) = @_;
+  croak "remove_from_env_runlist requires an environment name"
+    unless $env;
+  croak "remove_from_env_runlist requires an array reference of items to append"
+    unless ref($items) eq 'ARRAY';
+
+  if ( my $runlist = $self->get_env_run_list($env) ) {
+    $runlist->remove_from_run_list( @$items );
+  }
+
+  return;
+}
+
 =method save
 
 Saves the node to a file in the pantry.  If the private C<_path>
@@ -150,6 +195,10 @@ sub _freeze {
     }
     $data->{$attr} = $new;
   }
+  for my $env ( keys %{$data->{env_run_lists}} ) {
+    my $obj = delete $data->{env_run_lists}{$env};
+    $data->{env_run_lists}{$env} = [ $obj->run_list ];
+  }
   $data->{json_class} = "Chef::Role";
   $data->{chef_type} = "role";
   return $data;
@@ -170,6 +219,11 @@ sub _thaw {
       }
     }
     $data->{$attr} = $new;
+  }
+  for my $env ( keys %{$data->{env_run_lists}} ) {
+    my $obj = Pantry::Model::EnvRunList->new;
+    $obj->append_to_run_list(@{delete $data->{env_run_lists}{$env}});
+    $data->{env_run_lists}{$env} = $obj;
   }
   return $data;
 }

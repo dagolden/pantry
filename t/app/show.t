@@ -47,6 +47,7 @@ my @cases = (
       json_class => "Chef::Role",
       chef_type => "role",
       run_list => [ 'recipe[nginx]' ],
+      env_run_lists       => {},
       default_attributes => {
         nginx => {
           port => 80
