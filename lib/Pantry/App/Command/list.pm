@@ -24,7 +24,7 @@ sub options {
 }
 
 sub valid_types {
-  return qw/node nodes role roles/
+  return qw/node nodes role roles environment environments/
 }
 
 sub _list_nodes {
@@ -40,6 +40,13 @@ sub _list_roles {
 }
 
 *_list_role = *_list_roles; # alias
+
+sub _list_environments {
+  my ($self, $opt) = @_;
+  say $_ for $self->pantry->all_environments;
+}
+
+*_list_environment = *_list_environments; # alias
 
 1;
 

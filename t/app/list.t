@@ -27,6 +27,12 @@ my @cases = (
     names => ['web', 'db'],
     new => sub { my ($p,$n) = @_; $p->role($n) },
   },
+  {
+    label => "environments",
+    type => "environment",
+    names => ['test', 'prod'],
+    new => sub { my ($p,$n) = @_; $p->environment($n) },
+  },
 );
 
 for my $c ( @cases ) {
