@@ -157,6 +157,13 @@ my @cases = (
     new  => sub { my ( $p, $n ) = @_; $p->role($n) },
     subtests => [ @recipe_role_subtests, @deep_attribute_subtests ],
   },
+
+  {
+    type => "environment",
+    name => 'test',
+    new  => sub { my ( $p, $n ) = @_; $p->environment($n) },
+    subtests => [ @deep_attribute_subtests ],
+  },
 );
 
 for my $c (@cases) {
