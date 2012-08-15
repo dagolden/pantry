@@ -24,7 +24,7 @@ sub options {
 }
 
 sub valid_types {
-  return qw/node role cookbook/
+  return qw/node role environment cookbook/
 }
 
 sub _create_node {
@@ -56,6 +56,20 @@ sub _create_role {
   }
   else {
     $role->save;
+  }
+
+  return;
+}
+
+sub _create_environment {
+  my ($self, $opt, $name) = @_;
+
+  my $environment = $self->pantry->environment( $name );
+  if ( -e $environment->path ) {
+    $self->usage_error( "Environment '$name' already exists" );
+  }
+  else {
+    $environment->save;
   }
 
   return;

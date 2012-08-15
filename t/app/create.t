@@ -58,6 +58,18 @@ my @cases = (
     },
   },
   {
+    label => "environment",
+    type => "environment",
+    name => 'test',
+    new => sub { my ($p,$n) = @_; $p->environment($n) },
+    empty => {
+      json_class => "Chef::Environment",
+      chef_type => "environment",
+      default_attributes => {},
+      override_attributes => {},
+    },
+  },
+  {
     label => "cookbook",
     type => "cookbook",
     name => 'myapp',
