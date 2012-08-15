@@ -106,6 +106,7 @@ Otherwise, it will be created in memory (but will not be persisted to disk).
 sub node {
   my ($self, $node_name, $options ) = @_;
   $options //= {};
+  $options->{env} //= "_default";
   $node_name = lc $node_name;
   require Pantry::Model::Node;
   my $path = $self->_node_path( $node_name, $options->{env} );

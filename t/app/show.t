@@ -16,6 +16,7 @@ my @cases = (
     new => sub { my ($p,$n) = @_; $p->node($n) },
     expected => {
       run_list => [ 'recipe[nginx]' ],
+      chef_environment => '_default',
       nginx => {
         port => 80
       },
@@ -29,6 +30,7 @@ my @cases = (
     args => [qw/--env test/],
     expected => {
       run_list => [ 'recipe[nginx]' ],
+      chef_environment => 'test',
       nginx => {
         port => 80
       },

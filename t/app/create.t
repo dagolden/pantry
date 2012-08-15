@@ -15,6 +15,7 @@ my @cases = (
     name => 'foo.example.com',
     new => sub { my ($p,$n) = @_; $p->node($n) },
     empty => {
+      chef_environment => '_default',
       run_list => [],
     },
   },
@@ -26,6 +27,7 @@ my @cases = (
     new => sub { my ($p,$n) = @_; $p->node($n) },
     empty => {
       run_list => [],
+      chef_environment => '_default',
       pantry_host => 'localhost',
       pantry_port => 2222,
       pantry_user => 'vagrant',
@@ -38,6 +40,7 @@ my @cases = (
     opts => [qw/-E test/],
     new => sub { my ($p,$n) = @_; $p->node($n, {env => 'test'}) },
     empty => {
+      chef_environment => 'test',
       run_list => [],
     },
   },

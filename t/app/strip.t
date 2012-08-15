@@ -11,6 +11,7 @@ use JSON;
 
 my %templates = (
   node => {
+    chef_environment => '_default',
     run_list => [],
   },
   role => {
@@ -219,6 +220,9 @@ for my $c (@cases) {
       $st->{expected}{name} //= $c->{name};
       for my $k ( keys %{ $templates{ $c->{type} } } ) {
         $st->{expected}{$k} //= $templates{ $c->{type} }{$k};
+      }
+      if ( $c->{env_args} ) {
+        $st->{expected}{chef_environment} = $c->{env_args}[-1];
       }
 
       is_deeply( $data, $st->{expected}, "data file correct" )

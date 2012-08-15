@@ -52,6 +52,7 @@ subtest "create/retrieve a node in an environement" => sub {
       "saved a node to test environment directory"
   );
   ok( my $node2 = $pantry->node("foo.example.com", { env => "test"}), "retrieved a node from test environement");
+  is( $node2->env, 'test', "node.chef_environment correct" );
   ok( $node2->save, "saved it again" );
 };
 
