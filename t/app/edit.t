@@ -25,6 +25,12 @@ my @cases = (
     new => sub { my ($p,$n) = @_; $p->node($n, {env => 'test'}) },
   },
   {
+    label => "environment",
+    type => "environment",
+    name => 'test',
+    new => sub { my ($p,$n) = @_; $p->environment($n) },
+  },
+  {
     label => "role",
     type => "role",
     name => 'web',

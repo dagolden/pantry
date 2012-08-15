@@ -28,7 +28,7 @@ sub options {
 }
 
 sub valid_types {
-  return qw/node role/
+  return qw/node role environment/
 }
 
 sub _edit_node {
@@ -39,6 +39,11 @@ sub _edit_node {
 sub _edit_role {
   my ($self, $opt, $name) = @_;
   $self->_edit_obj($opt, 'role', $name);
+}
+
+sub _edit_environment {
+  my ($self, $opt, $name) = @_;
+  $self->_edit_obj($opt, 'environment', $name);
 }
 
 sub _edit_obj {
