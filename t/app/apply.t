@@ -23,6 +23,12 @@ my %templates = (
     default_attributes  => {},
     override_attributes => {},
   },
+  environment => {
+    json_class          => "Chef::Environment",
+    chef_type           => "environment",
+    default_attributes  => {},
+    override_attributes => {},
+  },
 );
 
 my @recipe_role_subtests = (

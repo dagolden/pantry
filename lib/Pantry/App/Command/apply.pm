@@ -25,7 +25,7 @@ sub options {
 }
 
 sub valid_types {
-  return qw/node role/
+  return qw/node role environment/
 }
 
 sub _apply_node {
@@ -38,12 +38,21 @@ sub _apply_role {
   $self->_apply_obj($opt, 'role', $name);
 }
 
+sub _apply_environment {
+  my ($self, $opt, $name) = @_;
+  $self->_apply_obj($opt, 'environment', $name);
+}
+
 my %setters = (
   node => {
     default => 'set_attribute',
     override => undef,
   },
   role => {
+    default => 'set_default_attribute',
+    override => 'set_override_attribute',
+  },
+  environment => {
     default => 'set_default_attribute',
     override => 'set_override_attribute',
   },
@@ -56,7 +65,7 @@ sub _apply_obj {
   $options->{env} = $opt->{env} if $opt->{env};
   my $obj = $self->_check_name($type, $name, $options);
 
-  $self->_apply_runlist($obj, $opt);
+  $self->_apply_runlist($obj, $opt) unless $type eq 'environment';
 
   for my $k ( sort keys %{$setters{$type}} ) {
     if ( my $method = $setters{$type}{$k} ) {
