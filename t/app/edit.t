@@ -18,6 +18,19 @@ my @cases = (
     new => sub { my ($p,$n) = @_; $p->node($n) },
   },
   {
+    label => "node in test env",
+    type => "node",
+    args => [qw/-E test/],
+    name => 'foo.example.com',
+    new => sub { my ($p,$n) = @_; $p->node($n, {env => 'test'}) },
+  },
+  {
+    label => "environment",
+    type => "environment",
+    name => 'test',
+    new => sub { my ($p,$n) = @_; $p->environment($n) },
+  },
+  {
     label => "role",
     type => "role",
     name => 'web',
@@ -26,19 +39,21 @@ my @cases = (
 );
 
 for my $c ( @cases ) {
-  subtest "$c->{type}: show" => sub {
+  subtest "edit $c->{type}" => sub {
     my ($wd, $pantry) = _create_pantry();
     my $obj = $c->{new}->($pantry, $c->{name});
+    my @cli_args = @{$c->{args} || []};
 
-    _try_command('create', $c->{type}, $c->{name});
+    _try_command('create', $c->{type}, $c->{name}, @cli_args);
+    ok( -e $obj->path, "node file created" );
 
     {
-      my @args;
+      my @args = ('');
       no warnings 'redefine';
       local *CORE::GLOBAL::system = sub { @args = @_; return 0 };
-      local $ENV{VISUAL} = $ENV{EDITOR} = "/bin/false";
+      local $ENV{EDITOR} = "perl -e exit";
       my $result = _try_command('edit', $c->{type}, $c->{name});
-      is_deeply( \@args, ['/bin/false', $obj->path], "(fake) editor invoked" );
+      is( $args[-1], $obj->path, "(fake) editor invoked" );
     }
   };
 }

@@ -97,6 +97,7 @@ subtest 'node attribute serialization' => sub {
   my $data = _thaw_file("node.json");
   is_deeply( $data, {
       name => 'foo.example.com',
+      chef_environment => '_default',
       run_list => [],
       nginx => {
         port => 80,
@@ -126,6 +127,7 @@ subtest 'node attribute escape dots' => sub {
   my $data = _thaw_file("node.json");
   is_deeply( $data, {
       name => 'foo.example.com',
+      chef_environment => '_default',
       run_list => [],
       'nginx.port' => 80,
       'deep' => {
@@ -159,6 +161,7 @@ subtest 'boolean values' => sub {
   my $data = _thaw_file("node.json");
   is_deeply( $data, {
       name => 'foo.example.com',
+      chef_environment => '_default',
       run_list => [],
       'nginx.enabled' => JSON::true,
       'nginx.logging' => JSON::false,

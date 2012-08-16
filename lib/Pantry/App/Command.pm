@@ -242,6 +242,12 @@ sub data_options {
   );
 }
 
+sub selector_options {
+  return (
+    [ 'env|E=s'       => "Deployment environment selector" ],
+  );
+}
+
 sub _check_name {
   my ($self, $type, $name) = @_;
   my $meth = "find_$type";
@@ -261,12 +267,13 @@ sub _check_name {
 
 =for Pod::Coverage
 command_type
-valid_types
 data_options
-ssh_options
 options
 options_desc
 pantry
+selector_options
+ssh_options
+valid_types
 validate
 
 =head1 DESCRIPTION

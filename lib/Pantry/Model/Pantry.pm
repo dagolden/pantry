@@ -25,10 +25,19 @@ has path => (
   default => sub { dir(".")->absolute }
 );
 
-sub _env_dir {
+# where environment JSON files and node subdirectories are stored
+sub _environment_dir {
+  my ($self) = @_;
+  my $path = $self->path->subdir("environments");
+  $path->mkpath;
+  return $path;
+}
+
+# directory where nodes are stored in an environment
+sub _node_dir {
   my ($self, $env) = @_;
   $env //= '_default';
-  my $path = $self->path->subdir("environments", $env);
+  my $path = $self->_environment_dir->subdir($env);
   $path->mkpath;
   return $path;
 }
@@ -47,14 +56,20 @@ sub _cookbook_dir {
   return $path;
 }
 
-sub _role_path {
-  my ($self, $role_name) = @_;
-  return $self->_role_dir->file("${role_name}.json");
+# file path where environment JSON file is located
+sub _environment_path {
+  my ($self, $env) = @_;
+  return $self->_environment_dir->file("${env}.json");
 }
 
 sub _node_path {
   my ($self, $node_name, $env) = @_;
-  return $self->_env_dir($env)->file("${node_name}.json");
+  return $self->_node_dir($env)->file("${node_name}.json");
+}
+
+sub _role_path {
+  my ($self, $role_name) = @_;
+  return $self->_role_dir->file("${role_name}.json");
 }
 
 sub _cookbook_path {
@@ -72,10 +87,19 @@ a count of nodes.
 =cut
 
 sub all_nodes {
-  my ($self, $env) = @_;
-  my @nodes = sort map { s/\.json$//r } map { $_->basename }
-              $self->_env_dir($env)->children;
+  my ($self, $options) = @_;
+  return map { $_->[0] } $self->_all_node_path_map($options);
+}
+
+sub _all_node_path_map {
+  my ($self, $options) = @_;
+  my @env = $options->{env} ? ($options->{env}) : (map {$_->basename} grep {-d $_} $self->_environment_dir->children);
+  my @nodes;
+  for my $e ( @env ) {
+    push @nodes,  map { [ $_, $e ] } map { s/\.json$//r } map { $_->basename } $self->_node_dir($e)->children;
+  }
   return @nodes;
+
 }
 
 =method C<node>
@@ -91,9 +115,10 @@ Otherwise, it will be created in memory (but will not be persisted to disk).
 sub node {
   my ($self, $node_name, $options ) = @_;
   $options //= {};
+  $options->{env} //= "_default";
   $node_name = lc $node_name;
   require Pantry::Model::Node;
-  my $path = $self->_node_path( $node_name );
+  my $path = $self->_node_path( $node_name, $options->{env} );
   if ( -e $path ) {
     return Pantry::Model::Node->new_from_file( $path );
   }
@@ -115,8 +140,9 @@ Returns a list of node objects if any are found.
 =cut
 
 sub find_node {
-  my ($self, $pattern) = @_;
-  return map { $self->node($_) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_nodes;
+  my ($self, $pattern, $options) = @_;
+  my @found = grep { $_->[0] =~ /^\Q$pattern\E/ } $self->_all_node_path_map($options);
+  return map { $self->node($_->[0], {env => $_->[1]}) } @found;
 }
 
 =method all_roles
@@ -146,7 +172,7 @@ Otherwise, it will be created in memory (but will not be persisted to disk).
 =cut
 
 sub role {
-  my ($self, $role_name, $env) = @_;
+  my ($self, $role_name, $options) = @_;
   $role_name = lc $role_name;
   require Pantry::Model::Role;
   my $path = $self->_role_path( $role_name );
@@ -170,8 +196,62 @@ Returns a list of role objects if any are found.
 =cut
 
 sub find_role {
-  my ($self, $pattern) = @_;
+  my ($self, $pattern, $options) = @_;
   return map { $self->role($_) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_roles;
+}
+
+=method all_environments
+
+  my @environments = $pantry->all_environments;
+
+In list context, returns a list of environments.  In scalar context, returns
+a count of environments.
+
+=cut
+
+sub all_environments {
+  my ($self, $env) = @_;
+  my @environments =
+    sort map { s/\.json$//r } map { $_->basename } grep { -f }
+    $self->_environment_dir->children;
+  return @environments;
+}
+
+=method C<environment>
+
+  my $node = $pantry->environment("staging");
+
+Returns a L<Pantry::Model::Environment> object corresponding to the given environment.
+
+=cut
+
+sub environment {
+  my ($self, $environment_name, $options) = @_;
+  $environment_name = lc $environment_name;
+  require Pantry::Model::Environment;
+  my $path = $self->_environment_path( $environment_name );
+  if ( -e $path ) {
+    return Pantry::Model::Environment->new_from_file( $path );
+  }
+  else {
+    return Pantry::Model::Environment->new( name => $environment_name, _path => $path );
+  }
+}
+
+=method find_environment
+
+  my @environments = $pantry->find_environment( $leading_part );
+
+Finds one or more environment matching a leading part.  For example, given environments 'test'
+and 'staging' in a pantry, use C<<$pantry->find_environment('sta')>> to get 'staging'.
+
+Returns a list of environment objects if any are found.
+
+=cut
+
+sub find_environment{
+  my ($self, $pattern, $options) = @_;
+  return map { $self->environment($_) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_environments;
 }
 
 =method C<cookbook>

@@ -13,7 +13,7 @@
 
 C<pantry> is a utility to make it easier to manage a collection of
 computers with the configuration management tool
-chef-solo L<http://wiki.opscode.com/display/chef/Chef+Solo>
+Chef Solo L<http://wiki.opscode.com/display/chef/Chef+Solo>
 
 =head1 USAGE
 
@@ -36,8 +36,11 @@ creates some directories for use storing cookbooks, node data, etc.
 
   $ pantry list nodes
   $ pantry list roles
+  $ pantry list environments
+  $ pantry list cookbooks
 
-Prints to STDOUT a list of nodes or roles managed within the pantry.
+Prints to STDOUT a list of items of a particular type managed within the
+pantry.
 
 =head2 Managing nodes
 
@@ -55,6 +58,19 @@ You can combine this with the C<pantry list> command to do
 batch operations.  For example, to sync all nodes:
 
   $ pantry list nodes | pantry sync node -
+
+Pantry supports grouping nodes into arbitrarily named environments,
+such as "test", "staging" or "production".  The node commands "create"
+and "list" can be given an environment selector with the C<--env
+ENV_NAME> or C<-E ENV_NAME> options and all operations will be happen
+in the context of that environment.
+
+This works with "list" and input from STDIN for a handy way to sync
+all nodes in an environment:
+
+  $ pantry list nodes -E staging | pantry sync node -
+
+See L</"Managing Environments> for more.
 
 =head3 create
 
@@ -178,7 +194,7 @@ acceptable. The name will be converted to lowercase for consistency.  When
 referring to an existing role, you may often abbreviate it to a unique prefix,
 e.g. "web" for "webserver".
 
-Also, whenever a command takes a single 'node NAME' target,
+Also, whenever a command takes a single 'role NAME' target,
 you may give a single dash ('-') as the NAME and the command
 will be run against a list of roles read from STDIN.
 
@@ -199,10 +215,10 @@ The difference is that you must specify the 'role' type:
 
 The C<apply> and C<strip> commands have slight differences, as roles have two
 kinds of attributes, "default attributes" (C<--default> or C<-d>) and "override
-attributes" (C<--override> or C<-O>), with slightly different precedence.
+attributes" (C<--override>), with slightly different precedence.
 
-  $ pantry apply role NAME -d nginx.user=nobody -O nginx.port=80
-  $ pantry strip role NAME -d nginx.user -O nginx.port
+  $ pantry apply role NAME -d nginx.user=nobody --override nginx.port=80
+  $ pantry strip role NAME -d nginx.user --override nginx.port
 
 The C<--recipe> (C<-r>) and C<--role> (C<-R>) arguments work the same as for nodes.
 Note that roles can have other roles in their C<run_list>.
@@ -211,6 +227,102 @@ When Chef merges attribute, the role default attribute has the lower precedence
 than node attributes.  Override attributes have higher precedence than node
 attributes. Yes, this is a gross simplification of how Chef does it.  See Chef
 docs for more: L<http://wiki.opscode.com/display/chef/Attributes>
+
+Roles have two kinds of run lists: default and environment-specific.
+The default run list applies whenever there is no environment-specific
+run list for the active environment for a node.  You can apply/strip
+environment-specific run list entries with the C<-E ENV_NAME> option,
+or omit it to apply/strip from the default list.
+
+  $ pantry apply role web -r nginx
+  $ pantry apply role web -r ufw -E production
+
+=head2 Managing environments
+
+In this section, when a environment NAME is required, any name without
+whitespace is acceptable. The name will be converted to lowercase for
+consistency.  When referring to an existing role, you may often abbreviate it
+to a unique prefix, e.g. "prod" for "production".
+
+Also, whenever a command takes a single 'environment NAME' target,
+you may give a single dash ('-') as the NAME and the command
+will be run against a list of roles read from STDIN.
+
+You can combine this with the C<pantry list> command to do
+batch operations.  For example, to add a default to all environments:
+
+  $ pantry list environments | pantry apply environment - -d nginx.port=8080
+
+Environments are different than nodes and roles because there are
+really three ways to work with an environment.  When you create an
+environment, an environment data file is created to hold attributes.
+When you create a node, it gets assigned to an environment (the
+"_default" environment is used if you don't specify one).  However,
+you can create a node in an environment even if you don't create the
+environment data file first.  Finally, roles can have
+environment-specific run lists.
+
+Here's a summary of those distinctions:
+
+=for *list:
+* all nodes are assigned to environments
+* roles can hold environment-specific run lists
+* environment data files hold environment-specific attributes
+
+When you want to affect environment data files, you'll use
+C<pantry VERB environment ...> commands, like this:
+
+  $ pantry show environment staging
+
+When you want to set an environment for node and role actions, you'll
+use the C<--env> or C<-E> selector option
+
+  $ pantry create node foo.example.com -E test
+  $ pantry apply role web -r ufw -E production
+
+=head3 create, rename, delete, show and edit
+
+These commands work the same as they do for nodes and roles.
+The difference is that you must specify the 'environment' type:
+
+  $ pantry create environment staging
+  $ pantry show environment staging
+
+=head3 apply and strip
+
+The C<apply> and C<strip> commands work like roles, except that environments
+don't have run lists.
+
+  $ pantry apply environment NAME -d nginx.user=nobody --override nginx.port=80
+  $ pantry strip environment NAME -d nginx.user --override nginx.port
+
+If you want to have different run lists in different environments, you have to
+do that via roles, with environment-specific run lists:
+
+  # turn on firewall in production
+  $ pantry apply role web -r ufw -E production
+
+An environment-specific run list I<replaces> the default run list if the role is
+applied to a node in the specified environment.
+
+Chef Solo does not yet have support for merging environment attributes
+the way Chef Client does.  Therefore, during sync, Pantry will do its
+own merge with node attributes to provide a reasonable emulation.  The
+precedence is slightly different, but if you have overlapping
+environment, role and node attributes and the order is really
+important to you, you're probably over-complicating things.  See Chef
+docs for more: L<http://wiki.opscode.com/display/chef/Attributes>
+
+=head2 Managing cookbooks
+
+Pantry does very little to manage cookbooks -- this is left up to you
+and you are free to do whatever you like in the C<cookbooks>
+directory.
+
+As a convenience, however, Pantry may be used to create an empty
+boilerplate cookbook for you to customize:
+
+  $ pantry create cookbook my-cookbook
 
 =head2 Getting help
 
@@ -266,10 +378,10 @@ stay unlocked.
 In the future, I hope to extend pantry to support some or all of the following:
 
 =for :list
-* environments
 * tagging nodes
 * searching nodes based on configuration
 * data bags
+* encrypted data bags (or equivalent functionality)
 * cookbook download from Opscode community repository
 * bootstrapping Chef over ssh
 

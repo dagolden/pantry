@@ -14,8 +14,25 @@ my @cases = (
     type => "node",
     name => 'foo.example.com',
     new => sub { my ($p,$n) = @_; $p->node($n) },
+    args => [qw/-r nginx -d nginx.port=80/],
     expected => {
       run_list => [ 'recipe[nginx]' ],
+      chef_environment => '_default',
+      nginx => {
+        port => 80
+      },
+    },
+  },
+  {
+    label => "node in test env",
+    type => "node",
+    name => 'foo.example.com',
+    new => sub { my ($p,$n) = @_; $p->node($n, {env => 'test'}) },
+    args => [qw/-r nginx -d nginx.port=80/],
+    env_args => [qw/--env test/],
+    expected => {
+      run_list => [ 'recipe[nginx]' ],
+      chef_environment => 'test',
       nginx => {
         port => 80
       },
@@ -26,10 +43,29 @@ my @cases = (
     type => "role",
     name => 'web',
     new => sub { my ($p,$n) = @_; $p->role($n) },
+    args => [qw/-r nginx -d nginx.port=80/],
     expected => {
       json_class => "Chef::Role",
       chef_type => "role",
       run_list => [ 'recipe[nginx]' ],
+      env_run_lists       => {},
+      default_attributes => {
+        nginx => {
+          port => 80
+        },
+      },
+      override_attributes => {},
+    },
+  },
+  {
+    label => "environment",
+    type => "environment",
+    name => 'web',
+    new => sub { my ($p,$n) = @_; $p->environment($n) },
+    args => [qw/-d nginx.port=80/],
+    expected => {
+      json_class => "Chef::Environment",
+      chef_type => "environment",
       default_attributes => {
         nginx => {
           port => 80
@@ -45,8 +81,8 @@ for my $c ( @cases ) {
     my ($wd, $pantry) = _create_pantry();
     my $obj = $c->{new}->($pantry, $c->{name});
 
-    _try_command('create', $c->{type}, $c->{name});
-    _try_command('apply', $c->{type}, $c->{name}, qw(-r nginx -d nginx.port=80));
+    _try_command('create', $c->{type}, $c->{name}, @{ $c->{env_args} });
+    _try_command('apply', $c->{type}, $c->{name}, @{ $c->{args} });
 
     my $result = _try_command('show', $c->{type}, $c->{name});
     my $data = eval { decode_json( $result->output ) };

@@ -19,12 +19,12 @@ sub command_type {
 }
 
 sub valid_types {
-  return qw/node role/
+  return qw/node role environment/
 }
 
 sub options {
   my ($self) = @_;
-  return $self->data_options;
+  return ($self->data_options, $self->selector_options);
 }
 
 sub _strip_node {
@@ -37,6 +37,11 @@ sub _strip_role {
   $self->_strip_obj($opt, 'role', $name);
 }
 
+sub _strip_environment {
+  my ($self, $opt, $name) = @_;
+  $self->_strip_obj($opt, 'environment', $name);
+}
+
 my %strippers = (
   node => {
     default => 'delete_attribute',
@@ -46,14 +51,34 @@ my %strippers = (
     default => 'delete_default_attribute',
     override => 'delete_override_attribute',
   },
+  environment => {
+    default => 'delete_default_attribute',
+    override => 'delete_override_attribute',
+  },
 );
 
 sub _strip_obj {
   my ($self, $opt, $type, $name) = @_;
 
-  my $obj = $self->_check_name($type, $name);
+  my $options;
+  $options->{env} = $opt->{env} if $opt->{env};
+  my $obj = $self->_check_name($type, $name, $options);
 
-  $self->_delete_runlist($obj, $opt);
+  if ( $type eq 'node' ) {
+    $self->_delete_runlist($obj, $opt)
+  }
+  elsif ( $type eq 'role' ) {
+    if ( $options->{env} ) {
+      $self->_delete_env_runlist($obj, $opt)
+    }
+    else {
+      $self->_delete_runlist($obj, $opt)
+    }
+  }
+  else {
+    # nothing else has run lists
+  }
+
 
   for my $k ( sort keys %{$strippers{$type}} ) {
     if ( my $method = $strippers{$type}{$k} ) {
@@ -76,6 +101,21 @@ sub _delete_runlist{
   }
   if ($opt->{recipe}) {
     $obj->remove_from_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
+  }
+  return;
+}
+
+sub _delete_env_runlist{
+  my ($self, $obj, $opt) = @_;
+  if ($opt->{role}) {
+    $obj->remove_from_env_run_list($opt->{env}, [map { "role[$_]" } @{$opt->{role}}]);
+  }
+  if ($opt->{recipe}) {
+    $obj->remove_from_env_run_list($opt->{env}, [map { "recipe[$_]" } @{$opt->{recipe}}]);
+  }
+  my $runlist = $obj->get_env_run_list($opt->{env});
+  if ( $runlist && $runlist->is_empty ){
+    $obj->delete_env_run_list($opt->{env});
   }
   return;
 }

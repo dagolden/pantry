@@ -12,6 +12,7 @@ use namespace::autoclean;
 use File::Basename qw/dirname/;
 use File::Path qw/mkpath/;
 use File::Slurp qw/read_file write_file/;
+use Storable qw/dclone/;
 use JSON 2;
 
 parameter freezer => (
@@ -67,7 +68,7 @@ with leading underscores are considered "private" and are omitted.
     delete $data->{$_} for grep { /^_/ } keys %$data; # delete private attributes
 
     if ($freezer) {
-      $data = $self->$freezer($data);
+      $data = $self->$freezer(dclone $data);
     }
 
     # XXX check if string needs UTF-8 encoding?

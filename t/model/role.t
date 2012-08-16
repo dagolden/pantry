@@ -92,6 +92,7 @@ subtest 'role attribute serialization' => sub {
       json_class => 'Chef::Role',
       chef_type => 'role',
       run_list => [],
+      env_run_lists => {},
       default_attributes => {
         nginx => {
           port => 80,
@@ -132,6 +133,7 @@ subtest 'role attribute escape dots' => sub {
       json_class => 'Chef::Role',
       chef_type => 'role',
       run_list => [],
+      env_run_lists => {},
       default_attributes => {
         'nginx.port' => 80,
       },
@@ -150,6 +152,39 @@ subtest 'role attribute escape dots' => sub {
     or diag explain $thawed;
   is( $thawed->get_override_attribute('deep.attribute.dotted\.name'), 'bar', q{thawed role has correct 'deep.attribute.dotted\.name'} )
     or diag explain $thawed;
+};
+
+subtest 'append to / remove from environment runlist' => sub {
+  my $wd=tempd;
+  my $role = Pantry::Model::Role->new(
+    name => "web",
+    _path => "role.json",
+  );
+  $role->append_to_env_run_list( 'test', ["foo", "bar"] );
+  is_deeply([qw/foo bar/], [$role->get_env_run_list('test')->run_list], "append two items to test environment");
+  $role->append_to_env_run_list( 'test', ["baz"] );
+  is_deeply([qw/foo bar baz/], [$role->get_env_run_list('test')->run_list], "append another");
+  $role->remove_from_env_run_list('test', ["bar"]);
+  is_deeply([qw/foo baz/], [$role->get_env_run_list('test')->run_list], "remove from middle");
+  $role->remove_from_run_list('test', ["wibble"]);
+  is_deeply([qw/foo baz/], [$role->get_env_run_list('test')->run_list], "remove item that doesn't exist");
+  $role->save;
+  my $data = _thaw_file("role.json");
+  is_deeply( $data, {
+      name => 'web',
+      json_class => 'Chef::Role',
+      chef_type => 'role',
+      run_list => [],
+      env_run_lists => {
+        test => [qw/foo baz/],
+      },
+      default_attributes => {},
+      override_attributes => {},
+    },
+    "env_run_lists serialized correctly"
+  ) or diag explain $data;
+  ok( my $thawed = Pantry::Model::Role->new_from_file("role.json"), "thawed role");
+  is_deeply([qw/foo baz/], [$thawed->get_env_run_list('test')->run_list], "env_run_lists round-tripped correctly");
 };
 
 done_testing;

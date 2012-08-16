@@ -42,6 +42,7 @@ sub _try_command {
   if ( ref $command[-1] eq 'HASH' ) {
     $opts = pop @command;
   }
+  pop @command unless length $command[-1];
 
   my $result = test_app( 'Pantry::App' => [@command] );
   is( $result->exit_code, $opts->{exit_code}, "'pantry @command' exit code" )

@@ -15,6 +15,7 @@ my @cases = (
     name => 'foo.example.com',
     new => sub { my ($p,$n) = @_; $p->node($n) },
     empty => {
+      chef_environment => '_default',
       run_list => [],
     },
   },
@@ -26,9 +27,21 @@ my @cases = (
     new => sub { my ($p,$n) = @_; $p->node($n) },
     empty => {
       run_list => [],
+      chef_environment => '_default',
       pantry_host => 'localhost',
       pantry_port => 2222,
       pantry_user => 'vagrant',
+    },
+  },
+  {
+    label => "node in test environment",
+    type => "node",
+    name => 'foo.example.com',
+    opts => [qw/-E test/],
+    new => sub { my ($p,$n) = @_; $p->node($n, {env => 'test'}) },
+    empty => {
+      chef_environment => 'test',
+      run_list => [],
     },
   },
   {
@@ -40,6 +53,19 @@ my @cases = (
       json_class => "Chef::Role",
       chef_type => "role",
       run_list => [],
+      env_run_lists       => {},
+      default_attributes => {},
+      override_attributes => {},
+    },
+  },
+  {
+    label => "environment",
+    type => "environment",
+    name => 'test',
+    new => sub { my ($p,$n) = @_; $p->environment($n) },
+    empty => {
+      json_class => "Chef::Environment",
+      chef_type => "environment",
       default_attributes => {},
       override_attributes => {},
     },

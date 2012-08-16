@@ -6,7 +6,8 @@ package Pantry::Model::Util;
 # VERSION
 
 use Exporter qw/import/;
-our @EXPORT_OK = qw/dot_to_hash hash_to_dot/;
+use Hash::Merge ();
+our @EXPORT_OK = qw/dot_to_hash hash_to_dot merge_hash/;
 
 sub dot_to_hash {
   my ($hash, $key, $value) = @_;
@@ -44,9 +45,15 @@ sub hash_to_dot {
   }
 }
 
+sub merge_hash {
+  my ($base, $override) = @_;
+  my $merger = Hash::Merge->new( 'STORAGE_PRECEDENT' );
+  return $merger->merge( $override, $base );
+}
+
 1;
 
-=for Pod::Coverage hash_to_dot dot_to_hash
+=for Pod::Coverage hash_to_dot dot_to_hash merge_hash
 
 =head1 DESCRIPTION
 

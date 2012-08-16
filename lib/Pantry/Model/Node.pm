@@ -29,6 +29,19 @@ has name => (
   required => 1,
 );
 
+=attr name
+
+This attribute is the name of the environment to which the node belongs.  This defaults
+to C<_default>.
+
+=cut
+
+has env => (
+  is => 'ro',
+  isa => 'Str',
+  default => '_default',
+);
+
 =attr run_list
 
 This attribute is provided by the L<Pantry::Role::Runlist> role and holds a list
@@ -139,10 +152,11 @@ sub save {
   return $self->save_as( $self->path );
 }
 
-my @top_level_keys = qw/name run_list pantry_host pantry_port pantry_user/;
+my @top_level_keys = qw/name run_list pantry_host pantry_port pantry_user chef_environment/;
 
 sub _freeze {
   my ($self, $data) = @_;
+  $data->{chef_environment} = delete $data->{env};
   my $attr = delete $data->{attributes};
   for my $k ( keys %$attr ) {
     next if grep { $k eq $_ } @top_level_keys;
@@ -164,6 +178,7 @@ sub _thaw {
     }
   }
   $data->{attributes} = $attr;
+  $data->{env} = delete( $data->{chef_environment} ) || "_default";
   return $data;
 }
 

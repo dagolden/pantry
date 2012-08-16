@@ -21,11 +21,11 @@ sub command_type {
 
 sub options {
   my ($self) = @_;
-  return $self->data_options;
+  return ($self->data_options, $self->selector_options);
 }
 
 sub valid_types {
-  return qw/node role/
+  return qw/node role environment/
 }
 
 sub _apply_node {
@@ -38,6 +38,11 @@ sub _apply_role {
   $self->_apply_obj($opt, 'role', $name);
 }
 
+sub _apply_environment {
+  my ($self, $opt, $name) = @_;
+  $self->_apply_obj($opt, 'environment', $name);
+}
+
 my %setters = (
   node => {
     default => 'set_attribute',
@@ -47,14 +52,33 @@ my %setters = (
     default => 'set_default_attribute',
     override => 'set_override_attribute',
   },
+  environment => {
+    default => 'set_default_attribute',
+    override => 'set_override_attribute',
+  },
 );
 
 sub _apply_obj {
   my ($self, $opt, $type, $name) = @_;
 
-  my $obj = $self->_check_name($type, $name);
+  my $options;
+  $options->{env} = $opt->{env} if $opt->{env};
+  my $obj = $self->_check_name($type, $name, $options);
 
-  $self->_apply_runlist($obj, $opt);
+  if ( $type eq 'node' ) {
+    $self->_apply_runlist($obj, $opt)
+  }
+  elsif ( $type eq 'role' ) {
+    if ( $options->{env} ) {
+      $self->_apply_env_runlist($obj, $opt)
+    }
+    else {
+      $self->_apply_runlist($obj, $opt)
+    }
+  }
+  else {
+    # nothing else has run lists
+  }
 
   for my $k ( sort keys %{$setters{$type}} ) {
     if ( my $method = $setters{$type}{$k} ) {
@@ -77,6 +101,17 @@ sub _apply_runlist {
   }
   if ($opt->{recipe}) {
     $obj->append_to_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
+  }
+  return;
+}
+
+sub _apply_env_runlist {
+  my ($self, $obj, $opt) = @_;
+  if ($opt->{role}) {
+    $obj->append_to_env_run_list($opt->{env}, [map { "role[$_]" } @{$opt->{role}}]);
+  }
+  if ($opt->{recipe}) {
+    $obj->append_to_env_run_list($opt->{env}, [map { "recipe[$_]" } @{$opt->{recipe}}]);
   }
   return;
 }

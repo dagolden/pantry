@@ -15,10 +15,23 @@ my @cases = (
     new => sub { my ($p,$n) = @_; $p->node($n) },
   },
   {
+    label => "node in test env",
+    type => "node",
+    name => 'foo.example.com',
+    args => [qw/-E test/],
+    new => sub { my ($p,$n) = @_; $p->node($n, {env => 'test'}) },
+  },
+  {
     label => "role",
     type => "role",
     name => 'web',
     new => sub { my ($p,$n) = @_; $p->role($n) },
+  },
+  {
+    label => "environment",
+    type => "environment",
+    name => 'test',
+    new => sub { my ($p,$n) = @_; $p->environment($n) },
   },
 );
 
@@ -28,15 +41,15 @@ for my $c ( @cases ) {
   subtest "$c->{label}: try delete, but don't confirm" => sub {
     my ($wd, $pantry) = _create_pantry();
     my $obj = $c->{new}->($pantry, $c->{name});
-    _try_command('create', $c->{type}, $c->{name});
-    _try_command('delete', $c->{type}, $c->{name});
+    _try_command('create', $c->{type}, $c->{name}, @{$c->{args} || []});
+    _try_command('delete', $c->{type}, $c->{name} );
     ok( -e $obj->path, "$c->{type} '$c->{name}' not deleted" );
   };
 
   subtest "$c->{label}: try delete, with force" => sub {
     my ($wd, $pantry) = _create_pantry();
     my $obj = $c->{new}->($pantry, $c->{name});
-    _try_command('create', $c->{type}, $c->{name});
+    _try_command('create', $c->{type}, $c->{name}, @{$c->{args} || []});
     _try_command('delete', '-f', $c->{type}, $c->{name});
     ok( ! -e $obj->path, "$c->{type} '$c->{name}' delete" );
   };

@@ -17,6 +17,7 @@ has run_list => (
     run_list => 'elements',
     _push_run_list => 'push',
     _clear_run_list => 'clear',
+    is_empty => 'is_empty',
   },
 );
 
