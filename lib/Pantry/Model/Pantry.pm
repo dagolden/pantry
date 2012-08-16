@@ -88,8 +88,9 @@ a count of nodes.
 
 sub all_nodes {
   my ($self, $options) = @_;
+  my @env = $options->{env} ? ($options->{env}) : ($self->all_environments);
   my @nodes = sort map { s/\.json$//r } map { $_->basename }
-              $self->_node_dir($options->{env})->children;
+              map { $self->_node_dir($_)->children} @env;
   return @nodes;
 }
 

@@ -2,6 +2,7 @@ use 5.006;
 use strict;
 use warnings;
 use Test::More 0.96;
+use Test::Deep 0.110 qw/cmp_deeply/;
 use File::pushd qw/tempd/;
 use File::Slurp qw/read_file/;
 use Path::Class;
@@ -66,12 +67,22 @@ subtest "list nodes when some exist" => sub {
   );
 };
 
+subtest "list nodes in all environments" => sub {
+  my $pantry = _new_pantry_ok();
+  ok( $pantry->node("foo.example.com")->save, "created a node");
+  ok( $pantry->node("foo2.example.com", {env => 'test'})->save, "created another node in test env");
+  is( scalar $pantry->all_nodes, 2, "all_nodes gives count of 2 (scalar)" );
+  cmp_deeply( [sort $pantry->all_nodes], [sort qw/foo.example.com foo2.example.com/],
+    "all_nodes gives correct list (list)"
+  );
+};
+
 subtest "list nodes in default environment only" => sub {
   my $pantry = _new_pantry_ok();
   ok( $pantry->node("foo.example.com")->save, "created a node");
   ok( $pantry->node("foo2.example.com", {env => 'test'})->save, "created another node in test env");
-  is( scalar $pantry->all_nodes, 1, "all_nodes gives count of 1 (scalar)" );
-  is_deeply( [sort $pantry->all_nodes], [sort qw/foo.example.com/],
+  is( scalar $pantry->all_nodes( {env => '_default'} ), 1, "all_nodes gives count of 1 (scalar)" );
+  cmp_deeply( [sort $pantry->all_nodes( {env => '_default' } )], [sort qw/foo.example.com/],
     "all_nodes gives correct list (list)"
   );
 };
@@ -81,7 +92,7 @@ subtest "list nodes in specified environment" => sub {
   ok( $pantry->node("foo.example.com")->save, "created a node");
   ok( $pantry->node("foo2.example.com", {env => 'test'})->save, "created another node in test env");
   is( scalar $pantry->all_nodes( {env => 'test'} ), 1, "all_nodes(\\\%opt) gives count of 1 (scalar)" );
-  is_deeply( [sort $pantry->all_nodes], [sort qw/foo.example.com/],
+  is_deeply( [sort $pantry->all_nodes( {env => 'test'} )], [sort qw/foo2.example.com/],
     "all_nodes(\\\%opt) gives correct list (list)"
   );
 };
@@ -101,9 +112,9 @@ subtest "find nodes matching a partial name" => sub {
   is ( scalar @found, 0, "search on 'zzz' found 0 nodes" );
 };
 
-subtest "find nodes matching a partial name in an environment" => sub {
+subtest "find nodes matching a partial name across environment" => sub {
   my $pantry = _new_pantry_ok();
-  for my $name (qw/foo bar baz/) {
+  for my $name (qw/foo bar baz wibbit/) {
     ok( my $node = $pantry->node("$name.example.com"), "created $name");
     $node->save;
   }
@@ -113,10 +124,13 @@ subtest "find nodes matching a partial name in an environment" => sub {
     );
     $node->save;
   }
-  my @found = $pantry->find_node("wibble");
-  is ( scalar @found, 0, "search on 'wibble' in default env found 0 nodes" );
-  @found = $pantry->find_node("wibble", {env => 'test'});
-  is ( scalar @found, 1, "search on 'wibble' in test env found 1 node" );
+  my @found = $pantry->find_node("wib");
+  is ( scalar @found, 2, "search on 'wib' found 2 nodes" );
+  is_deeply( [sort map { $_->name } @found], [sort map { "$_.example.com" } qw/wibbit wibble/],
+    "search on 'wib' gives correct list (list)"
+  );
+  @found = $pantry->find_node("wib", {env => 'test'});
+  is ( scalar @found, 1, "search on 'wib' in test env found 1 node" );
   is ( $found[0]->name, 'wibble.example.com', "found correct node" );
 };
 
