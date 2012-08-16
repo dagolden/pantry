@@ -74,7 +74,7 @@ Deletes the environment default attribute for the given key.
 =cut
 
 has default_attributes => (
-  is => 'bare',
+  is => 'ro',
   isa => 'HashRef',
   traits => ['Hash'],
   default => sub { +{} },
@@ -112,7 +112,7 @@ Deletes the environment override attribute for the given key.
 =cut
 
 has override_attributes => (
-  is => 'bare',
+  is => 'ro',
   isa => 'HashRef',
   traits => ['Hash'],
   default => sub { +{} },
