@@ -33,11 +33,13 @@
       "runtime" : {
          "requires" : {
             "App::Cmd::Setup" : "0.317",
+            "Carp" : "0",
             "Exporter" : "0",
             "File::Basename" : "0",
             "File::Path" : "0",
             "File::Slurp" : "0",
             "File::Temp" : "0.22",
+            "Hash::Merge" : "0",
             "IO::Prompt::Tiny" : "0",
             "IPC::Cmd" : "0",
             "JSON" : "2",
@@ -50,6 +52,7 @@
             "Net::OpenSSH" : "0",
             "Path::Class" : "0",
             "Path::Class::Rule" : "0",
+            "Storable" : "0",
             "autodie" : "0",
             "namespace::autoclean" : "0",
             "namespace::clean" : "0",
@@ -129,6 +132,14 @@
       },
       "Pantry::Model::Cookbook" : {
          "file" : "lib/Pantry/Model/Cookbook.pm",
+         "version" : "0.009"
+      },
+      "Pantry::Model::EnvRunList" : {
+         "file" : "lib/Pantry/Model/EnvRunList.pm",
+         "version" : "0.009"
+      },
+      "Pantry::Model::Environment" : {
+         "file" : "lib/Pantry/Model/Environment.pm",
          "version" : "0.009"
       },
       "Pantry::Model::Node" : {
