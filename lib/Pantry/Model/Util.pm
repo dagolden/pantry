@@ -53,7 +53,7 @@ sub merge_hash {
 
 1;
 
-=for Pod::Coverage hash_to_dot dot_to_hash
+=for Pod::Coverage hash_to_dot dot_to_hash merge_hash
 
 =head1 DESCRIPTION
 

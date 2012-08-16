@@ -139,6 +139,14 @@ has env_run_lists => (
   },
 );
 
+=method append_to_env_run_list
+
+  $role->append_to_env_run_list( $env, \@items );
+
+Appends items to an environment-specific runlist.
+
+=cut
+
 sub append_to_env_run_list {
   my ($self, $env, $items) = @_;
   croak "append_to_env_runlist requires an environment name"
@@ -155,6 +163,15 @@ sub append_to_env_run_list {
   $runlist->append_to_run_list( @$items );
   return;
 }
+
+
+=method remove_from_env_run_list
+
+  $role->remove_from_env_run_list( $env, \@items );
+
+Removes items from an environment-specific runlist.
+
+=cut
 
 sub remove_from_env_run_list {
   my ($self, $env, $items) = @_;
