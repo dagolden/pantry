@@ -64,7 +64,21 @@ sub _strip_obj {
   $options->{env} = $opt->{env} if $opt->{env};
   my $obj = $self->_check_name($type, $name, $options);
 
-  $self->_delete_runlist($obj, $opt);
+  if ( $type eq 'node' ) {
+    $self->_delete_runlist($obj, $opt)
+  }
+  elsif ( $type eq 'role' ) {
+    if ( $options->{env} ) {
+      $self->_delete_env_runlist($obj, $opt)
+    }
+    else {
+      $self->_delete_runlist($obj, $opt)
+    }
+  }
+  else {
+    # nothing else has run lists
+  }
+
 
   for my $k ( sort keys %{$strippers{$type}} ) {
     if ( my $method = $strippers{$type}{$k} ) {
@@ -87,6 +101,21 @@ sub _delete_runlist{
   }
   if ($opt->{recipe}) {
     $obj->remove_from_run_list(map { "recipe[$_]" } @{$opt->{recipe}});
+  }
+  return;
+}
+
+sub _delete_env_runlist{
+  my ($self, $obj, $opt) = @_;
+  if ($opt->{role}) {
+    $obj->remove_from_env_run_list($opt->{env}, [map { "role[$_]" } @{$opt->{role}}]);
+  }
+  if ($opt->{recipe}) {
+    $obj->remove_from_env_run_list($opt->{env}, [map { "recipe[$_]" } @{$opt->{recipe}}]);
+  }
+  my $runlist = $obj->get_env_run_list($opt->{env});
+  if ( $runlist && $runlist->is_empty ){
+    $obj->delete_env_run_list($opt->{env});
   }
   return;
 }

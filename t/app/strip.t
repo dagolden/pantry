@@ -183,6 +183,51 @@ my @deep_attribute_subtests = (
   },
 );
 
+my @env_run_list_subtests = (
+  {
+    label    => "env_run_lists: strip recipe",
+    apply    => [qw/-r nginx -E test/],
+    strip    => [qw/-r nginx -E test/],
+    expected => {},
+  },
+  {
+    label    => "env_run_lists: strip only one recipe",
+    apply    => [qw/-r nginx -r postfix -E test/],
+    strip    => [qw/-r nginx -E test/],
+    expected => {
+      env_run_lists => {
+        test => [qw/recipe[postfix]/],
+      },
+    },
+  },
+  {
+    label    => "env_run_lists: strip role",
+    apply    => [qw/-R web -E test/],
+    strip    => [qw/-R web -E test/],
+    expected => {},
+  },
+  {
+    label    => "env_run_lists: strip only one role",
+    apply    => [qw/-R web -R mail -E test/],
+    strip    => [qw/-R web -E test/],
+    expected => {
+      env_run_lists => {
+        test => [qw/role[mail]/]
+      },
+    },
+  },
+  {
+    label    => "env_run_lists: strip only role of mixed roles/recipes",
+    apply    => [qw/-R web -r postfix -E test/],
+    strip    => [qw/-R web -E test/],
+    expected => {
+      env_run_lists => {
+        test => [qw/recipe[postfix]/],
+      },
+    },
+  },
+);
+
 my @cases = (
   {
     type => "node",
@@ -201,7 +246,7 @@ my @cases = (
     type => "role",
     name => 'web',
     new  => sub { my ( $p, $n ) = @_; $p->role($n) },
-    subtests => [ @recipe_role_subtests, @deep_attribute_subtests ],
+    subtests => [ @recipe_role_subtests, @deep_attribute_subtests, @env_run_list_subtests ],
   },
   {
     type     => "environment",
