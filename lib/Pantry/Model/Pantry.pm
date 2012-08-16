@@ -211,8 +211,9 @@ a count of environments.
 
 sub all_environments {
   my ($self, $env) = @_;
-  my @environments = sort map { s/\.json$//r } map { $_->basename }
-              $self->_environment_dir->children;
+  my @environments =
+    sort map { s/\.json$//r } map { $_->basename } grep { -f }
+    $self->_environment_dir->children;
   return @environments;
 }
 

@@ -134,5 +134,14 @@ subtest "find nodes matching a partial name across environment" => sub {
   is ( $found[0]->name, 'wibble.example.com', "found correct node" );
 };
 
+subtest "find environments when nodes exist" => sub {
+  my $pantry = _new_pantry_ok();
+  ok( $pantry->node("foo.example.com")->save, "created a node");
+  ok( $pantry->environment("test")->save, "created test env" );
+  ok( $pantry->node("foo2.example.com", {env => 'test'})->save, "created another node in test env");
+  my @envs = $pantry->find_environment("test");
+  is ( scalar @envs, 1, "env search on 'test' found 1 env" );
+};
+
 done_testing;
 # COPYRIGHT
