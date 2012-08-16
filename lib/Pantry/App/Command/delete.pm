@@ -25,7 +25,6 @@ sub valid_types {
 sub options {
   my ($self) = @_;
   return (
-    $self->selector_options,
     ['force|f', "force deletion without confirmation"],
   );
 }

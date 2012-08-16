@@ -28,7 +28,8 @@ my @cases = (
     type => "node",
     name => 'foo.example.com',
     new => sub { my ($p,$n) = @_; $p->node($n, {env => 'test'}) },
-    args => [qw/-r nginx -d nginx.port=80 --env test/],
+    args => [qw/-r nginx -d nginx.port=80/],
+    env_args => [qw/--env test/],
     expected => {
       run_list => [ 'recipe[nginx]' ],
       chef_environment => 'test',
@@ -76,16 +77,14 @@ my @cases = (
 );
 
 for my $c ( @cases ) {
-  my @args = @{$c->{args}||[]};
-
   subtest "$c->{type}: show" => sub {
     my ($wd, $pantry) = _create_pantry();
     my $obj = $c->{new}->($pantry, $c->{name});
 
-    _try_command('create', $c->{type}, $c->{name}, @args);
-    _try_command('apply', $c->{type}, $c->{name}, @args);
+    _try_command('create', $c->{type}, $c->{name}, @{ $c->{env_args} });
+    _try_command('apply', $c->{type}, $c->{name}, @{ $c->{args} });
 
-    my $result = _try_command('show', $c->{type}, $c->{name}, @args);
+    my $result = _try_command('show', $c->{type}, $c->{name});
     my $data = eval { decode_json( $result->output ) };
 
     is ( delete $data->{name}, $c->{name}, "name correct in output JSON" );
@@ -100,7 +99,7 @@ for my $c ( @cases ) {
 
     ok( ! -e $obj->path, "$c->{type} '$c->{name}' not created yet" );
 
-    my $result = _try_command('show', $c->{type}, $c->{name}, @args, { exit_code => "-1" });
+    my $result = _try_command('show', $c->{type}, $c->{name}, { exit_code => "-1" });
     like( $result->error, qr/does not exist/i,
       "showing invalid $c->{type} gives error message"
     ) or diag $result->error;

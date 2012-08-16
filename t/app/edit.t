@@ -45,13 +45,14 @@ for my $c ( @cases ) {
     my @cli_args = @{$c->{args} || []};
 
     _try_command('create', $c->{type}, $c->{name}, @cli_args);
+    ok( -e $obj->path, "node file created" );
 
     {
       my @args = ('');
       no warnings 'redefine';
       local *CORE::GLOBAL::system = sub { @args = @_; return 0 };
       local $ENV{EDITOR} = "perl -e exit";
-      my $result = _try_command('edit', $c->{type}, $c->{name}, @cli_args);
+      my $result = _try_command('edit', $c->{type}, $c->{name});
       is( $args[-1], $obj->path, "(fake) editor invoked" );
     }
   };

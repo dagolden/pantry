@@ -42,7 +42,7 @@ for my $c ( @cases ) {
     my ($wd, $pantry) = _create_pantry();
     my $obj = $c->{new}->($pantry, $c->{name});
     _try_command('create', $c->{type}, $c->{name}, @{$c->{args} || []});
-    _try_command('delete', $c->{type}, $c->{name}, @{$c->{args} || []});
+    _try_command('delete', $c->{type}, $c->{name} );
     ok( -e $obj->path, "$c->{type} '$c->{name}' not deleted" );
   };
 
@@ -50,13 +50,13 @@ for my $c ( @cases ) {
     my ($wd, $pantry) = _create_pantry();
     my $obj = $c->{new}->($pantry, $c->{name});
     _try_command('create', $c->{type}, $c->{name}, @{$c->{args} || []});
-    _try_command('delete', '-f', $c->{type}, $c->{name}, @{$c->{args} || []});
+    _try_command('delete', '-f', $c->{type}, $c->{name});
     ok( ! -e $obj->path, "$c->{type} '$c->{name}' delete" );
   };
 
   subtest "$c->{label}: delete a missing node" => sub {
     my ($wd, $pantry) = _create_pantry();
-    my $result = _try_command('delete', $c->{type}, $c->{name}, @{$c->{args} || []}, { exit_code => -1});
+    my $result = _try_command('delete', $c->{type}, $c->{name}, { exit_code => -1});
     like( $result->error, qr/does not exist/, "error message" );
   };
 }

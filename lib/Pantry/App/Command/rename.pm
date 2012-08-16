@@ -18,11 +18,6 @@ sub command_type {
   return 'DUAL_TARGET';
 }
 
-sub options{
-  my ($self) = @_;
-  return $self->selector_options;
-}
-
 sub valid_types {
   return qw/node role environment/
 }
@@ -45,14 +40,17 @@ sub _rename_environment {
 sub _rename_obj {
   my ($self, $opt, $type, $name, $dest) = @_;
 
-  my $options;
-  $options->{env} = $opt->{env} if $opt->{env};
-  my $obj = $self->_check_name($type, $name, $options);
-  my $dest_path = $self->pantry->$type( $dest, $options )->path;
+  my $obj = $self->_check_name($type, $name);
+  my $dest_path;
+  if ( $type eq 'node' ) {
+    $dest_path = $self->pantry->$type( $dest, {env => $obj->env} )->path;
+  }
+  else {
+    $dest_path = $self->pantry->$type( $dest )->path;
+  }
 
   if ( ! -e $obj->path ) {
-    my $env = $opt->{env} || 'default';
-    die( "$type '$name' doesn't exist in the $env environment\n" );
+    die( "$type '$name' doesn't exist\n" );
   }
   elsif ( -e $dest_path ) {
     die( "$type '$dest' already exists. Won't over-write it.\n" );

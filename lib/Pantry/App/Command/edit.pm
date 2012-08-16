@@ -22,11 +22,6 @@ sub command_type {
   return 'TARGET';
 }
 
-sub options {
-  my ($self) = @_;
-  return ($self->selector_options);
-}
-
 sub valid_types {
   return qw/node role environment/
 }
@@ -57,10 +52,7 @@ sub _edit_obj {
     $self->usage_error( "EDITOR not set or not found" );
   }
 
-  my $options;
-  $options->{env} = $opt->{env} if $opt->{env};
-
-  my $obj = $self->_check_name($type, $name, $options);
+  my $obj = $self->_check_name($type, $name);
 
   my $path = $obj->path;
 

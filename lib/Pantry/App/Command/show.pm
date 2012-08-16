@@ -19,11 +19,6 @@ sub command_type {
   return 'TARGET';
 }
 
-sub options {
-  my ($self) = @_;
-  return $self->selector_options;
-}
-
 sub valid_types {
   return qw/node role environment/
 }

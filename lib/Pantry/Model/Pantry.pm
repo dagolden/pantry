@@ -88,10 +88,18 @@ a count of nodes.
 
 sub all_nodes {
   my ($self, $options) = @_;
-  my @env = $options->{env} ? ($options->{env}) : ($self->all_environments);
-  my @nodes = sort map { s/\.json$//r } map { $_->basename }
-              map { $self->_node_dir($_)->children} @env;
+  return map { $_->[0] } $self->_all_node_path_map($options);
+}
+
+sub _all_node_path_map {
+  my ($self, $options) = @_;
+  my @env = $options->{env} ? ($options->{env}) : (map {$_->basename} grep {-d $_} $self->_environment_dir->children);
+  my @nodes;
+  for my $e ( @env ) {
+    push @nodes,  map { [ $_, $e ] } map { s/\.json$//r } map { $_->basename } $self->_node_dir($e)->children;
+  }
   return @nodes;
+
 }
 
 =method C<node>
@@ -133,7 +141,8 @@ Returns a list of node objects if any are found.
 
 sub find_node {
   my ($self, $pattern, $options) = @_;
-  return map { $self->node($_, $options) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_nodes($options);
+  my @found = grep { $_->[0] =~ /^\Q$pattern\E/ } $self->_all_node_path_map($options);
+  return map { $self->node($_->[0], {env => $_->[1]}) } @found;
 }
 
 =method all_roles

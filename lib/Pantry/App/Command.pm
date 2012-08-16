@@ -249,12 +249,11 @@ sub selector_options {
 }
 
 sub _check_name {
-  my ($self, $type, $name, $options) = @_;
+  my ($self, $type, $name) = @_;
   my $meth = "find_$type";
-  my @objs = $self->pantry->$meth( $name, $options );
+  my @objs = $self->pantry->$meth( $name );
   if (@objs == 0) {
-    my $env = $options->{env} || 'default';
-    die "$type '$name' does not exist in the $env environment\n";
+    die "$type '$name' does not exist\n";
   }
   elsif ( @objs == 1 ) {
     return $objs[0];
