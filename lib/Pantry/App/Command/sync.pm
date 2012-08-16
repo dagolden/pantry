@@ -7,8 +7,10 @@ package Pantry::App::Command::sync;
 
 use Pantry::App -command;
 use autodie;
+use JSON 2;
 use Net::OpenSSH;
 use Path::Class;
+use Pantry::Model::Util qw/merge_hash/;
 use File::Temp 0.22 qw/tempfile/;
 
 Net::OpenSSH->VERSION("0.56_01");
@@ -75,9 +77,32 @@ sub _sync_node {
   $ssh->rsync_put($rsync_opts, $solo_rb, "$dest_dir/solo.rb")
     or die "Could not rsync solo.rb\n";
 
-  # rsync node JSON to remote /etc/chef/node.json
+  # prepare node JSON for upload
   # XXX should really check to be sure it exists
-  my $node_json = $self->pantry->node($name)->path->stringify;
+  my ($node_fh, $node_json) = tempfile( "node.json-XXXXXX", TMPDIR => 1 );
+  my $node = $self->pantry->node($name);
+  $node->save_as($node_json);
+
+  # XXX Chef Solo doesn't yet support environment data files, so we merge them
+  # in manually, though it doesn't quite match Chef's natural attribute
+  # precedence table.
+  # http://wiki.opscode.com/display/chef/Attributes#Attributes-Precedence
+  #
+  # When Chef Solo supports env files (in repo but not released) this won't be
+  # necessary, but we'll need to upload environment files and configure them in
+  # solo.rb
+
+  my $env = $self->pantry->environment($node->env);
+  if ( -e $env->path ) { # if we have a data file, then merge it
+    my $base = decode_json( file($node_json)->slurp );
+    my $merged = merge_hash(
+      merge_hash( $env->default_attributes, $base ),
+      $env->override_attributes
+    );
+    file($node_json)->spew( to_json( $merged, { utf8 => 1, pretty => 1 } ) );
+  }
+
+  # rsync node JSON to remote /etc/chef/node.json
   $ssh->rsync_put($rsync_opts, $node_json, "$dest_dir/node.json")
     or die "Could not rsync node.json\n";
 
