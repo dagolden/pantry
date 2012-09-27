@@ -18,10 +18,6 @@ sub command_type {
   return 'TARGET';
 }
 
-sub valid_types {
-  return qw/node role environment/
-}
-
 sub options {
   my ($self) = @_;
   return (
@@ -29,19 +25,18 @@ sub options {
   );
 }
 
-sub _delete_node {
-  my ($self, $opt, $name) = @_;
-  $self->_delete_obj($opt, "node", $name);
+my @types = qw/node role environment/;
+
+sub valid_types {
+  return @types;
 }
 
-sub _delete_role {
-  my ($self, $opt, $name) = @_;
-  $self->_delete_obj($opt, "role", $name);
-}
-
-sub _delete_environment {
-  my ($self, $opt, $name) = @_;
-  $self->_delete_obj($opt, "environment", $name);
+for my $t ( @types ) {
+  no strict 'refs';
+  *{"_delete_$t"} = sub {
+    my ($self, $opt, $name) = @_;
+    $self->_delete_obj($opt, $t, $name);
+  };
 }
 
 sub _delete_obj {
