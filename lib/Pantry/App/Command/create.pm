@@ -20,15 +20,15 @@ sub command_type {
 
 sub options {
   my ($self) = @_;
-  return ($self->ssh_options, $self->selector_options);
+  return ( $self->ssh_options, $self->selector_options );
 }
 
 # These get auto-generated creator methods
 my %creators = (
-  role => 'save',
+  role        => 'save',
   environment => 'save',
-  bag => 'save',
-  cookbook => 'create_boilerplate',
+  bag         => 'save',
+  cookbook    => 'create_boilerplate',
 );
 
 # Nodes get custom processing
@@ -36,33 +36,33 @@ sub valid_types {
   return qw/node/, keys %creators;
 }
 
-while ( my ($type, $method) = each %creators ) {
+while ( my ( $type, $method ) = each %creators ) {
   no strict 'refs';
   *{"_create_$type"} = sub {
-    my ($self, $opt, $name) = @_;
-    return $self->_generic_create($name, $type, $method);
+    my ( $self, $opt, $name ) = @_;
+    return $self->_generic_create( $name, $type, $method );
   };
 }
 
 sub _create_node {
-  my ($self, $opt, $name) = @_;
+  my ( $self, $opt, $name ) = @_;
 
   my %options;
-  for my $k ( qw/host port user/ ) {
+  for my $k (qw/host port user/) {
     $options{"pantry_$k"} = $opt->$k if $opt->$k;
   }
   $options{env} = $opt->{env} if $opt->{env};
 
-  return $self->_generic_create($name, 'node', 'save', \%options);
+  return $self->_generic_create( $name, 'node', 'save', \%options );
 }
 
 sub _generic_create {
-  my ($self, $name, $type, $init, $options ) = @_;
+  my ( $self, $name, $type, $init, $options ) = @_;
 
   my $obj = $self->pantry->$type( $name, $options );
   if ( -e $obj->path ) {
     $type = uc $type;
-    $self->usage_error( "$type '$name' already exists" );
+    $self->usage_error("$type '$name' already exists");
   }
   else {
     $obj->$init;
