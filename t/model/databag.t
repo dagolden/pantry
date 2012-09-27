@@ -14,83 +14,83 @@ subtest "creation" => sub {
   new_ok("Pantry::Model::DataBag", [name => "xdg"]);
 };
 
-### create/serialize/deserialize
-##subtest "freeze/thaw" => sub {
-##  my $wd=tempd;
-##
-##  my $role = Pantry::Model::Role->new(name => "web");
-##  ok( $role->save_as("role.json"), "saved a role" );
-##  ok( my $thawed = Pantry::Model::Role->new_from_file("role.json"), "thawed role");
-##  is( $thawed->name, $role->name, "thawed name matches original name" );
-##};
-##
-### create with a path
-##subtest "_path attribute" => sub {
-##  my $wd=tempd;
-##
-##  my $role = Pantry::Model::Role->new(
-##    name => "web",
-##    _path => "role.json"
-##  );
-##  ok( $role->save, "saved a role with default path" );
-##  ok( my $thawed = Pantry::Model::Role->new_from_file("role.json"), "thawed role");
-##  is( $thawed->name, $role->name, "thawed name matches original name" );
-##};
-##
+# create/serialize/deserialize
+subtest "freeze/thaw" => sub {
+  my $wd=tempd;
+
+  my $bag = Pantry::Model::DataBag->new(name => "web");
+  ok( $bag->save_as("bag.json"), "saved a bag" );
+  ok( my $thawed = Pantry::Model::DataBag->new_from_file("bag.json"), "thawed bag");
+  is( $thawed->name, $bag->name, "thawed name matches original name" );
+};
+
+# create with a path
+subtest "_path attribute" => sub {
+  my $wd=tempd;
+
+  my $bag = Pantry::Model::DataBag->new(
+    name => "xdg",
+    _path => "bag.json"
+  );
+  ok( $bag->save, "saved a bag with default path" );
+  ok( my $thawed = Pantry::Model::DataBag->new_from_file("bag.json"), "thawed bag");
+  is( $thawed->name, $bag->name, "thawed name matches original name" );
+};
+
 ### runlist manipulation
 ##subtest 'append to / remove from runlist' => sub {
-##  my $role = Pantry::Model::Role->new(
+##  my $bag = Pantry::Model::DataBag->new(
 ##    name => "web",
 ##  );
-##  $role->append_to_run_list( "foo", "bar" );
-##  is_deeply([qw/foo bar/], [$role->run_list], "append two items");
-##  $role->append_to_run_list( "baz" );
-##  is_deeply([qw/foo bar baz/], [$role->run_list], "append another");
-##  $role->remove_from_run_list("bar");
-##  is_deeply([qw/foo baz/], [$role->run_list], "remove from middle");
-##  $role->remove_from_run_list("wibble");
-##  is_deeply([qw/foo baz/], [$role->run_list], "remove item that doesn't exist");
+##  $bag->append_to_run_list( "foo", "bar" );
+##  is_deeply([qw/foo bar/], [$bag->run_list], "append two items");
+##  $bag->append_to_run_list( "baz" );
+##  is_deeply([qw/foo bar baz/], [$bag->run_list], "append another");
+##  $bag->remove_from_run_list("bar");
+##  is_deeply([qw/foo baz/], [$bag->run_list], "remove from middle");
+##  $bag->remove_from_run_list("wibble");
+##  is_deeply([qw/foo baz/], [$bag->run_list], "remove item that doesn't exist");
 ##};
 ##
-##subtest 'role default attribute CRUD' => sub {
-##  my $role = Pantry::Model::Role->new(
+##subtest 'bag default attribute CRUD' => sub {
+##  my $bag = Pantry::Model::DataBag->new(
 ##    name => "web",
 ##  );
-##  $role->set_default_attribute("nginx.port" => 80);
-##  is( $role->get_default_attribute("nginx.port"), 80, "set/got 'nginx.port'" );
-##  $role->set_default_attribute("nginx.port" => 8080);
-##  is( $role->get_default_attribute("nginx.port"), 8080, "changed 'nginx.port'" );
-##  $role->delete_default_attribute("nginx.port");
-##  is( $role->get_default_attribute("nginx.port"), undef, "deleted 'nginx.port'" );
+##  $bag->set_default_attribute("nginx.port" => 80);
+##  is( $bag->get_default_attribute("nginx.port"), 80, "set/got 'nginx.port'" );
+##  $bag->set_default_attribute("nginx.port" => 8080);
+##  is( $bag->get_default_attribute("nginx.port"), 8080, "changed 'nginx.port'" );
+##  $bag->delete_default_attribute("nginx.port");
+##  is( $bag->get_default_attribute("nginx.port"), undef, "deleted 'nginx.port'" );
 ##};
 ##
-##subtest 'role override attribute CRUD' => sub {
-##  my $role = Pantry::Model::Role->new(
+##subtest 'bag override attribute CRUD' => sub {
+##  my $bag = Pantry::Model::DataBag->new(
 ##    name => "web",
 ##  );
-##  $role->set_override_attribute("nginx.port" => 80);
-##  is( $role->get_override_attribute("nginx.port"), 80, "set/got 'nginx.port'" );
-##  $role->set_override_attribute("nginx.port" => 8080);
-##  is( $role->get_override_attribute("nginx.port"), 8080, "changed 'nginx.port'" );
-##  $role->delete_override_attribute("nginx.port");
-##  is( $role->get_override_attribute("nginx.port"), undef, "deleted 'nginx.port'" );
+##  $bag->set_override_attribute("nginx.port" => 80);
+##  is( $bag->get_override_attribute("nginx.port"), 80, "set/got 'nginx.port'" );
+##  $bag->set_override_attribute("nginx.port" => 8080);
+##  is( $bag->get_override_attribute("nginx.port"), 8080, "changed 'nginx.port'" );
+##  $bag->delete_override_attribute("nginx.port");
+##  is( $bag->get_override_attribute("nginx.port"), undef, "deleted 'nginx.port'" );
 ##};
 ##
-##subtest 'role attribute serialization' => sub {
+##subtest 'bag attribute serialization' => sub {
 ##  my $wd=tempd;
-##  my $role = Pantry::Model::Role->new(
+##  my $bag = Pantry::Model::DataBag->new(
 ##    name => "web",
-##    _path => "role.json",
+##    _path => "bag.json",
 ##  );
-##  $role->set_default_attribute("nginx.port" => 80);
-##  $role->set_default_attribute("nginx.user" => "nobody");
-##  $role->set_override_attribute("set_fqdn" => "web");
-##  $role->save;
-##  my $data = _thaw_file("role.json");
+##  $bag->set_default_attribute("nginx.port" => 80);
+##  $bag->set_default_attribute("nginx.user" => "nobody");
+##  $bag->set_override_attribute("set_fqdn" => "web");
+##  $bag->save;
+##  my $data = _thaw_file("bag.json");
 ##  is_deeply( $data, {
 ##      name => 'web',
-##      json_class => 'Chef::Role',
-##      chef_type => 'role',
+##      json_class => 'Chef::DataBag',
+##      chef_type => 'bag',
 ##      run_list => [],
 ##      env_run_lists => {},
 ##      default_attributes => {
@@ -103,35 +103,35 @@ subtest "creation" => sub {
 ##        set_fqdn => "web",
 ##      },
 ##    },
-##    "role attributes serialized at correct level"
+##    "bag attributes serialized at correct level"
 ##  ) or diag explain $data;
-##  ok( my $thawed = Pantry::Model::Role->new_from_file("role.json"), "thawed role");
+##  ok( my $thawed = Pantry::Model::DataBag->new_from_file("bag.json"), "thawed bag");
 ##  my $err;
-##  is( $thawed->get_default_attribute("nginx.port"), 80, "thawed role has correct default 'nginx.port'" )
+##  is( $thawed->get_default_attribute("nginx.port"), 80, "thawed bag has correct default 'nginx.port'" )
 ##    or $err++;
-##  is( $thawed->get_default_attribute("nginx.user"), "nobody", "thawed role has correct default 'nginx.user'" )
+##  is( $thawed->get_default_attribute("nginx.user"), "nobody", "thawed bag has correct default 'nginx.user'" )
 ##    or $err++;
-##  is( $thawed->get_override_attribute("set_fqdn"), "web", "thawed role has correct override 'set_fqdn'" )
+##  is( $thawed->get_override_attribute("set_fqdn"), "web", "thawed bag has correct override 'set_fqdn'" )
 ##    or $err++;
 ##  diag "DATA FILE:\n", explain $data if $err;
 ##};
 ##
-##subtest 'role attribute escape dots' => sub {
+##subtest 'bag attribute escape dots' => sub {
 ##  my $wd=tempd;
-##  my $role = Pantry::Model::Role->new(
+##  my $bag = Pantry::Model::DataBag->new(
 ##    name => "web",
-##    _path => "role.json",
+##    _path => "bag.json",
 ##  );
-##  $role->set_default_attribute('nginx\.port' => 80);
-##  $role->set_override_attribute('deep.attribute.dotted\.name' => 'bar');
-##  is( $role->get_default_attribute('nginx\.port'), 80, q{set/got 'nginx\.port'} );
-##  is( $role->get_override_attribute('deep.attribute.dotted\.name'), 'bar', q{set/got 'deep.attribute.dotted\.name'} );
-##  $role->save;
-##  my $data = _thaw_file("role.json");
+##  $bag->set_default_attribute('nginx\.port' => 80);
+##  $bag->set_override_attribute('deep.attribute.dotted\.name' => 'bar');
+##  is( $bag->get_default_attribute('nginx\.port'), 80, q{set/got 'nginx\.port'} );
+##  is( $bag->get_override_attribute('deep.attribute.dotted\.name'), 'bar', q{set/got 'deep.attribute.dotted\.name'} );
+##  $bag->save;
+##  my $data = _thaw_file("bag.json");
 ##  is_deeply( $data, {
 ##      name => 'web',
-##      json_class => 'Chef::Role',
-##      chef_type => 'role',
+##      json_class => 'Chef::DataBag',
+##      chef_type => 'bag',
 ##      run_list => [],
 ##      env_run_lists => {},
 ##      default_attributes => {
@@ -145,35 +145,35 @@ subtest "creation" => sub {
 ##        },
 ##      },
 ##    },
-##    "role attributes escaped dot works"
+##    "bag attributes escaped dot works"
 ##  ) or diag explain $data;
-##  ok( my $thawed = Pantry::Model::Role->new_from_file("role.json"), "thawed role");
-##  is( $thawed->get_default_attribute('nginx\.port'), 80, q{thawed role has correct 'nginx\.port'} )
+##  ok( my $thawed = Pantry::Model::DataBag->new_from_file("bag.json"), "thawed bag");
+##  is( $thawed->get_default_attribute('nginx\.port'), 80, q{thawed bag has correct 'nginx\.port'} )
 ##    or diag explain $thawed;
-##  is( $thawed->get_override_attribute('deep.attribute.dotted\.name'), 'bar', q{thawed role has correct 'deep.attribute.dotted\.name'} )
+##  is( $thawed->get_override_attribute('deep.attribute.dotted\.name'), 'bar', q{thawed bag has correct 'deep.attribute.dotted\.name'} )
 ##    or diag explain $thawed;
 ##};
 ##
 ##subtest 'append to / remove from environment runlist' => sub {
 ##  my $wd=tempd;
-##  my $role = Pantry::Model::Role->new(
+##  my $bag = Pantry::Model::DataBag->new(
 ##    name => "web",
-##    _path => "role.json",
+##    _path => "bag.json",
 ##  );
-##  $role->append_to_env_run_list( 'test', ["foo", "bar"] );
-##  is_deeply([qw/foo bar/], [$role->get_env_run_list('test')->run_list], "append two items to test environment");
-##  $role->append_to_env_run_list( 'test', ["baz"] );
-##  is_deeply([qw/foo bar baz/], [$role->get_env_run_list('test')->run_list], "append another");
-##  $role->remove_from_env_run_list('test', ["bar"]);
-##  is_deeply([qw/foo baz/], [$role->get_env_run_list('test')->run_list], "remove from middle");
-##  $role->remove_from_run_list('test', ["wibble"]);
-##  is_deeply([qw/foo baz/], [$role->get_env_run_list('test')->run_list], "remove item that doesn't exist");
-##  $role->save;
-##  my $data = _thaw_file("role.json");
+##  $bag->append_to_env_run_list( 'test', ["foo", "bar"] );
+##  is_deeply([qw/foo bar/], [$bag->get_env_run_list('test')->run_list], "append two items to test environment");
+##  $bag->append_to_env_run_list( 'test', ["baz"] );
+##  is_deeply([qw/foo bar baz/], [$bag->get_env_run_list('test')->run_list], "append another");
+##  $bag->remove_from_env_run_list('test', ["bar"]);
+##  is_deeply([qw/foo baz/], [$bag->get_env_run_list('test')->run_list], "remove from middle");
+##  $bag->remove_from_run_list('test', ["wibble"]);
+##  is_deeply([qw/foo baz/], [$bag->get_env_run_list('test')->run_list], "remove item that doesn't exist");
+##  $bag->save;
+##  my $data = _thaw_file("bag.json");
 ##  is_deeply( $data, {
 ##      name => 'web',
-##      json_class => 'Chef::Role',
-##      chef_type => 'role',
+##      json_class => 'Chef::DataBag',
+##      chef_type => 'bag',
 ##      run_list => [],
 ##      env_run_lists => {
 ##        test => [qw/foo baz/],
@@ -183,7 +183,7 @@ subtest "creation" => sub {
 ##    },
 ##    "env_run_lists serialized correctly"
 ##  ) or diag explain $data;
-##  ok( my $thawed = Pantry::Model::Role->new_from_file("role.json"), "thawed role");
+##  ok( my $thawed = Pantry::Model::DataBag->new_from_file("bag.json"), "thawed bag");
 ##  is_deeply([qw/foo baz/], [$thawed->get_env_run_list('test')->run_list], "env_run_lists round-tripped correctly");
 ##};
 
