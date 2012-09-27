@@ -104,7 +104,7 @@ my @top_level_keys = qw/id/;
 
 sub _freeze {
   my ($self, $data) = @_;
-  my $id = $self->name;
+  my $id = delete $data->{name};
   my $attr = delete $data->{attributes};
   for my $k ( keys %$attr ) {
     next if grep { $k eq $_ } @top_level_keys;
@@ -117,7 +117,6 @@ sub _freeze {
 sub _thaw {
   my ($self, $data) = @_;
   my $attr = {};
-  my $name = delete $data->{id};
   for my $k ( keys %$data ) {
     next if grep { $k eq $_ } @top_level_keys;
     my $v = delete $data->{$k};
@@ -128,7 +127,7 @@ sub _thaw {
     }
   }
   $data->{attributes} = $attr;
-  $data->{name} = $name;
+  $data->{name} = delete $data->{id};
   return $data;
 }
 
