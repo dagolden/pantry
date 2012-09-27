@@ -25,7 +25,7 @@ sub options {
   );
 }
 
-my @types = qw/node role environment/;
+my @types = qw/node role environment bag/;
 
 sub valid_types {
   return @types;
