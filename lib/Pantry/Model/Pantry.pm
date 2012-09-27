@@ -293,8 +293,11 @@ a count of bags.
 
 sub all_bags {
   my ($self, $env) = @_;
-  my @bags = sort map { s/\.json$//r } map { $_->basename }
-              $self->_bag_dir->children;
+  my $pcr = Path::Class::Rule->new->file;
+  my @bags =
+    sort map { s/\.json$//r }
+    map { $_->relative($self->_bag_dir) }
+    $pcr->all( $self->_bag_dir );
   return @bags;
 }
 

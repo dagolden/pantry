@@ -46,7 +46,7 @@ my @cases = (
   {
     label => "bags",
     type => "bag",
-    names => ['xdg', 'dag'],
+    names => ['xdg', 'dag', 'users/egg'],
     new => sub { my ($p,$n) = @_; $p->bag($n) },
   },
 );

@@ -95,6 +95,13 @@ my @cases = (
     new => sub { my ($p,$n) = @_; $p->bag($n) },
     empty => {},
   },
+  {
+    label => "bag with subdirectory",
+    type => "bag",
+    name => 'users/xdg',
+    new => sub { my ($p,$n) = @_; $p->bag($n) },
+    empty => {},
+  },
 
 );
 

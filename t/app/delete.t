@@ -39,6 +39,12 @@ my @cases = (
     name => 'xdg',
     new => sub { my ($p,$n) = @_; $p->bag($n) },
   },
+  {
+    label => "bag with subdirectory",
+    type => "bag",
+    name => 'users/xdg',
+    new => sub { my ($p,$n) = @_; $p->bag($n) },
+  },
 );
 
 local $ENV{PERL_MM_USE_DEFAULT} = 1;
