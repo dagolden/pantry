@@ -23,7 +23,7 @@ sub options {
   return ($self->selector_options);
 }
 
-my @types = qw/node role environment/;
+my @types = qw/node role environment bag/;
 
 sub valid_types {
   return map { ($_, "${_}s") } @types;
