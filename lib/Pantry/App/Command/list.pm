@@ -23,30 +23,22 @@ sub options {
   return ($self->selector_options);
 }
 
+my @types = qw/node role environment/;
+
 sub valid_types {
-  return qw/node nodes role roles environment environments/
+  return map { ($_, "${_}s") } @types;
 }
 
-sub _list_nodes {
-  my ($self, $opt) = @_;
-  say $_ for $self->pantry->all_nodes($opt);
+for my $t ( @types ) {
+  no strict 'refs';
+  my $plural = $t . "s";
+  my $method = "all_$plural";
+  *{"_list_$t"} = sub {
+    my ($self, $opt) = @_;
+    say $_ for $self->pantry->$method($opt);
+  };
+  *{"_list_$plural"} = *{"_list_$t"};
 }
-
-*_list_node = *_list_nodes; # alias
-
-sub _list_roles {
-  my ($self, $opt) = @_;
-  say $_ for $self->pantry->all_roles;
-}
-
-*_list_role = *_list_roles; # alias
-
-sub _list_environments {
-  my ($self, $opt) = @_;
-  say $_ for $self->pantry->all_environments;
-}
-
-*_list_environment = *_list_environments; # alias
 
 1;
 
