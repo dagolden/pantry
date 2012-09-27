@@ -56,6 +56,13 @@ sub _cookbook_dir {
   return $path;
 }
 
+sub _bag_dir {
+  my ($self) = @_;
+  my $path = $self->path->subdir("data_bags");
+  $path->mkpath;
+  return $path;
+}
+
 # file path where environment JSON file is located
 sub _environment_path {
   my ($self, $env) = @_;
@@ -75,6 +82,11 @@ sub _role_path {
 sub _cookbook_path {
   my ($self, $cookbook_name) = @_;
   return $self->_cookbook_dir->subdir("${cookbook_name}");
+}
+
+sub _bag_path {
+  my ($self, $bag_name) = @_;
+  return $self->_bag_dir->file("${bag_name}.json");
 }
 
 =method all_nodes
@@ -268,6 +280,61 @@ sub cookbook {
   require Pantry::Model::Cookbook;
   my $path = $self->_cookbook_path( $cookbook_name );
   return Pantry::Model::Cookbook->new( name => $cookbook_name, _path => $path );
+}
+
+=method all_bags
+
+  my @bags = $pantry->all_bags;
+
+In list context, returns a list of bags.  In scalar context, returns
+a count of bags.
+
+=cut
+
+sub all_bags {
+  my ($self, $env) = @_;
+  my @bags = sort map { s/\.json$//r } map { $_->basename }
+              $self->_bag_dir->children;
+  return @bags;
+}
+
+=method C<bag>
+
+  my $node = $pantry->bag("xdg");
+
+Returns a L<Pantry::Model::DataBag> object corresponding to the given bag.
+If the bag exists in the pantry, it will be loaded from the saved bag file.
+Otherwise, it will be created in memory (but will not be persisted to disk).
+
+=cut
+
+sub bag {
+  my ($self, $bag_name, $options) = @_;
+  $bag_name = lc $bag_name;
+  require Pantry::Model::DataBag;
+  my $path = $self->_bag_path( $bag_name );
+  if ( -e $path ) {
+    return Pantry::Model::DataBag->new_from_file( $path );
+  }
+  else {
+    return Pantry::Model::DataBag->new( name => $bag_name, _path => $path );
+  }
+}
+
+=method find_bag
+
+  my @bags = $pantry->find_bag( $leading_part );
+
+Finds one or more bag matching a leading part.  For example, given bags 'web'
+and 'mysql' in a pantry, use C<<$pantry->find_bag("my")>> to get 'mysql'.
+
+Returns a list of bag objects if any are found.
+
+=cut
+
+sub find_bag {
+  my ($self, $pattern, $options) = @_;
+  return map { $self->bag($_) } grep { $_ =~ /^\Q$pattern\E/ } $self->all_bags;
 }
 
 1;
