@@ -22,23 +22,18 @@ sub command_type {
   return 'TARGET';
 }
 
+my @types = qw/node role environment/;
+
 sub valid_types {
-  return qw/node role environment/
+  return @types;
 }
 
-sub _edit_node {
-  my ($self, $opt, $name) = @_;
-  $self->_edit_obj($opt, 'node', $name);
-}
-
-sub _edit_role {
-  my ($self, $opt, $name) = @_;
-  $self->_edit_obj($opt, 'role', $name);
-}
-
-sub _edit_environment {
-  my ($self, $opt, $name) = @_;
-  $self->_edit_obj($opt, 'environment', $name);
+for my $t (@types) {
+  no strict 'refs';
+  *{"_edit_$t"} = sub {
+    my ($self, $opt, $name) = @_;
+    $self->_edit_obj($opt, $t, $name);
+  };
 }
 
 sub _edit_obj {
