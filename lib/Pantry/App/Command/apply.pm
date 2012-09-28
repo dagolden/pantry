@@ -24,25 +24,6 @@ sub options {
   return ($self->data_options, $self->selector_options);
 }
 
-sub valid_types {
-  return qw/node role environment/
-}
-
-sub _apply_node {
-  my ($self, $opt, $name) = @_;
-  $self->_apply_obj($opt, 'node', $name);
-}
-
-sub _apply_role {
-  my ($self, $opt, $name) = @_;
-  $self->_apply_obj($opt, 'role', $name);
-}
-
-sub _apply_environment {
-  my ($self, $opt, $name) = @_;
-  $self->_apply_obj($opt, 'environment', $name);
-}
-
 my %setters = (
   node => {
     default => 'set_attribute',
@@ -57,6 +38,18 @@ my %setters = (
     override => 'set_override_attribute',
   },
 );
+
+sub valid_types {
+  return keys %setters;
+}
+
+for my $t ( keys %setters ) {
+  no strict 'refs';
+  *{"_apply_$t"} = sub {
+    my ($self, $opt, $name) = @_;
+    $self->_apply_obj($opt, $t, $name);
+  };
+}
 
 sub _apply_obj {
   my ($self, $opt, $type, $name) = @_;
