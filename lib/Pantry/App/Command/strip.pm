@@ -18,28 +18,9 @@ sub command_type {
   return 'TARGET';
 }
 
-sub valid_types {
-  return qw/node role environment/
-}
-
 sub options {
   my ($self) = @_;
   return ($self->data_options, $self->selector_options);
-}
-
-sub _strip_node {
-  my ($self, $opt, $name) = @_;
-  $self->_strip_obj($opt, 'node', $name);
-}
-
-sub _strip_role {
-  my ($self, $opt, $name) = @_;
-  $self->_strip_obj($opt, 'role', $name);
-}
-
-sub _strip_environment {
-  my ($self, $opt, $name) = @_;
-  $self->_strip_obj($opt, 'environment', $name);
 }
 
 my %strippers = (
@@ -56,6 +37,18 @@ my %strippers = (
     override => 'delete_override_attribute',
   },
 );
+
+sub valid_types {
+  return keys %strippers;
+}
+
+for my $t ( keys %strippers ) {
+  no strict 'refs';
+  *{"_strip_$t"} = sub {
+    my ($self, $opt, $name) = @_;
+    $self->_strip_obj($opt, $t, $name);
+  };
+}
 
 sub _strip_obj {
   my ($self, $opt, $type, $name) = @_;
