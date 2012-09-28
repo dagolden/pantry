@@ -2,6 +2,10 @@ Revision history for pantry
 
 {{$NEXT}}
 
+    [Added]
+
+    - Added support for data bags
+
 0.009     2012-08-16 14:56:25 America/New_York
 
     [Added]
