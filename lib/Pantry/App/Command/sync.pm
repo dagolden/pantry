@@ -121,6 +121,10 @@ sub _sync_node {
   $ssh->rsync_put($rsync_opts, "roles", $dest_dir)
     or die "Could not rsync roles\n";
 
+  # rsync databags to remote /var/chef-solo/data_bags
+  $ssh->rsync_put($rsync_opts, "data_bags", $dest_dir)
+    or die "Could not rsync data_bags\n";
+
   # ssh execute chef-solo
   my $command = $sudo_i . "chef-solo -c $dest_dir/solo.rb";
   $command .= " -l debug" if $ENV{PANTRY_CHEF_DEBUG};
@@ -145,6 +149,7 @@ sub _solo_rb_guts {
 file_cache_path "$dest_dir"
 cookbook_path "$dest_dir/cookbooks"
 role_path "$dest_dir/roles"
+data_bag_path "$dest_dir/data_bags"
 json_attribs "$dest_dir/node.json"
 require 'chef/handler/json_file'
 report_handlers << Chef::Handler::JsonFile.new(:path => "$dest_dir/reports")
