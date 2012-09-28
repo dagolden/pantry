@@ -256,7 +256,9 @@ for my $c (@cases) {
       my $data     = _thaw_file( $obj->path );
       my $expected = dclone $st->{expected};
       my $id_field = $c->{type} eq 'bag' ? 'id' : 'name';
-      $expected->{$id_field} //= $c->{name};
+      my ($first, $last) = split "/", $c->{name};
+      $last //= $first;
+      $expected->{$id_field} //= $last;
       for my $k ( keys %{ $templates{ $c->{type} } } ) {
         $expected->{$k} //= $templates{ $c->{type} }{$k};
       }

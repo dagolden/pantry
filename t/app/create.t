@@ -123,7 +123,9 @@ for my $c ( @cases ) {
       my $data = _thaw_file( $obj->path );
 
       my $id_field = $c->{type} eq 'bag' ? 'id' : 'name';
-      is ( delete $data->{$id_field}, $c->{name}, "$c->{type} name set correctly in data file" );
+      my ($first, $last) = split "/", $c->{name};
+      $last //= $first;
+      is ( delete $data->{$id_field}, $last, "$c->{type} name set correctly in data file" );
 
       is_deeply( $data, $c->{empty}, "remaining fields correctly set for empty $c->{type}" )
         or diag explain($data);
