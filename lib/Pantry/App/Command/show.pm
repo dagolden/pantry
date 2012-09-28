@@ -19,23 +19,18 @@ sub command_type {
   return 'TARGET';
 }
 
+my @types = qw/node role environment/;
+
 sub valid_types {
-  return qw/node role environment/
+  return @types;
 }
 
-sub _show_node {
-  my ($self, $opt, $name) = @_;
-  return $self->_show_obj($opt, 'node', $name);
-}
-
-sub _show_role {
-  my ($self, $opt, $name) = @_;
-  return $self->_show_obj($opt, 'role', $name);
-}
-
-sub _show_environment {
-  my ($self, $opt, $name) = @_;
-  return $self->_show_obj($opt, 'environment', $name);
+for my $t (@types) {
+  no strict 'refs';
+  *{"_show_$t"} = sub {
+    my ($self, $opt, $name) = @_;
+    return $self->_show_obj($opt, $t, $name);
+  };
 }
 
 sub _show_obj {
