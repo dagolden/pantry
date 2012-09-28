@@ -1,10 +1,12 @@
+=pod
+
 =head1 NAME
 
 Pantry - Configuration management tool for chef-solo
 
 =head1 VERSION
 
-version 0.009
+version 0.010
 
 =head1 SYNOPSIS
 
@@ -441,7 +443,7 @@ pocketknife L<http://github.com/igal/pocketknife> (Ruby)
 =head2 Bugs / Feature Requests
 
 Please report any bugs or feature requests through the issue tracker
-at L<https://rt.cpan.org/Public/Dist/Display.html?Name=Pantry>.
+at L<https://github.com/dagolden/pantry/issues>.
 You will be notified automatically of any progress on your issue.
 
 =head2 Source Code
