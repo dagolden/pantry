@@ -17,6 +17,7 @@ my @pantry_dirs = qw(
   environments
   reports
   roles
+  data_bags
 );
 
 sub _init {
