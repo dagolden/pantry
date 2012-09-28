@@ -36,6 +36,12 @@ my @cases = (
     name => 'web',
     new => sub { my ($p,$n) = @_; $p->role($n) },
   },
+  {
+    label => "bag",
+    type => "bag",
+    name => 'user/xdg',
+    new => sub { my ($p,$n) = @_; $p->bag($n) },
+  },
 );
 
 for my $c ( @cases ) {
