@@ -18,23 +18,18 @@ sub command_type {
   return 'DUAL_TARGET';
 }
 
+my @types = qw/node role environment/;
+
 sub valid_types {
-  return qw/node role environment/
+  return @types;
 }
 
-sub _rename_node {
-  my ($self, $opt, $name, $dest) = @_;
-  return $self->_rename_obj($opt, 'node', $name, $dest);
-}
-
-sub _rename_role {
-  my ($self, $opt, $name, $dest) = @_;
-  return $self->_rename_obj($opt, 'role', $name, $dest);
-}
-
-sub _rename_environment {
-  my ($self, $opt, $name, $dest) = @_;
-  return $self->_rename_obj($opt, 'environment', $name, $dest);
+for my $t (@types) {
+  no strict 'refs';
+  *{"_rename_$t"} = sub {
+    my ($self, $opt, $name, $dest) = @_;
+    return $self->_rename_obj($opt, $t, $name, $dest);
+  };
 }
 
 sub _rename_obj {
