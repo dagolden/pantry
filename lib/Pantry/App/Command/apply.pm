@@ -37,6 +37,10 @@ my %setters = (
     default => 'set_default_attribute',
     override => 'set_override_attribute',
   },
+  bag => {
+    default => 'set_attribute',
+    override => undef,
+  },
 );
 
 sub valid_types {

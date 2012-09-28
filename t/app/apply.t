@@ -30,6 +30,8 @@ my %templates = (
     default_attributes  => {},
     override_attributes => {},
   },
+  bag => {
+  },
 );
 
 my @recipe_role_subtests = (
@@ -142,6 +144,39 @@ my @deep_attribute_subtests = (
   },
 );
 
+my @bag_attribute_subtests = (
+  {
+    argv     => [qw/-d nginx.port=80/],
+    expected => {
+      nginx    => { port => 80 },
+    },
+  },
+  {
+    argv     => [qw/-d nginx.port=80,8080/],
+    expected => {
+      nginx    => { port => [ 80, 8080 ] },
+    },
+  },
+  {
+    argv     => [qw/-d nginx\.port=80,8000\,8080/],
+    expected => {
+      'nginx.port' => [ 80, '8000,8080' ],
+    },
+  },
+  {
+    argv     => [qw/-d nginx\.enable=false/],
+    expected => {
+      'nginx.enable' => JSON::false,
+    },
+  },
+  {
+    argv     => [qw/-d nginx\.enable=true/],
+    expected => {
+      'nginx.enable' => JSON::true,
+    },
+  },
+);
+
 my @env_run_list_subtests = (
   {
     argv     => [qw/-r nginx -E test/],
@@ -198,6 +233,13 @@ my @cases = (
     new  => sub { my ( $p, $n ) = @_; $p->environment($n) },
     subtests => [ @deep_attribute_subtests ],
   },
+
+  {
+    type => "bag",
+    name => 'user/xdg',
+    new  => sub { my ( $p, $n ) = @_; $p->bag($n) },
+    subtests => [ @bag_attribute_subtests ],
+  },
 );
 
 for my $c (@cases) {
@@ -213,7 +255,8 @@ for my $c (@cases) {
 
       my $data     = _thaw_file( $obj->path );
       my $expected = dclone $st->{expected};
-      $expected->{name} //= $c->{name};
+      my $id_field = $c->{type} eq 'bag' ? 'id' : 'name';
+      $expected->{$id_field} //= $c->{name};
       for my $k ( keys %{ $templates{ $c->{type} } } ) {
         $expected->{$k} //= $templates{ $c->{type} }{$k};
       }
