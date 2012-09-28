@@ -313,14 +313,15 @@ Otherwise, it will be created in memory (but will not be persisted to disk).
 
 sub bag {
   my ($self, $bag_name, $options) = @_;
-  $bag_name = lc $bag_name;
+  my ($dir_name, $item_name) = split "/", lc $bag_name;
+  $item_name //= $bag_name;
   require Pantry::Model::DataBag;
   my $path = $self->_bag_path( $bag_name );
   if ( -e $path ) {
     return Pantry::Model::DataBag->new_from_file( $path );
   }
   else {
-    return Pantry::Model::DataBag->new( name => $bag_name, _path => $path );
+    return Pantry::Model::DataBag->new( name => $item_name, _path => $path );
   }
 }
 

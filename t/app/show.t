@@ -74,6 +74,26 @@ my @cases = (
       override_attributes => {},
     },
   },
+  {
+    label => "bag",
+    type => "bag",
+    name => 'xdg',
+    new => sub { my ($p,$n) = @_; $p->bag($n) },
+    args => [qw(-d shell=/bin/bash)],
+    expected => {
+      shell => '/bin/bash',
+    },
+  },
+  {
+    label => "bag with subdir",
+    type => "bag",
+    name => 'users/xdg',
+    new => sub { my ($p,$n) = @_; $p->bag($n) },
+    args => [qw(-d shell=/bin/bash)],
+    expected => {
+      shell => '/bin/bash',
+    },
+  },
 );
 
 for my $c ( @cases ) {
@@ -87,7 +107,10 @@ for my $c ( @cases ) {
     my $result = _try_command('show', $c->{type}, $c->{name});
     my $data = eval { decode_json( $result->output ) };
 
-    is ( delete $data->{name}, $c->{name}, "name correct in output JSON" );
+    my $id_field = $c->{type} eq 'bag' ? 'id' : 'name';
+    my ($first, $last) = split "/", $c->{name};
+    $last //= $first;
+    is ( delete $data->{$id_field}, $last, "$id_field correct in output JSON" );
 
     is_deeply( $data, $c->{expected}, "remaining fields correct in output JSON" )
       or diag $result->output;
