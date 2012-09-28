@@ -254,6 +254,12 @@ my @cases = (
     new      => sub { my ( $p, $n ) = @_; $p->environment($n) },
     subtests => [@deep_attribute_subtests],
   },
+  {
+    type     => "bag",
+    name     => 'user/xdg',
+    new      => sub { my ( $p, $n ) = @_; $p->bag($n) },
+    subtests => [ @flat_attribute_subtests ],
+  },
 );
 
 for my $c (@cases) {
@@ -275,7 +281,10 @@ for my $c (@cases) {
 
       my $data     = _thaw_file( $obj->path );
       my $expected = dclone $st->{expected};
-      $expected->{name} //= $c->{name};
+      my $id_field = $c->{type} eq 'bag' ? 'id' : 'name';
+      my ($first, $last) = split "/", $c->{name};
+      $last //= $first;
+      $expected->{$id_field} //= $last;
       for my $k ( keys %{ $templates{ $c->{type} } } ) {
         $expected->{$k} //= $templates{ $c->{type} }{$k};
       }

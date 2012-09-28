@@ -36,6 +36,10 @@ my %strippers = (
     default => 'delete_default_attribute',
     override => 'delete_override_attribute',
   },
+  bag => {
+    default => 'delete_attribute',
+    override => undef,
+  },
 );
 
 sub valid_types {
