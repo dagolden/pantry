@@ -18,7 +18,7 @@ sub command_type {
   return 'DUAL_TARGET';
 }
 
-my @types = qw/node role environment/;
+my @types = qw/node role environment bag/;
 
 sub valid_types {
   return @types;
