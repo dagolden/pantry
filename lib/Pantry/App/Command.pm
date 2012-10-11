@@ -279,6 +279,7 @@ options_desc
 pantry
 selector_options
 ssh_options
+sync_options
 valid_types
 validate
 
