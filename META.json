@@ -4,7 +4,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300024, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Dist::Zilla version 4.300025, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "apache_2_0"
    ],
@@ -76,99 +76,99 @@
    "provides" : {
       "Pantry" : {
          "file" : "lib/Pantry.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App" : {
          "file" : "lib/Pantry/App.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App::Command" : {
          "file" : "lib/Pantry/App/Command.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App::Command::apply" : {
          "file" : "lib/Pantry/App/Command/apply.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App::Command::create" : {
          "file" : "lib/Pantry/App/Command/create.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App::Command::delete" : {
          "file" : "lib/Pantry/App/Command/delete.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App::Command::edit" : {
          "file" : "lib/Pantry/App/Command/edit.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App::Command::init" : {
          "file" : "lib/Pantry/App/Command/init.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App::Command::list" : {
          "file" : "lib/Pantry/App/Command/list.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App::Command::rename" : {
          "file" : "lib/Pantry/App/Command/rename.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App::Command::show" : {
          "file" : "lib/Pantry/App/Command/show.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App::Command::strip" : {
          "file" : "lib/Pantry/App/Command/strip.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::App::Command::sync" : {
          "file" : "lib/Pantry/App/Command/sync.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::Model" : {
          "file" : "lib/Pantry/Model.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::Model::Cookbook" : {
          "file" : "lib/Pantry/Model/Cookbook.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::Model::DataBag" : {
          "file" : "lib/Pantry/Model/DataBag.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::Model::EnvRunList" : {
          "file" : "lib/Pantry/Model/EnvRunList.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::Model::Environment" : {
          "file" : "lib/Pantry/Model/Environment.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::Model::Node" : {
          "file" : "lib/Pantry/Model/Node.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::Model::Pantry" : {
          "file" : "lib/Pantry/Model/Pantry.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::Model::Role" : {
          "file" : "lib/Pantry/Model/Role.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::Model::Util" : {
          "file" : "lib/Pantry/Model/Util.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::Role::Runlist" : {
          "file" : "lib/Pantry/Role/Runlist.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       },
       "Pantry::Role::Serializable" : {
          "file" : "lib/Pantry/Role/Serializable.pm",
-         "version" : "0.010"
+         "version" : "0.011"
       }
    },
    "release_status" : "stable",
@@ -183,6 +183,6 @@
          "web" : "https://github.com/dagolden/pantry"
       }
    },
-   "version" : "0.010"
+   "version" : "0.011"
 }
 
