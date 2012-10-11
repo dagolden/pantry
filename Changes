@@ -2,6 +2,8 @@ Revision history for pantry
 
 {{$NEXT}}
 
+0.011     2012-10-11 17:02:23 America/New_York
+
     [Fixed]
 
     - Removed a spurious dump of node data during environment syncs
