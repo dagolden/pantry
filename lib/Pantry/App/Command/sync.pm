@@ -26,6 +26,11 @@ sub command_type {
   return 'TARGET';
 }
 
+sub options {
+  my ($self) = @_;
+  return ( $self->sync_options );
+}
+
 sub valid_types {
   return qw/node/
 }
@@ -138,6 +143,10 @@ sub _sync_node {
 
   dir("reports")->mkpath;
   $ssh->rsync_get($rsync_opts, "$dest_dir/reports/$report", "reports/$name");
+
+  if ( $opt->{reboot} ) {
+    $ssh->system($sudo . "shutdown -r now");
+  }
 
 }
 

@@ -248,6 +248,12 @@ sub selector_options {
   );
 }
 
+sub sync_options {
+  return (
+    [ 'reboot'       => "Reboot nodes after sync" ],
+  );
+}
+
 sub _check_name {
   my ($self, $type, $name) = @_;
   my $meth = "find_$type";

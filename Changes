@@ -2,6 +2,10 @@ Revision history for pantry
 
 {{$NEXT}}
 
+    [Added]
+
+    - Added a --reboot flag to the sync command
+
 0.011     2012-10-11 17:02:23 America/New_York
 
     [Fixed]

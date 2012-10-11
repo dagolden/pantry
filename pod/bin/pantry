@@ -177,6 +177,10 @@ C<chef-solo> via C<ssh> to start a configuration run.  After configuration,
 the latest run-report for the node is updated in the 'reports' directory
 of the pantry.
 
+If the C<--reboot> option is given, each node will be rebooted after
+the synchronization run.  This will only work on Unix hosts that
+can use the C<shutdown> command.
+
 =head3 edit
 
   $ pantry edit node NAME
