@@ -81,7 +81,7 @@ all nodes in an environment:
 
   $ pantry list nodes -E staging | pantry sync node -
 
-See L</"Managing Environments> for more.
+See L</"Managing environments"> for more.
 
 =head3 create
 
